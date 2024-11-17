@@ -4,7 +4,7 @@
 #' @param df A dataframe of locational marginal prices
 #' @return A list of summary statistics
 #' @examples
-#' summarize(df)
+#' summarize_lmps(df)
 #' @export
 summarize_lmps = function(df){
   # Calculate the average price
