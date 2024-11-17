@@ -1,3 +1,5 @@
 ^\.github$
 ^\.devcontainer$
 ^LICENSE\.md$
+^.*\.Rproj$
+^\.Rproj\.user$
