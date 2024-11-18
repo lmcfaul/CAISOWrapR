@@ -7,12 +7,23 @@
 #' @return A named vector of the two locations and the difference in price
 #' @export
 #' @examples
-#' compare_lmps(df, "Boston", "New York")
+#' compare_lmps(df, "San Francisco", "San Diego")
 #' @importFrom dplyr filter
 compare_lmps = function(df, loc1, loc2) {
+  
+  cities_and_lmps = read.csv("data/cities_and_lmps.csv")
+  
+  # Check if both locations exist in the cities_and_lmps data
+  if (!(loc1 %in% cities_and_lmps$name)) {
+    return(paste("Location", loc1, "is not in the dataset. Please try another location."))
+  }
+  if (!(loc2 %in% cities_and_lmps$name)) {
+    return(paste("Location", loc2, "is not in the dataset. Please try another location."))
+  }
+  
   # Lookup the LMP names from location_and_lmps based on loc1 and loc2
-  lmp1 = location_and_lmps$lmp_name[location_and_lmps$location == loc1]
-  lmp2 = location_and_lmps$lmp_name[location_and_lmps$location == loc2]
+  lmp1 = cities_and_lmps$closest_lmp[cities_and_lmps$name == loc1]
+  lmp2 = cities_and_lmps$closest_lmp[cities_and_lmps$name == loc2]
   
   # Find the price for each LMP name in df
   price1 = df$price[df$lmp_name == lmp1]
