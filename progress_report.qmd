@@ -15,9 +15,8 @@ Please remove content in `[]` brackets and replace with your project-specific in
 ### Kate Esbenshade (ksesben)
 
 -   Created summarize and compare functions for the package
--   \[Include specific functions/features implemented\]
--   \[Note any documentation written\]
--   \[Mention tests developed\]
+-   Wrote documentation for the summarize and compare functions
+-   Added LMP and Cities databases and combined them so that users can use cities as a proxy for lmps
 
 ### Student 2 Name (SUNetID 2)
 
@@ -35,35 +34,38 @@ Please remove content in `[]` brackets and replace with your project-specific in
 
 ## Remaining Work
 
-### Student 1 Name (SUNetID 1)
+### Kate Esbenshade (ksesben)
+
+-   Still have to write more functions for data analysis and visualization of the LMP data
+-  Need to write documentation for the new functions
+-  Need to write tests for the new functions
+-  Need to write tests for the functions I already wrote once there is data to test them on
+
+### Student 2 Name (SUNetID 2)
 
 -   \[List tasks still to be completed\]
 -   \[Include estimated completion dates\]
 -   \[Note any dependencies on other team members' work\]
-
-### Student 2 Name (SUNetID 2)
-
-\[Follow same format as above\]
-
 ### Student 3 Name (SUNetID 3) \[Optional\]
 
-\[Follow same format as above\]
-
+-   \[List tasks still to be completed\]
+-   \[Include estimated completion dates\]
+-   \[Note any dependencies on other team members' work\]
 # Issues and Solutions
 
 ## Technical Challenges
 
-\[Describe any technical challenges encountered during development\]
+### Issue 1: New Englad LMP Data
 
-### Issue 1
+-   **Problem**: We originally tried to use the New England ISO API to get the LMP data, but it only provided 9 locations, one for each state and a few for the larger ones. This would not be enough to analyze congestion. 
+-   **Solution**: We pivoted to using electricity data from the Grid Status API, where there is more specific LMP data.
+-   **Impact**: This was a good fix, except that we eventually found other issues (below) and ended up changing the location scope anyways.
 
--   **Problem**: \[Brief description of the issue\]
--   **Solution**: \[How the issue was resolved or plan for resolution\]
--   **Impact**: \[Effect on project timeline or scope\]
+### Issue 2: LMP Location Data
 
-### Issue 2
-
-\[Follow same format as above\]
+-   **Problem**: With our original plan of the electricity pricing data from New England, we could not find the location data for the LMPs. It was only the LMP names, not any sort of latitude or longitude data so it would have been difficult to place it on a map. 
+-   **Solution**: We pivoted to using electricity data from California, where there is more available location data.
+-   **Impact**: There is not much changes to the functions or usability of our package, it now just focuses on California instead of New England. Because of California's many renewables and lower amount of transmission, the prices vary much more than in New England, so evaluating congestion may in fact be more interesting.
 
 ## Collaboration Challenges
 
@@ -77,19 +79,32 @@ Please remove content in `[]` brackets and replace with your project-specific in
 
 ## Scope Modifications
 
-\[List any changes to the original project scope\]
+1. The main scope modification is that we are now using California electricity data instead of New England data. This will require some changes to the functions and documentation, but the overall structure of the package will remain the same.
+2. We are also now adding a new feature so that this data can be visualized in an R Shiny App. This will require some additional work, but we believe it will add value to the package.
 
 ### Original Plan
 
-\[Description\]
+This package will be used to analyze electricity prices in New England by 
+location (locational marginal prices, also known as LMPs). The package will pull 
+from the ISO New England API to get the most recent data on electricity prices 
+and provide functions to analyze and visualize this data. We will use spacial 
+data to visualize the prices on a map of New England. We will also combine this 
+with shapefiles of transmission lines in order to visualize transmission 
+congestion, which is a major driver of electricity prices.
 
 ### Modified Plan
 
-\[Description\]
+This package will be used to analyze electricity prices in California by 
+location (locational marginal prices, also known as LMPs). The package will pull 
+from the Grid Status API to get the most recent data on electricity prices 
+and provide functions to analyze and visualize this data. We will use spacial 
+data to visualize the prices on a map of California. We will also combine this 
+with shapefiles of transmission lines in order to visualize transmission 
+congestion, which is a major driver of electricity prices. The maps and tranmission visualizations will be displayed on a Shiny app. 
 
 ### Reason for Change
 
-\[Explanation\]
+As descrbied above, we were unable to get the location data for the LMPs in New England, so we pivoted to California data. We also decided to add the Shiny app feature to add value to the package.
 
 ### Impact on Timeline
 
@@ -97,7 +112,7 @@ Please remove content in `[]` brackets and replace with your project-specific in
 
 ## Timeline Adjustments
 
-\[Document any changes to project milestones or deadlines\]
+This has pushed back our timeline slightly, but have made significant progress still with a few weeks left to complete it.
 
 ### Updated Timeline
 
