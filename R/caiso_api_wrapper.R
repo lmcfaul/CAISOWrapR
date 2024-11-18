@@ -199,8 +199,7 @@ get_lmp.CAISOClient <- function(client, dataset = "caiso_lmp_real_time_5_min", s
     page = page + 1
   }
   
-  # Combine and return the final data frame
-  print(dfs)
+  # Combine and return the final data framm
   final_df <- dplyr::bind_rows(dfs)
   return(final_df)
 }
