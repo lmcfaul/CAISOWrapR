@@ -20,5 +20,5 @@ A named vector of the two locations and the difference in price
 Function gets the input of two locations and a dataframe of locational marginal prices and returns the price comparison between the two locations.
 }
 \examples{
-compare_lmps(df, "Boston", "New York")
+compare_lmps(df, "San Francisco", "San Diego")
 }
