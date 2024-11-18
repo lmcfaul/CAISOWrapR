@@ -50,7 +50,7 @@ fetch_data <- function(client, endpoint, params = NULL) {
   
   # Add default query parameters
   params$return_format <- "json"
-  params$json_schema <- "array-of-objects"
+  params$json_schema <- "array-of-arrays"
   
   # Define the headers for the request
   headers <- list(
@@ -58,7 +58,7 @@ fetch_data <- function(client, endpoint, params = NULL) {
   )
   
   # Construct the base request and add query parameters
-  request <- httr2::request(client$host) |> # Pipe the base URL into the request function
+  request <- httr2::request(client$base_url) |> # Pipe the base URL into the request function
     httr2::req_url_path_append(endpoint) |> # Append the endpoint to the URL
     httr2::req_headers(!!!headers) |> # Unpack the headers list
     httr2::req_url_query(!!!params) |> # Unpack the parameters list
@@ -182,14 +182,15 @@ get_lmp.CAISOClient <- function(client, dataset = "caiso_lmp_real_time_5_min", s
     # Fetch data from the API
     response <- fetch_data(client, endpoint, params = params)
     
-    # Create data frame for each page of data
-    df <- as.data.frame(do.call(rbind, response$data))
+    # Create data frame for each
+    df <- as.data.frame(response$data[-1, ], stringsAsFactors = FALSE)
+    colnames(df) <- response$data[1, ]
     
     # Append the data frame to the list of data frames
     dfs[[length(dfs) + 1]] <- df
     
     # Check if there is a next page
-    next_page = if (!is.null(response$meta$hasNextPage)) response$meta$hasNextPage else FALSE
+    next_page = if (!is.null(response$meta$next_page)) response$meta$next_page else FALSE
     
     # Extract cursor for pagination
     cursor = response$meta$cursor
@@ -199,6 +200,7 @@ get_lmp.CAISOClient <- function(client, dataset = "caiso_lmp_real_time_5_min", s
   }
   
   # Combine and return the final data frame
+  print(dfs)
   final_df <- dplyr::bind_rows(dfs)
   return(final_df)
 }

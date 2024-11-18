@@ -1,10 +1,16 @@
-Package: ISONEr
-Title: What the Package Does (One Line, Title Case)
-Version: 0.0.0.9000
+Package: CAISOWrapR
+Title: CAISO API Wrapper using Grid Status API
+Version: 0.0.1
 Authors@R: 
-    person("First", "Last", , "first.last@example.com", role = c("aut", "cre"),
-           comment = c(ORCID = "YOUR-ORCID-ID"))
-Description: What the package does (one paragraph).
+    person("Mack", "Smith", , "macks26@stanford.edu", role = c("aut", "cre"))
+Description: 
+    This package provides a wrapper for the CAISO locational marginal price 
+    (LMP) datasets using the Grid Status API. The package allows users to 
+    access node-level LMP data concerning the California eletrical grid and
+    integrate it with data concerning California's transmission lines to 
+    identity areas of high congestion. Additionally, the package provides tools 
+    to visualize and analyze the LMP data to produce insightful and effective 
+    results concerning California eletrical grid congestion.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
