@@ -1,14 +1,8 @@
-::: callout-note
-Please remove content in `[]` brackets and replace with your project-specific 
-information.
-:::
-
 # Project Overview
 
 ## Package Name and Purpose
 
-\[Provide the name of your R package and a brief (2-3 sentences) description of 
-its purpose and main functionality.\]
+The package, **electriCAISO**, provides tools to analyze and visualize California electricity data, including locational marginal prices (LMPs). It uses spatial data and shapefiles of transmission lines to map prices and visualize transmission congestion, displayed interactively in a Shiny app.
 
 # Progress Summary
 
@@ -30,12 +24,12 @@ queries for the API, and parse the data into a usable format.
 -   Wrote documentation for the API wrapper object and method for collecting LMP 
 data
 
-### Student 3 Name (SUNetID 3) \[Optional\]
+### Luke McFaul (lmcfaul)
 
--   \[List major tasks completed\]
--   \[Include specific functions/features implemented\]
--   \[Note any documentation written\]
--   \[Mention tests developed\]
+-   create base map of California to be used as Shiny app
+-   Found data and shapefiles for transmission lines and substations to help with visualizations
+-   Wrote documentation for shiny app function
+
 
 ## Remaining Work
 
@@ -57,11 +51,11 @@ most a week's amount of time to complete.
 -   Write test functions to handle edge cases, especially for unusual 
 argument combinations
 
-### Student 3 Name (SUNetID 3) \[Optional\]
+### Luke McFaul (lmcfaul)
 
--   \[List tasks still to be completed\]
--   \[Include estimated completion dates\]
--   \[Note any dependencies on other team members' work\]
+-   Need to write additional options for Shiny visualization (e.g. transmission, LMPs)
+-   Write tests and additional documentation
+-   Expand on analysis of transmission lines and impacts of different factors on LMPs
 
 # Issues and Solutions
 
