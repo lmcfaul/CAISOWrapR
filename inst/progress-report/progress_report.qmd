@@ -16,10 +16,10 @@ its purpose and main functionality.\]
 
 ### Kate Esbenshade (ksesben)
 
--   Created summarize and compare functions for the package
--   Wrote documentation for the summarize and compare functions
+-   Created summarize, compare, and histogram functions for the package
+-   Wrote documentation for the summarize, compare, and histogram functions
 -   Added LMP and Cities databases and combined them so that users can use 
-cities as a proxy for LMPs
+cities as a proxy for LMPs (these are used in functions)
 
 ### Mack Smith (macks26)
 
@@ -42,7 +42,7 @@ data
 ### Kate Esbenshade (ksesben)
 
 -  Still have to write more functions for data analysis and visualization of the 
-LMP data
+LMP data (prices over time, prices by hour, comparing locations on graphs etc)
 -  Need to write documentation for the new functions
 -  Need to write tests for the new functions
 -  Need to write tests for the functions I already wrote once there is data to 
@@ -94,11 +94,7 @@ interesting.
 
 ## Collaboration Challenges
 
-\[Describe any team coordination or communication challenges\]
-
--   **Challenge**: \[Description\]
--   **Resolution**: \[Steps taken to address\]
--   **Preventive Measures**: \[Steps to prevent similar issues\]
+N/A
 
 # Changes to Project Plan
 
@@ -154,9 +150,9 @@ still with a few weeks left to complete it.
 
 ### Updated Timeline
 
--   \[Milestone 1\]: \[New Date\]
--   \[Milestone 2\]: \[New Date\]
--   \[Final Delivery\]: \[New Date\]
+-   Initial basic implementation of functions: 11/22/2024
+-   Additional features added and testing: 12/06/2024
+-   Final Package: 12/08/2024
 
 # Additional Notes
 
