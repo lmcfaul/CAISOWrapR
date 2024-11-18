@@ -2,7 +2,7 @@
 
 ## Package Name and Purpose
 
-The package, **electriCAISO**, provides tools to analyze and visualize California electricity data, including locational marginal prices (LMPs). It uses spatial data and shapefiles of transmission lines to map prices and visualize transmission congestion, displayed interactively in a Shiny app.
+The package, **CAISOWrapR**, provides tools to analyze and visualize California electricity data, including locational marginal prices (LMPs). It uses spatial data and shapefiles of transmission lines to map prices and visualize transmission congestion, displayed interactively in a Shiny app.
 
 # Progress Summary
 
