@@ -58,7 +58,7 @@ fetch_data <- function(client, endpoint, params = NULL) {
   )
   
   # Construct the base request and add query parameters
-  request <- httr2::request(client$base_url) |> # Pipe the base URL into the request function
+  request <- httr2::request(client$host) |> # Pipe the base URL into the request function
     httr2::req_url_path_append(endpoint) |> # Append the endpoint to the URL
     httr2::req_headers(!!!headers) |> # Unpack the headers list
     httr2::req_url_query(!!!params) |> # Unpack the parameters list
@@ -111,7 +111,7 @@ fetch_data <- function(client, endpoint, params = NULL) {
 get_lmp.CAISOClient <- function(client, dataset = "caiso_lmp_real_time_5_min", start_tm = NULL, 
                                 end_tm = NULL, columns = NULL, filter_column = NULL, 
                                 filter_value = NULL, filter_operator = NULL, publish_tm = NULL, 
-                                resample = NULL, resample_by = NULL,resample_function = "mean", 
+                                resample = NULL, resample_by = NULL, resample_function = "mean", 
                                 limit = 5, page_size = NULL, tz = NULL, verbose = FALSE, 
                                 use_cursor_pagination = TRUE) {
   
@@ -182,9 +182,18 @@ get_lmp.CAISOClient <- function(client, dataset = "caiso_lmp_real_time_5_min", s
     # Fetch data from the API
     response <- fetch_data(client, endpoint, params = params)
     
-    # Create data frame for each
-    df <- as.data.frame(response$data[-1, ], stringsAsFactors = FALSE)
-    colnames(df) <- response$data[1, ]
+    # Extract column names from the first element of response$data
+    column_names <- response$data[[1]]
+    
+    # Extract the remaining data (skipping the first element)
+    data_rows <- response$data[-1]
+    
+    # Convert the list of rows to a data frame, assigning column names
+    df <- as.data.frame(do.call(rbind, data_rows), stringsAsFactors = FALSE)
+    colnames(df) <- column_names
+    
+    # Convert numeric columns from character (if applicable)
+    df[] <- lapply(df, function(x) if (suppressWarnings(all(!is.na(as.numeric(x))))) as.numeric(x) else x)
     
     # Append the data frame to the list of data frames
     dfs[[length(dfs) + 1]] <- df
