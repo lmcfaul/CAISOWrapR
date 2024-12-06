@@ -81,7 +81,7 @@ fetch_data <- function(client, endpoint, params = NULL) {
 #' 
 #' Fetch locational marginal price (LMP) data from the Grid Status API.
 #' @param client An CAISOClient object created with \code{\link{CAISOClient}}.
-#' @param dataset The name of the dataset to fetch data from. Default is "caiso_lmp_real_time_5_min".
+#' @param dataset The name of the dataset to fetch data from. Default is "caiso_lmp_real_time_15_min".
 #' Options are
 #' @param start_tm The start time for the data query. If not provided, the API will use the earliest available time.
 #' @param end_tm The end time for the data query. If not provided, the API will use the latest available time.
@@ -108,7 +108,7 @@ fetch_data <- function(client, endpoint, params = NULL) {
 #' @param use_cursor_pagination A logical value indicating whether to use cursor-based pagination. Default is FALSE.
 #' @return A data frame containing the LMP data.
 #' @export get_lmp.CAISOClient
-get_lmp.CAISOClient <- function(client, dataset = "caiso_lmp_real_time_5_min", start_tm = NULL, 
+get_lmp.CAISOClient <- function(client, dataset = "caiso_lmp_real_time_15_min", start_tm = NULL, 
                                 end_tm = NULL, columns = NULL, filter_column = NULL, 
                                 filter_value = NULL, filter_operator = NULL, publish_tm = NULL, 
                                 resample = NULL, resample_by = NULL, resample_function = "mean", 
