@@ -1,0 +1,51 @@
+#' Pull One Data Instnace
+#' 
+#' This function takes in a date and time (15 minute increment) and returns a dataframe of every LMP and the price breakdown
+#' 
+#' @param date Date in format "YYYY-MM-DD"
+#' @param time Time in format "HH:MM"
+#' @param api_key API key for the CAISO API
+#' 
+#' @return A dataframe with the LMP and price breakdown for the given date and time
+#' 
+#' @import lubridate
+#' 
+#' @export
+#' 
+#' @examples
+#' pulldata_instance("2019-01-01", "00:00", api_key = api_key)
+pulldata_instance = function(date, time, api_key){
+  
+  adjust_to_nearest_15 <- function(time) {
+    parsed_time = ymd_hms(time)
+    rounded_time = round_date(parsed_time, unit = "15 minutes")
+    return(rounded_time)
+  }
+  
+  input_datetime = paste(date, time, "00")
+  input_datetime = ymd_hms(input_datetime)
+  
+  start_time = adjust_to_nearest_15(input_datetime)
+  start_time_iso = format(start_time, "%Y-%m-%d %H:%M:%S")  # Remove the "T"
+  print(start_time_iso)
+  
+  end_time = start_time + minutes(15)
+  end_time_iso = format(end_time, "%Y-%m-%d %H:%M:%S")  # Remove the "T"
+  print(end_time_iso)
+
+  unique_lmps = read.csv("data/lmps.csv")
+  # Load the data
+  client_pull = CAISOClient(api_key = api_key)
+  
+  df_instance = get_lmp.CAISOClient(
+    client = client_pull,
+    start_tm = start_time_iso,
+    end_tm = end_time_iso,
+    filter_column = "location",
+    filter_value = paste(unique_lmps$unique_lmps, collapse = ","),
+    filter_operator = "in",
+    limit = length(unique_lmps$unique_lmps)
+  )
+
+  return(df_instance)
+}
