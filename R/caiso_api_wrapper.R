@@ -192,8 +192,8 @@ get_lmp.CAISOClient <- function(client, dataset = "caiso_lmp_real_time_5_min", s
     df <- as.data.frame(do.call(rbind, data_rows), stringsAsFactors = FALSE)
     colnames(df) <- column_names
     
-    # Convert numeric columns from character (if applicable)
-    df[] <- lapply(df, function(x) if (suppressWarnings(all(!is.na(as.numeric(x))))) as.numeric(x) else x)
+    # Preprocess data with type conversions
+    df <- preprocess_data(df)
     
     # Append the data frame to the list of data frames
     dfs[[length(dfs) + 1]] <- df
@@ -208,7 +208,33 @@ get_lmp.CAISOClient <- function(client, dataset = "caiso_lmp_real_time_5_min", s
     page = page + 1
   }
   
-  # Combine and return the final data framm
+  # Combine and return the final data frame
   final_df <- dplyr::bind_rows(dfs)
   return(final_df)
+}
+
+#' Preprocess data from the Grid Status API
+#' 
+#' Preprocess the raw data from the Grid Status API by converting columns to the appropriate data types.
+#' @param data A data frame containing the raw data from the API.
+#' @return A data frame with the columns converted to the appropriate data types.
+#' @export preprocess_data
+preprocess_data <- function(data) {
+  df |>
+    dplyr::mutate(
+      # Convert list columns to POSIXct by extracting the first element of each list
+      interval_start_utc = as.POSIXct(sapply(interval_start_utc, "[[", 1), format = "%Y-%m-%dT%H:%M:%S", tz = "UTC"),
+      interval_end_utc = as.POSIXct(sapply(interval_end_utc, "[[", 1), format = "%Y-%m-%dT%H:%M:%S", tz = "UTC"),
+      
+      # Convert categorical columns to factors
+      market = as.factor(sapply(market, "[[", 1)),
+      location = as.factor(sapply(location, "[[", 1)),
+      location_type = as.factor(sapply(location_type, "[[", 1)),
+      
+      # Convert numeric columns by extracting values from lists
+      lmp = as.numeric(sapply(lmp, "[[", 1)),
+      energy = as.numeric(sapply(energy, "[[", 1)),
+      congestion = as.numeric(sapply(congestion, "[[", 1)),
+      loss = as.numeric(sapply(loss, "[[", 1))
+    )
 }
