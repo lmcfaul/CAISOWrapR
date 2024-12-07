@@ -218,9 +218,8 @@ get_lmp.CAISOClient <- function(client, dataset = "caiso_lmp_real_time_15_min", 
 #' Preprocess the raw data from the Grid Status API by converting columns to the appropriate data types.
 #' @param data A data frame containing the raw data from the API.
 #' @return A data frame with the columns converted to the appropriate data types.
-#' @export preprocess_data
 preprocess_data <- function(data) {
-  df |>
+  data |>
     dplyr::mutate(
       # Convert list columns to POSIXct by extracting the first element of each list
       interval_start_utc = as.POSIXct(sapply(interval_start_utc, "[[", 1), format = "%Y-%m-%dT%H:%M:%S", tz = "UTC"),
