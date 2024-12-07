@@ -6,7 +6,7 @@
 \usage{
 get_lmp.CAISOClient(
   client,
-  dataset = "caiso_lmp_real_time_5_min",
+  dataset = "caiso_lmp_real_time_15_min",
   start_tm = NULL,
   end_tm = NULL,
   columns = NULL,
@@ -27,7 +27,7 @@ get_lmp.CAISOClient(
 \arguments{
 \item{client}{An CAISOClient object created with \code{\link{CAISOClient}}.}
 
-\item{dataset}{The name of the dataset to fetch data from. Default is "caiso_lmp_real_time_5_min".
+\item{dataset}{The name of the dataset to fetch data from. Default is "caiso_lmp_real_time_15_min".
 Options are}
 
 \item{start_tm}{The start time for the data query. If not provided, the API will use the earliest available time.}

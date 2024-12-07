@@ -26,8 +26,8 @@ compare_lmps = function(df, loc1, loc2) {
   lmp2 = cities_and_lmps$closest_lmp[cities_and_lmps$name == loc2]
   
   # Find the price for each LMP name in df
-  price1 = df$price[df$lmp_name == lmp1]
-  price2 = df$price[df$lmp_name == lmp2]
+  price1 = df$lmp[df$location == lmp1]
+  price2 = df$lmp[df$location == lmp2]
   
   # Calculate the difference in price
   diff_price = price1 - price2
