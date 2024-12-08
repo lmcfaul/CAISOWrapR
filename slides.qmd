@@ -2,20 +2,28 @@
 title: "Locational Marginal Price and Congestion Analysis in R"
 authors: "Kate Esbenshade, Luke McFaul, Mack Smith"
 format: revealjs  # Can also use ioslides, beamer, etc.
+revealjs:
+  theme: solarized
+  slideNumber: true
+---
+
+# Project Inspiration
+
+1. California has a unique electricity market structure that is different from other states in the US. 
+2. There are many integrated renewables and high fluctuation in electricity demand, meaning that there are often times when there is not enough transmission capacity to move electricity from one location to another. 
+3. This can cause congestion in the transmission system, which can lead to higher electricity prices in certain locations (different locational marginal prices, or LMPS).
+4. We wanted to create a project to visualize these differences in price and allow users to understand and analyze LMP differences and congestion. 
+
 ---
 
 # Project Goals
 - Create a package in R to help with analysis of electricity prices in California
-- Use the package to analyze the relationship between congestion and locational marginal prices (LMPs) in California
+- Use the package to analyze the relationship between congestion and locational marginal prices (LMPs) in California wihin locations and between them
 - Create a shiny app to visualize the results
-- 
-
---- 
-
-# Slide 2 Title
-Content for slide 2.
 
 ---
 
-## Slide 3 Title
-Content for slide 3.
+# Project Goals
+- Create a package in R to help with analysis of electricity prices in California
+- Use the package to analyze the relationship between congestion and locational marginal prices (LMPs) in California wihin locations and between them
+- Create a shiny app to visualize the results
