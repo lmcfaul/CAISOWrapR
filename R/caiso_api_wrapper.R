@@ -124,16 +124,19 @@ execute_api_request <- function(request) {
 #' Retrieve LMP data with flexible querying and filtering options.
 #'
 #' @param client A GridStatusClient object created with \code{\link{create_gridstatus_client}}
-#' @param dataset Name of the CAISO LMP dataset to query. 
-#'   Defaults to "caiso_lmp_real_time_15_min".
+#' @param dataset Name of the CAISO LMP dataset to query. (default: "caiso_lmp_real_time_15_min")
+#'   Options:
+#'   - "caiso_lmp_real_time_15_min": 15-minute real-time LMP data
+#'   - "caiso_lmp_real_time_5_min": 5-minute real-time LMP data
+#'   - "caiso_lmp_day_ahead_hourly": 1-minute real-time LMP data
 #'   
-#' @param start Start time for data retrieval (optional)
-#'   - Format: "YYYY-MM-DD HH:MM:SS"
+#' @param start_time Start time for data retrieval (optional)
+#'   - Format: "YYYY-MM-DD HH:MM:SS" or "YYYY-MM-DD"
 #'   - Timezone: Automatically converted to UTC
 #'   - If not provided, uses earliest available time
 #'   
-#' @param end End time for data retrieval (optional)
-#'   - Format: "YYYY-MM-DD HH:MM:SS"
+#' @param end_time End time for data retrieval (optional)
+#'   - Format: "YYYY-MM-DD HH:MM:SS" or "YYYY-MM-DD"
 #'   - Timezone: Automatically converted to UTC
 #'   - If not provided, uses latest available time
 #'   
@@ -268,6 +271,19 @@ fetch_lmp_data <- function(
 process_lmp_response <- function(response) {
   # Extract column names and data
   column_names <- response$data[[1]]
+  
+  # Check if there are any data rows
+  if (length(response$data) == 1) {
+    # No data rows, return an empty data frame with appropriate column names
+    empty_df <- as.data.frame(matrix(ncol = length(column_names), nrow = 0))
+    colnames(empty_df) <- column_names
+    
+    # Apply type conversion to ensure correct data types
+    empty_df <- convert_lmp_datatypes(empty_df)
+    
+    return(empty_df)
+  }
+  
   data_rows <- response$data[-1]
   
   # Convert to data frame
@@ -284,7 +300,6 @@ process_lmp_response <- function(response) {
 #' @description Convert API data types to appropriate R types
 #' @param data Input data frame
 #' @return Data frame with converted types
-#' @export
 convert_lmp_datatypes <- function(data) {
   # Robust type conversion with error handling
   tryCatch({
@@ -332,8 +347,8 @@ compact_list <- function(l) {
 # client <- create_caiso_client(api_key = "your_api_key")
 # lmp_data <- fetch_lmp_data(
 #   client, 
-#   start_tm = "2024-01-01", 
-#   end_tm = "2024-01-02",
+#   start = "2024-01-01", 
+#   end = "2024-01-02",
 #   limit = 10,
 #   columns = c("interval_start_utc", "lmp")
 # )

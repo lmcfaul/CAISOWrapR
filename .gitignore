@@ -35,3 +35,4 @@ po/*~
 rsconnect/
 .DS_Store
 Final Project.Rproj
+inst/doc
