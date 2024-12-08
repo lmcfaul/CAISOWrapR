@@ -4,7 +4,7 @@
 \alias{pulldata_node}
 \title{Pull Data from One Node}
 \usage{
-pulldata_node(city = NULL, node = NULL, year = 2020, api_key)
+pulldata_node(city = NULL, node = NULL, year = 2023, api_key)
 }
 \arguments{
 \item{city}{city (automatically set to NULL)}
@@ -17,7 +17,7 @@ pulldata_node(city = NULL, node = NULL, year = 2020, api_key)
 a dataframe of the price every 15 minutes for that year in that location
 }
 \description{
-This function takes in a city or a node and a year and returns a dataframe of the price every 15 minutes for that year in that location
+This function takes in a city or a node and a year and returns a dataframe of the price every 15 minutes for that year in that location. Default is Palo Alto for 2024
 }
 \examples{
 pulldata_node(city = "San Diego", year = 2020)
