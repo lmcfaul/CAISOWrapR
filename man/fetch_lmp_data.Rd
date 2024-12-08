@@ -9,19 +9,24 @@ fetch_lmp_data(client, dataset = "caiso_lmp_real_time_15_min", ...)
 \arguments{
 \item{client}{A GridStatusClient object created with \code{\link{create_gridstatus_client}}}
 
-\item{dataset}{Name of the CAISO LMP dataset to query.
-Defaults to "caiso_lmp_real_time_15_min".}
-
-\item{start}{Start time for data retrieval (optional)
+\item{dataset}{Name of the CAISO LMP dataset to query. (default: "caiso_lmp_real_time_15_min")
+Options:
 \itemize{
-\item Format: "YYYY-MM-DD HH:MM:SS"
+\item "caiso_lmp_real_time_15_min": 15-minute real-time LMP data
+\item "caiso_lmp_real_time_5_min": 5-minute real-time LMP data
+\item "caiso_lmp_day_ahead_hourly": 1-minute real-time LMP data
+}}
+
+\item{start_time}{Start time for data retrieval (optional)
+\itemize{
+\item Format: "YYYY-MM-DD HH:MM:SS" or "YYYY-MM-DD"
 \item Timezone: Automatically converted to UTC
 \item If not provided, uses earliest available time
 }}
 
-\item{end}{End time for data retrieval (optional)
+\item{end_time}{End time for data retrieval (optional)
 \itemize{
-\item Format: "YYYY-MM-DD HH:MM:SS"
+\item Format: "YYYY-MM-DD HH:MM:SS" or "YYYY-MM-DD"
 \item Timezone: Automatically converted to UTC
 \item If not provided, uses latest available time
 }}
