@@ -99,4 +99,9 @@ test_that("convert_lmp_datatypes handles type conversion", {
   expect_type(converted_data$lmp, "double")
 })
 
-
+# Create test client for fetch_lmp_data tests
+create_test_client <- function() {
+  create_caiso_client(
+    api_key = "c92f5de270cc4ec2ab3c4da6f8a53399"
+  )
+}
