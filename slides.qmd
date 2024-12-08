@@ -1,0 +1,21 @@
+---
+title: "Locational Marginal Price and Congestion Analysis in R"
+authors: "Kate Esbenshade, Luke McFaul, Mack Smith"
+format: revealjs  # Can also use ioslides, beamer, etc.
+---
+
+# Project Goals
+- Create a package in R to help with analysis of electricity prices in California
+- Use the package to analyze the relationship between congestion and locational marginal prices (LMPs) in California
+- Create a shiny app to visualize the results
+- 
+
+--- 
+
+# Slide 2 Title
+Content for slide 2.
+
+---
+
+## Slide 3 Title
+Content for slide 3.
