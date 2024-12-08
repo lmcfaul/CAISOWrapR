@@ -60,11 +60,11 @@ visualize_node = function(df){
   # Return the plot
   return(p)
 }
-
-p = ggplot() + 
-  geom_col(data = testing_palo_alto, aes(x = time_only, y = avg_lmp, fill = "Average Price per Time")) +
-  labs(title = "Average Price per Time", x = "Time", y = "Average LMP") +
-  theme_minimal()
-
-p
+# 
+# p = ggplot() + 
+#   geom_col(data = testing_palo_alto, aes(x = time_only, y = avg_lmp, fill = "Average Price per Time")) +
+#   labs(title = "Average Price per Time", x = "Time", y = "Average LMP") +
+#   theme_minimal()
+# 
+# p
 

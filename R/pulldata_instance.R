@@ -35,12 +35,12 @@ pulldata_instance = function(date, time, api_key){
 
   unique_lmps = read.csv("data/lmps.csv")
   # Load the data
-  client_pull = CAISOClient(api_key = api_key)
+  client_pull = create_caiso_client(api_key = api_key)
   
-  df_instance = get_lmp.CAISOClient(
+  df_instance = fetch_lmp_data(
     client = client_pull,
-    start_tm = start_time_iso,
-    end_tm = end_time_iso,
+    start = start_time_iso,
+    end = end_time_iso,
     filter_column = "location",
     filter_value = paste(unique_lmps$unique_lmps, collapse = ","),
     filter_operator = "in",
