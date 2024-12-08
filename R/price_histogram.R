@@ -24,9 +24,9 @@ price_violin <- function(df) {
     geom_violin(fill = "gray", color = "black", alpha = 0.7) +
     geom_boxplot(width = 0.2, fill = "#E8E8E8", color = "black", outlier.shape = NA) +  # Add a boxplot
     labs(
-      title = paste("Frequency of California Locational Marginal Prices on", formatted_time),
+      title = paste("California LMP Frequencies on", formatted_time),
       x = "Frequency",
-      y = "Price"
+      y = "Locationl Marginal Price ($/MWh)"
     ) +
     theme(
       axis.text.x = element_blank(), 

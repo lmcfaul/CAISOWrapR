@@ -30,47 +30,54 @@ pulldata_node = function(city = NULL, node = NULL, year = 2020, api_key){
     }
   }
   
-  # If node is provided, proceed with the data pull for that node
-  if(!is.null(node)){
-    # Define the 2-month chunks
-    start_dates <- seq(from = as.Date(paste(year, "-01-01", sep = "")), 
-                       to = as.Date(paste(year, "-11-01", sep = "")), by = "2 months")
-    end_dates <- c(start_dates[-1], as.Date(paste(year + 1, "-01-01", sep = ""))) - 1
-    
-    all_data <- list()  # To store data from each chunk
-    
-    client_pull = CAISOClient(api_key = api_key)
-    
-    for (i in seq_along(start_dates)) {
-      start_time_iso <- format(start_dates[i], "%Y-%m-%d %H:%M:%S")
-      end_time_iso <- format(end_dates[i], "%Y-%m-%d %H:%M:%S")
-      
-      #print(start_time_iso)
-      #print(end_time_iso)
-      
-      # Fetch LMP data for the given node and time range
-      df_node <- get_lmp.CAISOClient(
-        client = client_pull,
-        start_tm = start_time_iso,
-        end_tm = end_time_iso,
-        filter_column = "location",
-        filter_value = node,
-        filter_operator = "=",
-        limit = 5840  # Adjust limit as needed
-      )
-      
-      #print(paste("Fetched data from", start_time_iso, "to", end_time_iso))
-      #print(class(df_node))
-      #print(str(df_node))
-      
-      all_data[[i]] <- df_node
+  if (!is.null(node)) {
+    city = city_lmps$name[city_lmps$closest_lmp == node]
+    city <- as.character(city[1])
+    if (length(city) == 0 || is.na(city)) {
+      stop("Node not found in the cities_and_lmps.csv file.")
     }
-    
-    # Combine all chunks into a single data frame
-    final_data <- do.call(rbind, all_data)
-    
-    return(final_data)
   } else {
     stop("Either a city or a node must be provided.")
   }
+
+  # Define the 2-month chunks
+  start_dates <- seq(from = as.Date(paste(year, "-01-01", sep = "")), 
+                     to = as.Date(paste(year, "-11-01", sep = "")), by = "2 months")
+  end_dates <- c(start_dates[-1], as.Date(paste(year + 1, "-01-01", sep = ""))) - 1
+  
+  all_data <- list()  # To store data from each chunk
+  
+  client_pull = CAISOClient(api_key = api_key)
+  
+  for (i in seq_along(start_dates)) {
+    start_time_iso <- format(start_dates[i], "%Y-%m-%d %H:%M:%S")
+    end_time_iso <- format(end_dates[i], "%Y-%m-%d %H:%M:%S")
+    
+    #print(start_time_iso)
+    #print(end_time_iso)
+    
+    # Fetch LMP data for the given node and time range
+    df_node <- get_lmp.CAISOClient(
+      client = client_pull,
+      start_tm = start_time_iso,
+      end_tm = end_time_iso,
+      filter_column = "location",
+      filter_value = node,
+      filter_operator = "=",
+      limit = 5840  # Adjust limit as needed
+    )
+    
+    df_node$city <- city
+    
+    #print(paste("Fetched data from", start_time_iso, "to", end_time_iso))
+    #print(class(df_node))
+    #print(str(df_node))
+    
+    all_data[[i]] <- df_node
+  }
+  
+  # Combine all chunks into a single data frame
+  final_data <- do.call(rbind, all_data)
+  
+  return(final_data)
 }
