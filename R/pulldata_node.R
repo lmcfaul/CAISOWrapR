@@ -47,7 +47,7 @@ pulldata_node = function(city = NULL, node = NULL, year = 2020, api_key){
   
   all_data <- list()  # To store data from each chunk
   
-  client_pull = CAISOClient(api_key = api_key)
+  client_pull = create_caiso_client(api_key = api_key)
   
   for (i in seq_along(start_dates)) {
     start_time_iso <- format(start_dates[i], "%Y-%m-%d %H:%M:%S")
@@ -57,10 +57,10 @@ pulldata_node = function(city = NULL, node = NULL, year = 2020, api_key){
     #print(end_time_iso)
     
     # Fetch LMP data for the given node and time range
-    df_node <- get_lmp.CAISOClient(
+    df_node <- fetch_lmp_data(
       client = client_pull,
-      start_tm = start_time_iso,
-      end_tm = end_time_iso,
+      start = start_time_iso,
+      end = end_time_iso,
       filter_column = "location",
       filter_value = node,
       filter_operator = "=",
