@@ -1,239 +1,339 @@
-#' ISONE API Wrapper Constructor
+#' CAISO API Client
 #'
-#' Construct an CAISOClient object for interacting with the Grid Status API.
-#' @param host The base URL of the Grid Status API. Default is "https://api.gridstatus.io/v1".
-#' @param api_key The API key to use for authenticating requests to the API. If not provided, the function will
-#' attempt to read the API key from the `GRIDSTATUS_API_KEY` environment variable.
-#' @param max_retries The maximum number of times to retry a request if it fails. Default is 3.
-#' @details
-#' The CAISOClient object is used to interact with the Grid Status API. In order to fetch LMP data
-#' from the API, need to generate a free api key from the Grid Status website. You can do so by
-#' signing up for an account at https://gridstatus.io/signup. Once you have an API key, you can
-#' pass it to the CAISOClient constructor or set the environment variable `GRIDSTATUS_API_KEY` to 
-#' create a client object that can be used to fetch data.
-#' @return An CAISOClient object.
-#' @export CAISOClient
-CAISOClient <- function(host = "https://api.gridstatus.io/v1",
-                        api_key = NULL,
-                        max_retries = 3) {
+#' A comprehensive R package for interacting with the Grid Status API
+#' to access CAISO LMP data and gather different analyses and visualizations
+#' from it.
+
+#' @title CAISO API Client
+#' @description Create a client for interacting with the Grid Status API
+#' @param host Base URL of the API (default: "https://api.gridstatus.io/v1")
+#' @param api_key API authentication key
+#' @param max_retries Maximum number of request retries (default: 3)
+#' @return A CAISO API object
+#' @export
+create_caiso_client <- function(
+    host = "https://api.gridstatus.io/v1", 
+    api_key = NULL, 
+    max_retries = 3
+) {
+  # Validate and retrieve API key
+  if (is.null(api_key)) {
+    api_key <- Sys.getenv("GRIDSTATUS_API_KEY", unset = "")
+  }
   
-    if (is.null(api_key)) {
-      api_key <- Sys.getenv("GRIDSTATUS_API_KEY", unset = "")
-    }
-    
-    if (api_key == "") {
-      stop("API key not provided. Either pass api_key to the constructor
-           or define the GRIDSTATUS_API_KEY environment variable.")
-    }
+  # Throw informative error if no API key is found
+  if (api_key == "") {
+    stop(paste(
+      "No API key provided. Please:\n",
+      "1. Pass api_key to the function, or\n",
+      "2. Set the GRIDSTATUS_API_KEY environment variable\n",
+      "Get your free API key at: https://www.gridstatus.io/api"
+    ))
+  }
   
-  structure(list(
-    host = host,
-    api_key = api_key,
-    retries = max_retries
+  # Create client structure with strong validation
+  client <- structure(
+    list(
+      host = host,
+      api_key = api_key,
+      max_retries = max_retries
     ),
     class = "CAISOClient"
   )
+  
+  return(client)
 }
 
-#' Fetch data from the Grid Status API
-#' 
-#' Fetch data from the Grid Status API using the provided client, endpoint, and query parameters.
-#' @param client An CAISOClient object created with \code{\link{CAISOClient}}.
-#' @param endpoint The API endpoint to fetch data from.
-#' @param params A list of query parameters to include in the request.
-#' @return A list representing the JSON response from the API.
-fetch_data <- function(client, endpoint, params = NULL) {
-  # Check if params is NULL and set it to an empty list if so
-  if (is.null(params)) {
-    params <- list()
+#' @title Validate CAISO Client
+#' @description Internal method to validate client object
+#' @param client CAISO client object
+#' @return Logical indicating client validity
+validate_client <- function(client) {
+  # Check if object is of correct class and has required fields
+  if (!inherits(client, "CAISOClient")) {
+    stop("Invalid client: Must be a CAISO object")
   }
   
-  # Add default query parameters
-  params$return_format <- "json"
-  params$json_schema <- "array-of-arrays"
+  # Validate host and API key
+  if (is.null(client$host) || is.null(client$api_key)) {
+    stop("Client is missing required configuration")
+  }
   
-  # Define the headers for the request
-  headers <- list(
-    "x-api-key" = client$api_key
+  return(TRUE)
+}
+
+#' @title Construct API Request
+#' @description Build a robust API request with error handling
+#' @param client CAISO client object
+#' @param endpoint API endpoint
+#' @param params Query parameters
+#' @return httr2 request object
+build_api_request <- function(client, endpoint, params = list()) {
+  # Validate client first
+  validate_client(client)
+  
+  # Ensure params is a list and add default configurations
+  params <- c(params, list(
+    return_format = "json",
+    json_schema = "array-of-arrays"
+  ))
+  
+  # Construct request with comprehensive error handling
+  tryCatch({
+    request <- httr2::request(client$host) |>
+      httr2::req_url_path_append(endpoint) |>
+      httr2::req_headers(
+        "x-api-key" = client$api_key,
+      ) |>
+      httr2::req_url_query(!!!params) |>
+      httr2::req_retry(max_tries = client$max_retries) |>
+      httr2::req_timeout(10)
+    
+    return(request)
+  }, error = function(e) {
+    stop(sprintf("Failed to construct API request: %s", e$message))
+  })
+}
+
+#' @title Execute API Request
+#' @description Send API request and process response
+#' @param request httr2 request object
+#' @return Processed API response
+execute_api_request <- function(request) {
+  tryCatch({
+    response <- httr2::req_perform(request)
+    
+    # Enhanced error handling for non-200 status codes
+    if (response$status_code != 200) {
+      stop(sprintf(
+        "API request failed with status %d: %s", 
+        response$status_code, 
+        httr2::resp_body_string(response)
+      ))
+    }
+    
+    # Parse and return JSON response
+    return(httr2::resp_body_json(response))
+  }, error = function(e) {
+    stop(sprintf("API request execution failed: %s", e$message))
+  })
+}
+
+#' Fetch Locational Marginal Price (LMP) Data from Grid Status API
+#'
+#' Retrieve LMP data with flexible querying and filtering options.
+#'
+#' @param client A GridStatusClient object created with \code{\link{create_gridstatus_client}}
+#' @param dataset Name of the CAISO LMP dataset to query. 
+#'   Defaults to "caiso_lmp_real_time_15_min".
+#'   
+#' @param start Start time for data retrieval (optional)
+#'   - Format: "YYYY-MM-DD HH:MM:SS"
+#'   - Timezone: Automatically converted to UTC
+#'   - If not provided, uses earliest available time
+#'   
+#' @param end End time for data retrieval (optional)
+#'   - Format: "YYYY-MM-DD HH:MM:SS"
+#'   - Timezone: Automatically converted to UTC
+#'   - If not provided, uses latest available time
+#'   
+#' @param filter_column Column to apply filtering on (optional)
+#' 
+#' @param filter_value Value to filter by (optional)
+#' 
+#' @param filter_operator Filtering operator (optional)
+#'   Supported operators:
+#'   - "=" (exact match)
+#'   - ">" (greater than)
+#'   - "<" (less than)
+#'   - ">=" (greater than or equal to)
+#'   - "<=" (less than or equal to)
+#'   - "in" (multiple value matching)
+#'   
+#' @param columns Specific columns to retrieve (optional)
+#'   - Character vector of column names
+#'   - If not provided, returns all columns
+#'   
+#' @param limit Maximum number of records to return
+#' 
+#' @param page_size Number of records per page (optional)
+#'   - Uses API's default page size if not specified
+#'   
+#' @param resample Frequency to resample data (optional)
+#' 
+#' @param resample_by Columns to group by when resampling (optional)
+#'   - Default: Groups by time index column
+#'   
+#' @param resample_function Aggregation method for resampling (default: "mean")
+#'   Options:
+#'   - "mean"
+#'   - "sum"
+#'   - "min"
+#'   - "max"
+#'   - "stddev"
+#'   - "count"
+#'   - "variance"
+#'   
+#' @param publish_tm Controls filtering based on publish time (optional)
+#'   - "latest_report": Most recently published report
+#'   - "latest": Most recent record for each timestamp
+#'   - Specific timestamp string
+#'   - NULL: No filtering
+#'   
+#' @param use_cursor_pagination Use cursor-based pagination (default: TRUE)
+#' 
+#' @param tz Timezone for timestamp conversion (default: "UTC")
+#'
+#' @return A data frame containing the retrieved LMP data
+#'
+#' @examples
+#' \dontrun{
+#' # Create a client
+#' client <- create_caiso_client(api_key = "your_api_key")
+#'
+#' # Basic usage
+#' lmp_data <- fetch_lmp_data(
+#'   client,
+#'   start = "2024-01-01 00:00:00",
+#'   end = "2024-01-02 00:00:00"
+#' )
+#'
+#' # Advanced filtering
+#' filtered_data <- fetch_lmp_data(
+#'   client,
+#'   filter_column = "location",
+#'   filter_value = "",
+#'   filter_operator = "=",
+#'   columns = c("interval_start_utc", "lmp", "location")
+#' )
+#'
+#' # Resampling data
+#' resampled_data <- fetch_lmp_data(
+#'   client,
+#'   resample = "1H",  # Resample to hourly
+#'   resample_function = "mean",
+#'   resample_by = c("location", "market")
+#' )
+#' }
+#'
+#' @section Nuances and Considerations:
+#' \itemize{
+#'   \item Input times are converted to UTC
+#'   \item Can specify output timezone via \code{tz} parameter
+#'   \item Automatically handles multi-page responses
+#'   \item Supports both cursor and traditional pagination
+#'   \item Automatically converts:
+#'     \itemize{
+#'       \item Timestamps to POSIXct
+#'       \item Categorical columns to factors
+#'       \item Numeric columns to numeric type
+#'     }
+#'   \item Provides informative error messages
+#'   \item Gracefully handles conversion issues
+#' }
+#'
+#' @seealso \code{\link{create_caiso_client}}
+#'
+#' @export
+fetch_lmp_data <- function(
+    client, 
+    dataset = "caiso_lmp_real_time_15_min", 
+    ...
+) {
+  # Validate input parameters
+  args <- list(...)
+  
+  # Construct endpoint
+  endpoint <- paste0("/datasets/", dataset, "/query")
+  
+  # Build and execute request
+  request <- build_api_request(
+    client, 
+    endpoint, 
+    params = compact_list(args)
   )
   
-  # Construct the base request and add query parameters
-  request <- httr2::request(client$host) |> # Pipe the base URL into the request function
-    httr2::req_url_path_append(endpoint) |> # Append the endpoint to the URL
-    httr2::req_headers(!!!headers) |> # Unpack the headers list
-    httr2::req_url_query(!!!params) |> # Unpack the parameters list
-    httr2::req_retry(client$retries) |> # Set the number of retries
-    httr2::req_timeout(10) # Set the request timeout
+  response <- execute_api_request(request)
   
-  # Send the request and return the response
-  response <- httr2::req_perform(request)
+  # Process response into data frame
+  processed_data <- process_lmp_response(response)
   
-  # Check the status code and stop if it's not 200
-  if (response$status_code != 200) {
-    stop("Request failed with status code ", response$status_code)
-  }
-  
-  # Parse the response body as JSON
-  return(httr2::resp_body_json(response))
+  return(processed_data)
 }
 
-#' Fetch LMP data from the Grid Status API
-#' 
-#' Fetch locational marginal price (LMP) data from the Grid Status API.
-#' @param client An CAISOClient object created with \code{\link{CAISOClient}}.
-#' @param dataset The name of the dataset to fetch data from. Default is "caiso_lmp_real_time_15_min".
-#' Options are
-#' @param start_tm The start time for the data query. If not provided, the API will use the earliest available time.
-#' @param end_tm The end time for the data query. If not provided, the API will use the latest available time.
-#' @param columns A character vector of column names to include in the response. If not provided, all columns will be returned.
-#' @param filter_column The name of the column to filter on. If provided, the filter_value and filter_operator parameters must also be provided.
-#' @param filter_value The value to filter on. If provided, the filter_column and filter_operator parameters must also be provided.
-#' If filter operator is "in", filter value should be a list of values to filter on.
-#' @param filter_operator The operator to use for the filter. Options are "=", ">", "<", ">=", "<=", "in". If not provided, the default is "=".
-#' @param publish_tm Controls the filtering on the dataset's publish time. The possible values are as follows:
-#' - "latest_report": Returns records only from the most recently published report
-#' - "latest": For any given timestamp, returns the most recently published record associated with it
-#' - timestamp str: Returns records that were published at the timestamp provided
-#' - None: No filtering
-#' @param resample The frequency to resample the data to. Options are 
-#' @param resample_by A character vector of column names to group by when resampling the data.
-#' By default resamples by the time index column. If resample is not provided, this parameter is ignored.
-#' @param resample_function The function to use when resampling the data. Options are "mean", "sum", "min", "max", "stddev", "count", "variance".
-#' Default is "mean".
-#' @param limit The maximum number of records to return. Default is 5.
-#' @param page_size The number of records to return per page. If not provided, the API will use the default page size allowed by subscription
-#' @param tz The timezone to convert the timestamps to. Default is "UTC".
-#' @param verbose If set to TRUE or "info", prints additional information. If set to "debug", prints more additional 
-#' debug information. If set to FALSE, does not print any additional information. Default is FALSE.
-#' @param use_cursor_pagination A logical value indicating whether to use cursor-based pagination. Default is FALSE.
-#' @return A data frame containing the LMP data.
-#' @export get_lmp.CAISOClient
-get_lmp.CAISOClient <- function(client, dataset = "caiso_lmp_real_time_15_min", start_tm = NULL, 
-                                end_tm = NULL, columns = NULL, filter_column = NULL, 
-                                filter_value = NULL, filter_operator = NULL, publish_tm = NULL, 
-                                resample = NULL, resample_by = NULL, resample_function = "mean", 
-                                limit = 5, page_size = NULL, tz = NULL, verbose = FALSE, 
-                                use_cursor_pagination = TRUE) {
+#' @title Process LMP Response
+#' @description Convert API response to a clean, type-converted data frame
+#' @param response API response object
+#' @return Processed data frame
+process_lmp_response <- function(response) {
+  # Extract column names and data
+  column_names <- response$data[[1]]
+  data_rows <- response$data[-1]
   
-  # Check if the start and end times are provided and convert them to the desired timezone
-  if (is.null(tz)) {
-    tz <- "UTC"
-  }
+  # Convert to data frame
+  df <- as.data.frame(do.call(rbind, data_rows), stringsAsFactors = FALSE)
+  colnames(df) <- column_names
   
-  if (!is.null(start_tm)) {
-    start_tm <- as.POSIXct(start_tm, tz = "UTC") # Parse the UTC timestamp
-    start_tm <- format(start_tm, tz = tz, usetz = TRUE) # Convert to the desired timezone
-  }
+  # Advanced type conversion
+  df <- convert_lmp_datatypes(df)
   
-  if (!is.null(end_tm)) {
-    end_tm <- as.POSIXct(end_tm, tz = "UTC") # Parse the UTC timestamp
-    end_tm <- format(end_tm, tz = tz, usetz = TRUE) # Convert to the desired timezone
-  }
-  
-  # Handle pagination
-  page = 1
-  next_page = TRUE
-  
-  # Initialize cursor
-  cursor = ""
-  
-  # Initialize list to store data frames
-  dfs <- list()
-  
-  while (next_page) {
-    # Define the query parameters for the request
-    params <- list(
-      "start" = start_tm,
-      "end" = end_tm,
-      "limit" = limit,
-      "page" = page,
-      "page_size" = page_size,
-      "resample_frequency" = resample,
-      "resample_by" = if (!is.null(resample_by)) paste(resample_by, collapse = ",") else NULL,
-      "resample_function" = if (!is.null(resample)) resample_function else NULL,
-      "publish_time" = publish_tm
-    )
-    
-    # Add cursor parameter if given
-    if (use_cursor_pagination) {
-      params$cursor <- cursor
-    }
-    
-    #  Add filter parameters if given
-    if (!is.null(filter_column) || !is.null(filter_value)) {
-        if (is.list(filter_value) && filter_operator == "in") {
-          filter_value <- paste(filter_value, collapse = ",")
-        }
-      
-      params$filter_column <- filter_column
-      params$filter_value <- filter_value
-      params$filter_operator <- filter_operator
-      
-    }
-    
-    # Add columns parameter if given
-    if (!is.null(columns)) {
-      params$columns <- paste(columns, collapse = ",")
-    }
-    
-    # Create endpoint for request
-    endpoint <- paste("/datasets/", dataset, "/query", sep = "")
-    
-    # Fetch data from the API
-    response <- fetch_data(client, endpoint, params = params)
-    
-    # Extract column names from the first element of response$data
-    column_names <- response$data[[1]]
-    
-    # Extract the remaining data (skipping the first element)
-    data_rows <- response$data[-1]
-    
-    # Convert the list of rows to a data frame, assigning column names
-    df <- as.data.frame(do.call(rbind, data_rows), stringsAsFactors = FALSE)
-    colnames(df) <- column_names
-    
-    # Preprocess data with type conversions
-    df <- preprocess_data(df)
-    
-    # Append the data frame to the list of data frames
-    dfs[[length(dfs) + 1]] <- df
-    
-    # Check if there is a next page
-    next_page = if (!is.null(response$meta$next_page)) response$meta$next_page else FALSE
-    
-    # Extract cursor for pagination
-    cursor = response$meta$cursor
-    
-    # Increment the page number
-    page = page + 1
-  }
-  
-  # Combine and return the final data frame
-  final_df <- dplyr::bind_rows(dfs)
-  return(final_df)
+  return(df)
 }
 
-#' Preprocess data from the Grid Status API
-#' 
-#' Preprocess the raw data from the Grid Status API by converting columns to the appropriate data types.
-#' @param data A data frame containing the raw data from the API.
-#' @return A data frame with the columns converted to the appropriate data types.
-preprocess_data <- function(data) {
-  data |>
-    dplyr::mutate(
-      # Convert list columns to POSIXct by extracting the first element of each list
-      interval_start_utc = as.POSIXct(sapply(interval_start_utc, "[[", 1), format = "%Y-%m-%dT%H:%M:%S", tz = "UTC"),
-      interval_end_utc = as.POSIXct(sapply(interval_end_utc, "[[", 1), format = "%Y-%m-%dT%H:%M:%S", tz = "UTC"),
-      
-      # Convert categorical columns to factors
-      market = as.factor(sapply(market, "[[", 1)),
-      location = as.factor(sapply(location, "[[", 1)),
-      location_type = as.factor(sapply(location_type, "[[", 1)),
-      
-      # Convert numeric columns by extracting values from lists
-      lmp = as.numeric(sapply(lmp, "[[", 1)),
-      energy = as.numeric(sapply(energy, "[[", 1)),
-      congestion = as.numeric(sapply(congestion, "[[", 1)),
-      loss = as.numeric(sapply(loss, "[[", 1))
-    )
+#' @title Convert LMP Data Types
+#' @description Convert API data types to appropriate R types
+#' @param data Input data frame
+#' @return Data frame with converted types
+#' @export
+convert_lmp_datatypes <- function(data) {
+  # Robust type conversion with error handling
+  tryCatch({
+    data |>
+      dplyr::mutate(
+        interval_start_utc = as.POSIXct(extract_first(interval_start_utc), format = "%Y-%m-%dT%H:%M:%S", tz = "UTC"),
+        interval_end_utc = as.POSIXct(extract_first(interval_end_utc), format = "%Y-%m-%dT%H:%M:%S", tz = "UTC"),
+        market = as.factor(extract_first(market)),
+        location = as.factor(extract_first(location)),
+        location_type = as.factor(extract_first(location_type)),
+        lmp = as.numeric(extract_first(lmp)),
+        energy = as.numeric(extract_first(energy)),
+        congestion = as.numeric(extract_first(congestion)),
+        loss = as.numeric(extract_first(loss))
+      )
+  }, error = function(e) {
+    warning(sprintf("Data type conversion failed: %s", e$message))
+    return(data)
+  })
 }
+
+#' @title Safely Extract First List Element
+#' @description Safely extract first element from potentially nested lists
+#' @param x Input list or vector
+#' @return First element or NA
+extract_first <- function(x) {
+  # Handle NULL input by returning NA
+  if (is.null(x)) return(NA)
+  
+  # Extract first value from nested list
+  tryCatch({
+    sapply(x, function(x) x[1])
+  }, error = function(e) NA)  # In case of an error, return NA
+}
+
+#' @title Compact List
+#' @description Remove NULL elements from a list
+#' @param l Input list
+#' @return Cleaned list
+compact_list <- function(l) {
+  l[!sapply(l, is.null)]
+}
+
+# Examples of Usage:
+# client <- create_caiso_client(api_key = "your_api_key")
+# lmp_data <- fetch_lmp_data(
+#   client, 
+#   start_tm = "2024-01-01", 
+#   end_tm = "2024-01-02",
+#   limit = 10,
+#   columns = c("interval_start_utc", "lmp")
+# )
