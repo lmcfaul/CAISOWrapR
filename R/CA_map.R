@@ -12,7 +12,7 @@
 #' @import rnaturalearth
 #' 
 #' @export
-CA_map <- function(instance = (read.csv("data/instance_jan1_2020.csv"))) {
+CA_map <- function(instance = (read.csv("data/instance_normal.csv"))) {
   # Get the geometries for the United States
   us_states <- ne_states(country = "United States of America", returnclass = "sf")
   
