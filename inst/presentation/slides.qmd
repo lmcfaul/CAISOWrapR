@@ -9,6 +9,9 @@ revealjs:
 editor: 
   markdown: 
     wrap: 72
+execute:
+  echo: true   # Show code by default
+  eval: false  # Do not execute code by default
 ---
 
 ```{r setup, include=FALSE}
@@ -18,7 +21,7 @@ editor:
 # Suppress messages )
 ```
 
-## Project Inspiration
+## Project Inspiration {.scrollable}
 
 1.  California has a unique electricity market structure that is
     different from other states in the US.
@@ -52,11 +55,66 @@ editor:
     all nodes, and for an entire node (or comparing nodes) across all
     instances of a year
 
+# CAISO API Client
+
+## Finding the Right API
+
+-   Initially used ISO New England (ISONE) API to collect LMP data at a
+    node-specific scope
+
+    -   Poor documentation of API and LMP data at a region-specific
+        scale
+
+    -   Lack of geographical data surrounding node locations
+
+-   Shifted attention to GridStatus API because of node-specific LMP
+    data, and focused on (CAISO) because of availability of geographical
+    data concerning node locations
+
+## Creating CAISO API Client
+
+-   Need free API key from GridStatus to initialize client, then pass
+    key into `create_caiso_client()`, returning your API client
+
+    -   Alternatively can set the environment variable
+        `GRIDSTATUS_API_KEY` to your GridStatus API key
+
+-   Ex:
+
+    ```{r}
+    library(CAISOWrapR)
+
+    # Create CAISO API Client
+    client <- create_caiso_client(api_key = "your_api_key")
+    ```
+
+## Fetching LMP Data {.scrollable}
+
+-   With API client, fetch CAISO's LMP data from a variety of temporal
+    scopes, such as 5 minute or 15 minute intervals
+
+    ```{r}
+    # Fetch LMP data using API Client
+    lmp_data <- fetch_lmp_data(client,
+                               start_time = "2024-01-01",
+                               end_time = "2024-01-02",
+                               limit = 10)
+    ```
+
+-   Advanced options available, including filtering options, resampling,
+    aggregation, time-zone conversion, and much more
+
+-   Properly cleans JSON data, handling all missing values and type
+    conversions, and returns clean data frame.
+
+-   Quick Note: Only 250 monthly API requests and 1000000 monthly API
+    rows under Starter Plan
+
 ## Example Plot from Package
 
 This plot demonstrates the distribution of LMPs for an example node:
 
-```{r visualize_node_example, echo=FALSE, fig.cap="LMP Distribution Example Plot"} 
+```{r visualize_node_example, fig.cap="LMP Distribution Example Plot"}
 # Load the CSV file 
 # file_path <- system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR") 
 # example_data <- read.csv(file_path)
