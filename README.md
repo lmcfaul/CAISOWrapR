@@ -1,6 +1,8 @@
-# CAISOWrapR: 
+# CAISOWrapR:
 
-## Installation
+## Installation:
+
+To install CAISOWrapR, simply run `install.packages()` to install from CRAN:
 
 ```{r}
 install.packages("CAISOWrapR")
@@ -76,3 +78,7 @@ lmp_data <- fetch_lmp_data(
       resample_by = c("location", "market")
     )
     ```
+
+## Next Section:
+
+## Last Section:

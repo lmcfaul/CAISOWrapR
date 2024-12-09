@@ -162,7 +162,7 @@ execute_api_request <- function(request) {
 #' @param page_size Number of records per page (optional)
 #'   - Uses API's default page size if not specified
 #'   
-#' @param resample Frequency to resample data (optional)
+#' @param resample_frequency Frequency to resample data (optional)
 #' 
 #' @param resample_by Columns to group by when resampling (optional)
 #'   - Default: Groups by time index column
@@ -177,7 +177,7 @@ execute_api_request <- function(request) {
 #'   - "count"
 #'   - "variance"
 #'   
-#' @param publish_tm Controls filtering based on publish time (optional)
+#' @param publish_time Controls filtering based on publish time (optional)
 #'   - "latest_report": Most recently published report
 #'   - "latest": Most recent record for each timestamp
 #'   - Specific timestamp string
@@ -213,7 +213,7 @@ execute_api_request <- function(request) {
 #' # Resampling data
 #' resampled_data <- fetch_lmp_data(
 #'   client,
-#'   resample = "1H",  # Resample to hourly
+#'   resample_frequency = "1H",  # Resample to hourly
 #'   resample_function = "mean",
 #'   resample_by = c("location", "market")
 #' )
@@ -243,8 +243,28 @@ fetch_lmp_data <- function(
     dataset = "caiso_lmp_real_time_15_min", 
     ...
 ) {
+  # Default timezone
+  tz <- "UTC"
+  
   # Validate input parameters
   args <- list(...)
+  
+  # Check if a custom timezone is provided in the arguments
+  if (!is.null(args$tz)) {
+    tz <- args$tz  # Override the default timezone
+    args$tz <- NULL  # Remove from args to avoid sending it to the API
+  }
+  
+  # Handle start_time and end_time conversions
+  if (!is.null(args$start_time)) {
+    args$start_time <- as.POSIXct(args$start_time, tz = tz, format = "%Y-%m-%d %H:%M:%S")
+    args$start_time <- format(args$start_time, tz = "UTC", usetz = FALSE)  # Convert to UTC for API
+  }
+  
+  if (!is.null(args$end_time)) {
+    args$end_time <- as.POSIXct(args$end_time, tz = tz, format = "%Y-%m-%d %H:%M:%S")
+    args$end_time <- format(args$end_time, tz = "UTC", usetz = FALSE)  # Convert to UTC for API
+  }
   
   # Construct endpoint
   endpoint <- paste0("/datasets/", dataset, "/query")

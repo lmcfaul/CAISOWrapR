@@ -1,8 +1,15 @@
 Package: CAISOWrapR
 Title: CAISO API Wrapper using Grid Status API
-Version: 0.0.1
-Authors@R: 
-    person("Mack", "Smith", , "macks26@stanford.edu", role = c("aut", "cre"))
+Version: 0.1.0
+Authors@R: c(person("Mack", "Smith", 
+                    email = "macks26@stanford.edu", 
+                    role = c("aut", "cre")),
+             person("First", "Last",
+                    email = "",
+                    role = c("")),
+             person("First", "Last",
+                    email = "",
+                    role = c("")))
 Description: 
     This package provides a wrapper for the CAISO locational marginal price 
     (LMP) datasets using the Grid Status API. The package allows users to 
@@ -15,10 +22,19 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
-Suggests: 
-    httptest2,
-    knitr,
-    rmarkdown,
+Suggests:
+    quarto,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
-VignetteBuilder: knitr
+VignetteBuilder: quarto
+Imports: 
+    dplyr,
+    geosphere,
+    ggplot2,
+    ggthemes,
+    httr2,
+    leaflet,
+    lubridate,
+    rnaturalearth,
+    sf,
+    shiny
