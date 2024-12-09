@@ -499,7 +499,7 @@ compare_congestion_visual = function(df1 = read.csv(system.file("extdata", "San_
   q <- ggplot2::ggplot() +
     ggplot2::geom_rect(
       data = avg_price_per_time1,
-      aes(
+      ggplot2::aes(
         xmin = hour - 0.35,
         xmax = hour - 0.005,
         ymin = lower_quartile,
@@ -510,7 +510,7 @@ compare_congestion_visual = function(df1 = read.csv(system.file("extdata", "San_
     ) +
     ggplot2::geom_segment(
       data = avg_price_per_time1,
-      aes(
+      ggplot2::aes(
         x = hour - 0.2,
         xend = hour - 0.2,
         y = lower_whisker,
@@ -520,7 +520,7 @@ compare_congestion_visual = function(df1 = read.csv(system.file("extdata", "San_
     ) +
     ggplot2::geom_segment(
       data = avg_price_per_time1,
-      aes(
+      ggplot2::aes(
         x = hour - 0.2,
         xend = hour - 0.2,
         y = upper_quartile,
@@ -530,7 +530,7 @@ compare_congestion_visual = function(df1 = read.csv(system.file("extdata", "San_
     ) +
     ggplot2::geom_point(
       data = avg_price_per_time1,
-      aes(
+      ggplot2::aes(
         x = (hour - 0.35 + hour - 0.005) / 2,
         y = median,
       ),
@@ -539,7 +539,7 @@ compare_congestion_visual = function(df1 = read.csv(system.file("extdata", "San_
     ) +
     ggplot2::geom_rect(
       data = avg_price_per_time2,
-      aes(
+      ggplot2::aes(
         xmin = hour + 0.05,
         xmax = hour + 0.35,
         ymin = lower_quartile,
@@ -550,7 +550,7 @@ compare_congestion_visual = function(df1 = read.csv(system.file("extdata", "San_
     ) +
     ggplot2::geom_segment(
       data = avg_price_per_time2,
-      aes(
+      ggplot2::aes(
         x = hour + 0.2,
         xend = hour + 0.2,
         y = lower_whisker,
@@ -560,7 +560,7 @@ compare_congestion_visual = function(df1 = read.csv(system.file("extdata", "San_
     ) +
     ggplot2::geom_segment(
       data = avg_price_per_time2,
-      aes(
+      ggplot2::aes(
         x = hour + 0.2,
         xend = hour + 0.2,
         y = upper_quartile,
@@ -570,7 +570,7 @@ compare_congestion_visual = function(df1 = read.csv(system.file("extdata", "San_
     ) +
     ggplot2::geom_point(
       data = avg_price_per_time2,
-      aes(
+      ggplot2::aes(
         x = hour + 0.2,
         y = median,
       ),
@@ -679,7 +679,7 @@ compare_congestion_visual_seasonal = function(df1 = read.csv(system.file("extdat
   q <- ggplot2::ggplot() +
     ggplot2::geom_rect(
       data = avg_price_per_time1,
-      aes(
+      ggplot2::aes(
         xmin = hour - 0.35,
         xmax = hour - 0.005,
         ymin = lower_quartile,
@@ -690,7 +690,7 @@ compare_congestion_visual_seasonal = function(df1 = read.csv(system.file("extdat
     ) +
     ggplot2::geom_segment(
       data = avg_price_per_time1,
-      aes(
+      ggplot2::aes(
         x = hour - 0.2,
         xend = hour - 0.2,
         y = lower_whisker,
@@ -700,7 +700,7 @@ compare_congestion_visual_seasonal = function(df1 = read.csv(system.file("extdat
     ) +
     ggplot2::geom_segment(
       data = avg_price_per_time1,
-      aes(
+      ggplot2::aes(
         x = hour - 0.2,
         xend = hour - 0.2,
         y = upper_quartile,
@@ -710,7 +710,7 @@ compare_congestion_visual_seasonal = function(df1 = read.csv(system.file("extdat
     ) +
     ggplot2::geom_point(
       data = avg_price_per_time1,
-      aes(
+      ggplot2::aes(
         x = (hour - 0.35 + hour - 0.005) / 2,
         y = median,
       ),
@@ -719,7 +719,7 @@ compare_congestion_visual_seasonal = function(df1 = read.csv(system.file("extdat
     ) +
     ggplot2::geom_rect(
       data = avg_price_per_time2,
-      aes(
+      ggplot2::aes(
         xmin = hour + 0.05,
         xmax = hour + 0.35,
         ymin = lower_quartile,
@@ -730,7 +730,7 @@ compare_congestion_visual_seasonal = function(df1 = read.csv(system.file("extdat
     ) +
     ggplot2::geom_segment(
       data = avg_price_per_time2,
-      aes(
+      ggplot2::aes(
         x = hour + 0.2,
         xend = hour + 0.2,
         y = lower_whisker,
@@ -740,7 +740,7 @@ compare_congestion_visual_seasonal = function(df1 = read.csv(system.file("extdat
     ) +
     ggplot2::geom_segment(
       data = avg_price_per_time2,
-      aes(
+      ggplot2::aes(
         x = hour + 0.2,
         xend = hour + 0.2,
         y = upper_quartile,
@@ -750,7 +750,7 @@ compare_congestion_visual_seasonal = function(df1 = read.csv(system.file("extdat
     ) +
     ggplot2::geom_point(
       data = avg_price_per_time2,
-      aes(
+      ggplot2::aes(
         x = hour + 0.2,
         y = median,
       ),
@@ -845,7 +845,7 @@ compare_losses_visual = function(df1 = read.csv(system.file("extdata", "San_Fran
   q <- ggplot2::ggplot() +
     ggplot2::geom_rect(
       data = avg_price_per_time1,
-      aes(
+      ggplot2::aes(
         xmin = hour - 0.35,
         xmax = hour - 0.005,
         ymin = lower_quartile,
@@ -856,7 +856,7 @@ compare_losses_visual = function(df1 = read.csv(system.file("extdata", "San_Fran
     ) +
     ggplot2::geom_segment(
       data = avg_price_per_time1,
-      aes(
+      ggplot2::aes(
         x = hour - 0.2,
         xend = hour - 0.2,
         y = lower_whisker,
@@ -866,7 +866,7 @@ compare_losses_visual = function(df1 = read.csv(system.file("extdata", "San_Fran
     ) +
     ggplot2::geom_segment(
       data = avg_price_per_time1,
-      aes(
+      ggplot2::aes(
         x = hour - 0.2,
         xend = hour - 0.2,
         y = upper_quartile,
@@ -876,7 +876,7 @@ compare_losses_visual = function(df1 = read.csv(system.file("extdata", "San_Fran
     ) +
     ggplot2::geom_point(
       data = avg_price_per_time1,
-      aes(
+      ggplot2::aes(
         x = (hour - 0.35 + hour - 0.005) / 2,
         y = median,
       ),
@@ -885,7 +885,7 @@ compare_losses_visual = function(df1 = read.csv(system.file("extdata", "San_Fran
     ) +
     ggplot2::geom_rect(
       data = avg_price_per_time2,
-      aes(
+      ggplot2::aes(
         xmin = hour + 0.05,
         xmax = hour + 0.35,
         ymin = lower_quartile,
@@ -896,7 +896,7 @@ compare_losses_visual = function(df1 = read.csv(system.file("extdata", "San_Fran
     ) +
     ggplot2::geom_segment(
       data = avg_price_per_time2,
-      aes(
+      ggplot2::aes(
         x = hour + 0.2,
         xend = hour + 0.2,
         y = lower_whisker,
@@ -906,7 +906,7 @@ compare_losses_visual = function(df1 = read.csv(system.file("extdata", "San_Fran
     ) +
     ggplot2::geom_segment(
       data = avg_price_per_time2,
-      aes(
+      ggplot2::aes(
         x = hour + 0.2,
         xend = hour + 0.2,
         y = upper_quartile,
@@ -916,7 +916,7 @@ compare_losses_visual = function(df1 = read.csv(system.file("extdata", "San_Fran
     ) +
     ggplot2::geom_point(
       data = avg_price_per_time2,
-      aes(
+      ggplot2::aes(
         x = hour + 0.2,
         y = median,
       ),
@@ -1025,7 +1025,7 @@ compare_losses_visual_seasonal = function(df1 = read.csv(system.file("extdata", 
   q <- ggplot2::ggplot() +
     ggplot2::geom_rect(
       data = avg_price_per_time1,
-      aes(
+      ggplot2::aes(
         xmin = hour - 0.35,
         xmax = hour - 0.005,
         ymin = lower_quartile,
@@ -1036,7 +1036,7 @@ compare_losses_visual_seasonal = function(df1 = read.csv(system.file("extdata", 
     ) +
     ggplot2::geom_segment(
       data = avg_price_per_time1,
-      aes(
+      ggplot2::aes(
         x = hour - 0.2,
         xend = hour - 0.2,
         y = lower_whisker,
@@ -1046,7 +1046,7 @@ compare_losses_visual_seasonal = function(df1 = read.csv(system.file("extdata", 
     ) +
     ggplot2::geom_segment(
       data = avg_price_per_time1,
-      aes(
+      ggplot2::aes(
         x = hour - 0.2,
         xend = hour - 0.2,
         y = upper_quartile,
@@ -1056,7 +1056,7 @@ compare_losses_visual_seasonal = function(df1 = read.csv(system.file("extdata", 
     ) +
     ggplot2::geom_point(
       data = avg_price_per_time1,
-      aes(
+      ggplot2::aes(
         x = (hour - 0.35 + hour - 0.005) / 2,
         y = median,
       ),
@@ -1065,7 +1065,7 @@ compare_losses_visual_seasonal = function(df1 = read.csv(system.file("extdata", 
     ) +
     ggplot2::geom_rect(
       data = avg_price_per_time2,
-      aes(
+      ggplot2::aes(
         xmin = hour + 0.05,
         xmax = hour + 0.35,
         ymin = lower_quartile,
@@ -1076,7 +1076,7 @@ compare_losses_visual_seasonal = function(df1 = read.csv(system.file("extdata", 
     ) +
     ggplot2::geom_segment(
       data = avg_price_per_time2,
-      aes(
+      ggplot2::aes(
         x = hour + 0.2,
         xend = hour + 0.2,
         y = lower_whisker,
@@ -1086,7 +1086,7 @@ compare_losses_visual_seasonal = function(df1 = read.csv(system.file("extdata", 
     ) +
     ggplot2::geom_segment(
       data = avg_price_per_time2,
-      aes(
+      ggplot2::aes(
         x = hour + 0.2,
         xend = hour + 0.2,
         y = upper_quartile,
@@ -1096,7 +1096,7 @@ compare_losses_visual_seasonal = function(df1 = read.csv(system.file("extdata", 
     ) +
     ggplot2::geom_point(
       data = avg_price_per_time2,
-      aes(
+      ggplot2::aes(
         x = hour + 0.2,
         y = median,
       ),
