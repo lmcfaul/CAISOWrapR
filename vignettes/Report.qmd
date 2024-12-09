@@ -140,22 +140,6 @@ The Shiny App allows users to interact with the data and visualizations in a use
 
 With this app, users can interact with the data and see the differences in prices and congestion in California.
 
-
-## Use Case
-
-To
-
-```{r}
-# Load CAISOWrapR
-library(CAISOWrapR)
-
-# Create environment variable for GridStatus API key
-Sys.setenv(GRIDSTATUS_API_KEY = "c92f5de270cc4ec2ab3c4da6f8a53399")
-
-# Create CAISO Client
-client <- create_caiso_client()
-```
-
 ## Future Enhancements and Extensions
 For the future, we think it would enhance the package to be able to visualize congestion on individual transmission lines. This would allow users to easily see where congestion is occuring and how it is affecting prices.
 
