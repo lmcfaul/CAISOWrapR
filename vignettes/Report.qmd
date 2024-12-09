@@ -12,9 +12,20 @@ vignette: >
 
 ## Introduction
 
+California has a unique electricity market structure that is different from other states in the US. There are many integrated renewables and therefore high fluctuations in electricity prices. Also, because of the location of generation sources and electricity demand, there is often congestion in the transmission system, which can lead to higher electricity prices in certain locations (different locational marginal prices, or LMPS). We wanted to create a project to visualize these differences in price and allow users to understand and analyze LMP differences and congestion.
+
 ### Problem Statement
 
+Currently, there is a website called gridstatus.io that allows you to view current electricity prices in California and around the country. However, without paying the the premium version, there is no way to view historical data. Additionally, you cannot analyze the differences in prices, or prices over time or by season.
+
+We wanted to create a user friendly way to conduct analysis on California electricity prices in order to undestand the past and plan for the future. 
+
 ### Project Goals and Output
+
+1. Develop a CAISO API wrapper to retrieve LMP data for specific nodes within the CAISO region.
+2. Clean and transform the LMP data into a usable format for analysis and visualization.
+3. Create visualizations that allow users to explore and analyze the LMP data, including price differences between nodes, temporal trends, and seasonal patterns. Combine these viusals into functions that export pdfs of analyses of prices and trends. 
+4. Create a Shiny App that allows users to interact with the node data and transmission line visuals and explore the data in a user-friendly manner.
 
 ## CAISO Client (Mack)
 
@@ -102,9 +113,33 @@ By taking care of these data preprocessing tasks, `fetch_lmp_data()` allows the 
 
 With the CAISO API wrapper now in place, users can easily retrieve LMP data for specific nodes within the CAISO region and leverage that data for in-depth analysis and visualization. The `fetch_lmp_data()` function is flexible and user-friendly, allowing for custom queries while automatically handling data cleaning and transformation. In the next sections, we'll examine the functions within the **CAISOWrapR** and see how they make use of the data our API wrapper and analyze/visualize them.
 
-## Next Section (Name)
+## Data Fetching and Visualizations (Kate and Luke)
 
-## Next Section (Name)
+### Data Fetching
+Users can use the `fetch_lmp_data()` function to retrieve LMP data for specific CAISO nodes within a defined time range. We also created `pulldata_instance()` and `pulldata_node()` which allow users to pull data for a specific instance or node respectively. 
+
+`pulldata_instance()` allows users to pull data for a specific instance (15 minute interval) for every node in the CAISO region. Users can run this by inputting a date and time and API key, and then saving it to a dataframe. Data in this output allows users to then run the following functions for data visualiaztions.
+
+`pulldata_node()` allows users to pull data for a specific node (location) over a year of 15 minute intervals. Users can run this by inputting a city or node, year, and API key, and then saving it to a dataframe. Data in this output allows users to then run the following functions for data visualizations.
+
+### Data Visualization and Analysis
+
+`analyze_single_instance_data()` allows users to analyze the data from `pulldata_instance()` and returns a short pdf of analysis. It runs the other functions, `summarize_lmps()` and `price_violin()` and then returns a pdf with the results. This allows users to understand the distribution of prices at a singular instance (15 minute interval).
+
+`analyze_single_node_data()` allows users to analyze the data from `pulldata_node()` and returns a pdf of analysis. It runs the other functions, `visualize_node()`, `visualize_node_seasonal()`, `visualize_node_congestion()`, `visualize_node_seasonal_congestion()`, `visualize_node_losses()`, `visualize_node_seasonal_losses()`, `visualize_node_demand()`, `visualize_node_demand_without_high_demand_hours()`, `visualize_node_demand_congestion()`, `visualize_node_demand_without_high_demand_hours_congestion()` and then returns a pdf with the results. This allows users to understand the distribution of prices at a singular node (location). 
+
+`analyze_two_node_data()` allows users to analyze the data from `pulldata_node()` for two nodes and returns a pdf of analysis comparing the two. It runs the other functions, `compare_lmps_visual`, `compare_lmps_visual_seasonal`, `compare_congestion_visual`, `compare_congestion_visual_seasonal`, `compare_losses_visual`, and `compare_losses_visual_seasonal` and then returns a pdf with the results. This allows users to understand the distribution of prices at two nodes (locations) and compare them.
+
+### Conclusion
+
+Generally, the data analysis functions allow users to better understand the California electricity prices. They can choose either a specific instance or node to analyze and then run the functions to get a pdf of the results. Or, they can run the individual, smaller functions to see specific results. This allows users to understand the current and historical electricity prices in California better.
+
+## Shiny App (Luke)
+
+The Shiny App allows users to interact with the data and visualizations in a user-friendly manner. Users can select an instance and download the data using `pulldata_instance()`. Or, they can use the baseline instance data, which is a typical day in California or a predefined instance of a particularly high demand day. Then, they can run `CA_map()` to generate an interactive Shiny app that allows users to explore the data and the transmission lines. After running the app, you can see LMPs, congestion prices, or loss pricing, and look at all transmission lines or just the major ones. 
+
+With this app, users can interact with the data and see the differences in prices and congestion in California.
+
 
 ## Use Case
 
@@ -122,3 +157,6 @@ client <- create_caiso_client()
 ```
 
 ## Future Enhancements and Extensions
+For the future, we think it would enhance the package to be able to visualize congestion on individual transmission lines. This would allow users to easily see where congestion is occuring and how it is affecting prices.
+
+Another addition to the project is allow users to understand potential differences of revenue or value of renewable energy projects depending on their location and generation patterns. This would allow for users to understand the value of different energy generating facilties, and how it is affected by both location. 

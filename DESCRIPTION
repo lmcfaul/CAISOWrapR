@@ -1,15 +1,15 @@
 Package: CAISOWrapR
 Title: CAISO API Wrapper using Grid Status API
 Version: 0.1.0
-Authors@R: c(person("Mack", "Smith", 
+Authors@R: c(person("Mack", "Smith",
                     email = "macks26@stanford.edu", 
+                    role = c("aut","cre)),
+            person("Luke", "McFaul", 
+                    email = "lmcfaul@stanford.edu", 
                     role = c("aut", "cre")),
-             person("First", "Last",
-                    email = "",
-                    role = c("")),
-             person("First", "Last",
-                    email = "",
-                    role = c("")))
+            person("Kate", "Esbenshade", 
+                    email = "ksesbenshade@stanford.edu",
+                    role = c("aut", "cre")))
 Description: 
     This package provides a wrapper for the CAISO locational marginal price 
     (LMP) datasets using the Grid Status API. The package allows users to 

@@ -29,6 +29,9 @@ execute:
     electricity demand, meaning that there are often times when there is
     not enough transmission capacity to move electricity from one
     location to another.
+    
+## Project Inspiration {.scrollable}
+    
 3.  This can cause **congestion in the transmission system**, which can
     lead to higher electricity prices in certain locations (different
     locational marginal prices, or LMPS).
@@ -56,20 +59,6 @@ execute:
     instances of a year
 
 # CAISO API Client
-
-## Finding the Right API
-
--   Initially used ISO New England (ISONE) API to collect LMP data at a
-    node-specific scope
-
-    -   Poor documentation of API and LMP data at a region-specific
-        scale
-
-    -   Lack of geographical data surrounding node locations
-
--   Shifted attention to GridStatus API because of node-specific LMP
-    data, and focused on (CAISO) because of availability of geographical
-    data concerning node locations
 
 ## Creating CAISO API Client
 
@@ -122,6 +111,8 @@ execute:
 -   `pulldata_node` fetches data for an entire node (or comparing nodes) across 
     all instances of a year. This is useful for comparing LMPs at a single node 
     over time
+
+# Visualizing and Analyzing LMP Data
     
 ## Visualizing and Analyzing LMP Data {.scrollable}
 
@@ -132,6 +123,8 @@ execute:
     
 -   When analyzing a singular node or two nodes, users can visualize the LMPs 
     and also the different parts of the pricing, including congestion and losses
+    
+## Visualizing and Analyzing LMP Data {.scrollable}
 
 -   Users can visualize the average prices per hour to see the daily fluctuation, 
     and look at this seasonally which demonstrates how LMPs change over the year
@@ -140,71 +133,6 @@ execute:
     time
 
 -   Lastly, users can compare prices with daily electricity demand
-    
-## Example LMP Distribution Plot
-
-This plot demonstrates the distribution of LMPs for an example node:
-
-```{r visualize_node_example, fig.cap="LMP Distribution Example Plot", eval = TRUE, echo = FALSE}
-# Load the CSV file 
-# file_path <- system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR") 
-# example_data <- read.csv(file_path)
-
-library(CAISOWrapR)
-
-sf_node = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR"))
-visualize_node(sf_node)
-
-```
-
-## Example Seasonal LMP Distribution Plot
-
-This plot demonstrates the distribution of LMPs for an example node:
-
-```{r visualize_node_example_seasonal, fig.cap="SeasonalLMP Distribution Example Plot", eval = TRUE, echo = FALSE}
-# Load the CSV file 
-# file_path <- system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR") 
-# example_data <- read.csv(file_path)
-
-library(CAISOWrapR)
-
-sf_node = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR"))
-visualize_node_seasonal(sf_node)
-
-```
-
-## Example Comparison LMP Distribution Plot
-
-This plot demonstrates the distribution of LMPs for an example node:
-
-```{r visualize_node_example_comparison, fig.cap="Comparison LMP Distribution Example Plot", eval = TRUE, echo = FALSE}
-# Load the CSV file 
-# file_path <- system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR") 
-# example_data <- read.csv(file_path)
-
-library(CAISOWrapR)
-
-sf_node = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR"))
-la_node = read.csv(system.file("extdata", "Los_Angeles_node_2023.csv", package = "CAISOWrapR"))
-compare_lmps_visual_seasonal(sf_node, la_node)
-
-```
-
-## Example Demand and LMP Plot
-
-This plot demonstrates the distribution of LMPs for an example node:
-
-```{r visualize_node_example_demand, fig.cap="Demand and LMP Example Plot", eval = TRUE, echo = FALSE}
-# Load the CSV file 
-# file_path <- system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR") 
-# example_data <- read.csv(file_path)
-
-library(CAISOWrapR)
-
-sf_node = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR"))
-visualize_node_demand_without_high_demand_hours(sf_node)
-
-```
 
 ## Shiny App
 

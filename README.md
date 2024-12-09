@@ -83,13 +83,35 @@ lmp_data <- fetch_lmp_data(
 
 ## How to use CA_map() function
 
-The CA_map() function is a simple function that allows you to visualize the LMP data on a map of California. The function takes in a data frame of LMP data and plots the LMP values for each location on a map of California. The user can then visualize LMPs, congestion, losses, and transmission lines.
+The CA_map() function is a simple function that allows you to visualize the LMP data on a map of California. The function takes in a data frame of one instance of LMP data and plots the LMP values for each location on a map of California. The user can then visualize LMPs, congestion, losses, and transmission lines.
 
-The function takes in a single instance of data, and creates a map of California.
-
-The user can choose to input a data frame into the function, use argument "peak_load" (September 6, 2022 at 5 PM), or use the default instance of data
+The user can choose to input a data frame into the function, use argument "peak_load" (September 6, 2022 at 5 PM), or use the default instance of data, which is an average day in California at 1pm. 
 ### Example:
 ```{r}
 # Plot LMP data on a map of California
 CA_map()
 ```
+
+## Next Section
+
+## How to use pulldata_instance() function
+
+The pulldata_instance() function is a simple function that allows you to pull LMP data for a specific instance of time. The function takes in a data, time, and API key and returns the LMP data for that specific instance of time. The user can then visualize LMPs, congestion, losses, and transmission lines through other functions.
+
+## Next Section
+
+## How to use pulldata_node() function
+
+The pulldata_instance() function is a simple function that allows you to pull LMP data for a specific location in California over time. The function takes in a city or node, a year, and an API key and returns the LMP data for that specific location over time. The user can then visualize LMPs, congestion, losses, and transmission lines through other functions. The time intervals are 15 minutes.
+
+## Next Section
+
+## How to use analyze_single_node_data() function
+
+This function is allows a user to pass in a dataframe of one node prices over time (created through pulldata_node function) and exports a pdf with graphs and analysis. There are many functions a user can run to analyze the data, such as graphing it over time, by season, and in combination with electricity demand. This function runs all of those analsyses and returns a formatted pdf with the results. These results are for one node (location) over a year.
+
+## Next Section
+
+## How to use analyze_two_node_data() function
+
+This function is allows a user to pass in two dataframes of node prices over time for two different locations (created through pulldata_node function) and exports a pdf with graphs and analysis. There are many functions a user can run to analyze the data, such as graphing it over time, by season, and in combination with electricity demand. This function runs all of those analyses and returns a formatted pdf with the results. These results are for two nodes (locations) over a year.
