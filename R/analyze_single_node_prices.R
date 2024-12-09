@@ -31,6 +31,13 @@ analyze_single_node_data <- function(node_df, output_pdf_path = "single_node_dat
   result_five <- visualize_node_losses(node_df)
   result_six <- visualize_node_seasonal_losses(node_df)
   
+  # Visualizations for Demand
+  result_seven <- visualize_node_demand(node_df)
+  result_eight <- visualize_node_demand_without_high_demand_hours(node_df)
+  result_nine <- visualize_node_demand_congestion(node_df)
+  result_ten <- visualize_node_demand_without_high_demand_hours_congestion(node_df)
+  
+  
   # Extract the year and city for the title
   interval_time <- unique(node_df$interval_start_utc)[1]
   year_of_data <- format(ymd_hms(interval_time), "%Y")
@@ -699,4 +706,383 @@ visualize_node_seasonal_losses = function(node_df){
   return(p)
   
 }
+
+
+
+#' Visualize Node Data: Demand
+#' 
+#' This function takes in a tibble of a year's worth of 15-minute data for a node and visualizes the data with a box and whisker plot with buckets of load on the x axis and lmp on the y axis
+#' 
+#' @param node_df a tibble of a year's worth of 15-minute data for a node
+#' 
+#' @return A ggplot object displaying the distribution of LMPs by demand bucket
+#' 
+#' @import ggplot2
+#' @import dplyr
+#' @import ggthemes theme_solarized
+#' 
+#' @export
+visualize_node_demand <- function(node_df) {
+  node_df = merge_demand(node_df)
+  # Create load buckets ranging from 12,000 to 52,000 with 2,000 intervals
+  node_df <- node_df %>%
+    mutate(
+      interval_start_utc = as.POSIXct(interval_start_utc, format = "%Y-%m-%d %H:%M:%S", tz = "UTC"),
+      interval_start_pst = lubridate::with_tz(interval_start_utc, tzone = "America/Los_Angeles"),
+      load_bucket = cut(load, 
+                        breaks = seq(12000, 52000, by = 1000), 
+                        include.lowest = TRUE,
+                        labels = paste0(seq(12, 51, by = 1000), "-", seq(14, 52, by = 1)))
+    )
+  
+  # Summarize LMP data by load bucket
+  avg_price_per_bucket <- node_df %>%
+    group_by(load_bucket) %>%
+    summarise(
+      lower_whisker = quantile(lmp, 0.1, na.rm = TRUE),
+      lower_quartile = quantile(lmp, 0.25, na.rm = TRUE),
+      median = median(lmp, na.rm = TRUE),
+      upper_quartile = quantile(lmp, 0.75, na.rm = TRUE),
+      upper_whisker = quantile(lmp, 0.9, na.rm = TRUE)
+    )
+  
+  interval_time <- unique(node_df$interval_start_utc)[1]
+  year_of_data <- format(ymd_hms(interval_time), "%Y")
+  
+  # Plot the results
+  p <- ggplot(avg_price_per_bucket, aes(x = load_bucket)) +
+    geom_rect(
+      aes(
+        xmin = as.numeric(factor(load_bucket)) - 0.4,
+        xmax = as.numeric(factor(load_bucket)) + 0.4,
+        ymin = lower_quartile,
+        ymax = upper_quartile,
+      ),
+      fill = "steelblue",
+      alpha = 0.5
+    ) +
+    geom_segment(
+      aes(
+        x = as.numeric(factor(load_bucket)),
+        xend = as.numeric(factor(load_bucket)),
+        y = lower_whisker,
+        yend = lower_quartile
+      ),
+      color = "black"
+    ) +
+    geom_segment(
+      aes(
+        x = as.numeric(factor(load_bucket)),
+        xend = as.numeric(factor(load_bucket)),
+        y = upper_quartile,
+        yend = upper_whisker
+      ),
+      color = "black"
+    ) +
+    geom_point(aes(
+      x = as.numeric(factor(load_bucket)),
+      y = median
+    ), color = "black", size = .75) +
+    scale_x_discrete(
+      name = "Load Buckets (Thousand MWs)",
+      labels = levels(avg_price_per_bucket$load_bucket)
+    ) +
+    labs(
+      title = paste("LMP Distribution by Load Bucket for", node_df$city[1], "in", year_of_data), 
+      subtitle = "Median, Interquartile Range, and 10% and 90% whiskers",
+      y = "Locational Marginal Price ($/MWh)",
+      fill = "Median LMP"
+    ) +
+    theme_solarized() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  
+  return(p)
+}
+
+
+
+#' Visualize Node Data Without High Demand Days
+#' 
+#' This function takes in a tibble of a year's worth of 15-minute data for a node and visualizes the data with a box and whisker plot of LMP grouped by load buckets, excluding high-demand days.
+#' 
+#' @param node_df A tibble of a year's worth of 15-minute data for a node
+#' 
+#' @return A ggplot object displaying the distribution of LMPs by demand bucket (up to 40,000)
+#' 
+#' @import ggplot2
+#' @import dplyr
+#' @import ggthemes theme_solarized
+#' 
+#' @export
+
+visualize_node_demand_without_high_demand_hours <- function(node_df) {
+  node_df = merge_demand(node_df)
+  
+  # Filter out high-demand loads
+  node_df <- node_df %>% filter(load <= 40000)
+  
+  # Create load buckets ranging from 12,000 to 40,000 with 1,000 intervals
+  node_df <- node_df %>%
+    mutate(
+      interval_start_utc = as.POSIXct(interval_start_utc, format = "%Y-%m-%d %H:%M:%S", tz = "UTC"),
+      interval_start_pst = lubridate::with_tz(interval_start_utc, tzone = "America/Los_Angeles"),
+      load_bucket = cut(load, 
+                        breaks = seq(12000, 40000, by = 1000), 
+                        include.lowest = TRUE,
+                        labels = paste0(seq(12, 39, by = 1), "-", seq(13, 40, by = 1)))
+    )
+  
+  # Summarize LMP data by load bucket
+  avg_price_per_bucket <- node_df %>%
+    group_by(load_bucket) %>%
+    summarise(
+      lower_whisker = quantile(lmp, 0.1, na.rm = TRUE),
+      lower_quartile = quantile(lmp, 0.25, na.rm = TRUE),
+      median = median(lmp, na.rm = TRUE),
+      upper_quartile = quantile(lmp, 0.75, na.rm = TRUE),
+      upper_whisker = quantile(lmp, 0.9, na.rm = TRUE)
+    )
+  
+  interval_time <- unique(node_df$interval_start_utc)[1]
+  year_of_data <- format(ymd_hms(interval_time), "%Y")
+  
+  # Plot the results
+  p <- ggplot(avg_price_per_bucket, aes(x = load_bucket)) +
+    geom_rect(
+      aes(
+        xmin = as.numeric(factor(load_bucket)) - 0.4,
+        xmax = as.numeric(factor(load_bucket)) + 0.4,
+        ymin = lower_quartile,
+        ymax = upper_quartile,
+      ),
+      fill = "steelblue",
+      alpha = 0.5
+    ) +
+    geom_segment(
+      aes(
+        x = as.numeric(factor(load_bucket)),
+        xend = as.numeric(factor(load_bucket)),
+        y = lower_whisker,
+        yend = lower_quartile
+      ),
+      color = "black"
+    ) +
+    geom_segment(
+      aes(
+        x = as.numeric(factor(load_bucket)),
+        xend = as.numeric(factor(load_bucket)),
+        y = upper_quartile,
+        yend = upper_whisker
+      ),
+      color = "black"
+    ) +
+    geom_point(aes(
+      x = as.numeric(factor(load_bucket)),
+      y = median
+    ), color = "black", size = .75) +
+    scale_x_discrete(
+      name = "Load Buckets (Thousand MWs)",
+      labels = levels(avg_price_per_bucket$load_bucket)
+    ) +
+    labs(
+      title = paste("LMP Distribution by Load Bucket (Up to 40,000) for", node_df$city[1], "in", year_of_data), 
+      subtitle = "Median, Interquartile Range, and 10% and 90% whiskers",
+      y = "Locational Marginal Price ($/MWh)",
+      fill = "Median LMP"
+    ) +
+    theme_solarized() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  
+  return(p)
+}
+
+
+#' Visualize Node Data: Congestion
+#' 
+#' This function takes in a tibble of a year's worth of 15-minute data for a node and visualizes the data with a box and whisker plot of congestion grouped by load buckets
+#' 
+#' @param node_df A tibble of a year's worth of 15-minute data for a node
+#' 
+#' @return A ggplot object displaying the distribution of congestion by demand bucket (up to 40,000)
+#' 
+#' @import ggplot2
+#' @import dplyr
+#' @import ggthemes theme_solarized
+#' 
+#' @export
+visualize_node_demand_congestion <- function(node_df) {
+  node_df = merge_demand(node_df)
+
+  # Create load buckets ranging from 12,000 to 40,000 with 1,000 intervals
+  node_df <- node_df %>%
+    mutate(
+      interval_start_utc = as.POSIXct(interval_start_utc, format = "%Y-%m-%d %H:%M:%S", tz = "UTC"),
+      interval_start_pst = lubridate::with_tz(interval_start_utc, tzone = "America/Los_Angeles"),
+      load_bucket = cut(load, 
+                        breaks = seq(12000, 52000, by = 1000), 
+                        include.lowest = TRUE,
+                        labels = paste0(seq(12, 51, by = 1), "-", seq(13, 52, by = 1)))
+    )
+  
+  # Summarize congestion data by load bucket
+  avg_congestion_per_bucket <- node_df %>%
+    group_by(load_bucket) %>%
+    summarise(
+      lower_whisker = quantile(congestion, 0.1, na.rm = TRUE),
+      lower_quartile = quantile(congestion, 0.25, na.rm = TRUE),
+      median = median(congestion, na.rm = TRUE),
+      upper_quartile = quantile(congestion, 0.75, na.rm = TRUE),
+      upper_whisker = quantile(congestion, 0.9, na.rm = TRUE)
+    )
+  
+  interval_time <- unique(node_df$interval_start_utc)[1]
+  year_of_data <- format(ymd_hms(interval_time), "%Y")
+  
+  # Plot the results
+  p <- ggplot(avg_congestion_per_bucket, aes(x = load_bucket)) +
+    geom_rect(
+      aes(
+        xmin = as.numeric(factor(load_bucket)) - 0.4,
+        xmax = as.numeric(factor(load_bucket)) + 0.4,
+        ymin = lower_quartile,
+        ymax = upper_quartile,
+      ),
+      fill = "steelblue",
+      alpha = 0.5
+    ) +
+    geom_segment(
+      aes(
+        x = as.numeric(factor(load_bucket)),
+        xend = as.numeric(factor(load_bucket)),
+        y = lower_whisker,
+        yend = lower_quartile
+      ),
+      color = "black"
+    ) +
+    geom_segment(
+      aes(
+        x = as.numeric(factor(load_bucket)),
+        xend = as.numeric(factor(load_bucket)),
+        y = upper_quartile,
+        yend = upper_whisker
+      ),
+      color = "black"
+    ) +
+    geom_point(aes(
+      x = as.numeric(factor(load_bucket)),
+      y = median
+    ), color = "black", size = .75) +
+    scale_x_discrete(
+      name = "Load Buckets (Thousand MWs)",
+      labels = levels(avg_congestion_per_bucket$load_bucket)
+    ) +
+    labs(
+      title = paste("Congestion Distribution by Load Bucket (Up to 40,000) for", node_df$city[1], "in", year_of_data), 
+      subtitle = "Median, Interquartile Range, and 10% and 90% whiskers",
+      y = "Congestion ($/MWh)",
+      fill = "Median Congestion"
+    ) +
+    theme_solarized() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  
+  return(p)
+}
+
+
+
+#' Visualize Node Data Without High Demand Hours: Congestion
+#' 
+#' This function takes in a tibble of a year's worth of 15-minute data for a node and visualizes the data with a box and whisker plot of congestion grouped by load buckets, excluding high-demand hours.
+#' 
+#' @param node_df A tibble of a year's worth of 15-minute data for a node
+#' 
+#' @return A ggplot object displaying the distribution of congestion by demand bucket (up to 40,000)
+#' 
+#' @import ggplot2
+#' @import dplyr
+#' @import ggthemes theme_solarized
+#' 
+#' @export
+visualize_node_demand_without_high_demand_hours_congestion <- function(node_df) {
+  node_df = merge_demand(node_df)
+  
+  # Filter out high-demand loads
+  node_df <- node_df %>% filter(load <= 40000)
+  
+  # Create load buckets ranging from 12,000 to 40,000 with 1,000 intervals
+  node_df <- node_df %>%
+    mutate(
+      interval_start_utc = as.POSIXct(interval_start_utc, format = "%Y-%m-%d %H:%M:%S", tz = "UTC"),
+      interval_start_pst = lubridate::with_tz(interval_start_utc, tzone = "America/Los_Angeles"),
+      load_bucket = cut(load, 
+                        breaks = seq(12000, 40000, by = 1000), 
+                        include.lowest = TRUE,
+                        labels = paste0(seq(12, 39, by = 1), "-", seq(13, 40, by = 1)))
+    )
+  
+  # Summarize congestion data by load bucket
+  avg_congestion_per_bucket <- node_df %>%
+    group_by(load_bucket) %>%
+    summarise(
+      lower_whisker = quantile(congestion, 0.1, na.rm = TRUE),
+      lower_quartile = quantile(congestion, 0.25, na.rm = TRUE),
+      median = median(congestion, na.rm = TRUE),
+      upper_quartile = quantile(congestion, 0.75, na.rm = TRUE),
+      upper_whisker = quantile(congestion, 0.9, na.rm = TRUE)
+    )
+  
+  interval_time <- unique(node_df$interval_start_utc)[1]
+  year_of_data <- format(ymd_hms(interval_time), "%Y")
+  
+  # Plot the results
+  p <- ggplot(avg_congestion_per_bucket, aes(x = load_bucket)) +
+    geom_rect(
+      aes(
+        xmin = as.numeric(factor(load_bucket)) - 0.4,
+        xmax = as.numeric(factor(load_bucket)) + 0.4,
+        ymin = lower_quartile,
+        ymax = upper_quartile,
+      ),
+      fill = "steelblue",
+      alpha = 0.5
+    ) +
+    geom_segment(
+      aes(
+        x = as.numeric(factor(load_bucket)),
+        xend = as.numeric(factor(load_bucket)),
+        y = lower_whisker,
+        yend = lower_quartile
+      ),
+      color = "black"
+    ) +
+    geom_segment(
+      aes(
+        x = as.numeric(factor(load_bucket)),
+        xend = as.numeric(factor(load_bucket)),
+        y = upper_quartile,
+        yend = upper_whisker
+      ),
+      color = "black"
+    ) +
+    geom_point(aes(
+      x = as.numeric(factor(load_bucket)),
+      y = median
+    ), color = "black", size = .75) +
+    scale_x_discrete(
+      name = "Load Buckets (Thousand MWs)",
+      labels = levels(avg_congestion_per_bucket$load_bucket)
+    ) +
+    labs(
+      title = paste("Congestion Distribution by Load Bucket (Up to 40,000) for", node_df$city[1], "in", year_of_data), 
+      subtitle = "Median, Interquartile Range, and 10% and 90% whiskers",
+      y = "Congestion ($/MWh)",
+      fill = "Median Congestion"
+    ) +
+    theme_solarized() +
+    theme(axis.text.x = element_text(angle = 45, hjust = 1))
+  
+  return(p)
+}
+
+
 
