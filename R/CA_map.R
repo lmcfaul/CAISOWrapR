@@ -27,9 +27,10 @@ CA_map <- function(instance = read.csv(system.file("extdata", "instance_normal.c
   CA_states <- us_states[us_states$name %in% c("California"), ]
   
   # Load the transmission line shapefiles
-  df_transmission <- sf::st_read("data/all_transmission_lines.shp")
-  df_transmission_500 <- sf::st_read("data/500kv_transmission_lines.shp")
+  df_transmission <- sf::st_read(system.file("extdata", "all_transmission_lines.shp", package = "CAISOWrapR"))
+  df_transmission_500 <- sf::st_read(system.file("extdata", "500kv_transmission_lines.shp", package = "CAISOWrapR"))
   
+
   # Merge LMP locations data with the instance dataframe
   instance <- merge_lmp_locations(instance)
   
