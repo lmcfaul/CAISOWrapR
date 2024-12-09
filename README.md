@@ -2,10 +2,11 @@
 
 ## Installation:
 
-To install CAISOWrapR, simply run `install.packages()` to install from CRAN:
+To install CAISOWrapR, simply run `install_github()` to install from Github:
 
 ```{r}
-install.packages("CAISOWrapR")
+install.packages("remotes")
+remotes::install_github("lmcfaul/CAISOWrapR")
 ```
 
 ## How to Use the CAISO API Wrapper:
