@@ -14,7 +14,93 @@ vignette: >
 
 ### Problem Statement
 
+### Project Goals and Output
+
 ## CAISO Client (Mack)
+
+In order to \_\_\_\_ , we first need to find a way to collect LMP data and clean it such that it's well-organized for analyses and visualizations.
+
+Initially we had planned to develop an API wrapper for the ISO New England (ISONE) API and use its Locational Marginal Price (LMP) data for our visualizations and analysis. However, after examining the available data for ISONE, we encountered a significant issue: the LMP data was only provided at a state-level scope, rather than being available for specific nodes within the system. This node-level granularity is essential for our project, as we wanted to create detailed visualizations that reflect the price fluctuations at specific locations. Additionally, even if we could find node-level LMP data, there was no available geographical data for the locations of the nodes, which further hindered our ability to achieve the primary goal of our project.
+
+After some investigation, we shifted our focus to the California Independent System Operator (CAISO) region, as it offered node-level LMP data and geographical data for those nodes, which we could use for our visualizations. The GridStatus API, which provides access to energy data from various grid operators, including CAISO, proved to be the solution we needed. We decided to adapt our project to leverage this API and pivot from ISONE to CAISO for the remainder of the work.
+
+Now using the GridStatus API, we were able to create a user-friendly wrapper to retrieve LMP data for CAISO nodes at various temporal granularities, such as 5-minute and 15-minute intervals between each data point. This allows us to capture the dynamic nature of energy prices at a much finer resolution than what was available through ISONE.
+
+### Creating CAISO Client:
+
+To get started with the CAISO data, the user first needs to generate an API key for the GridStatus API. Once the API key is acquired, they can create a client object that will facilitate retrieving the data. Below is an example of how to create the client:
+
+```{r}
+#| eval: false
+
+# Create CAISO Client
+client <- CAISOWrapR::create_caiso_client(api_key = "your_api_key")
+```
+
+Alternatively, you can set the environment variable `GRIDSTATUS_API_KEY` to your API key and then create the client.
+
+```{r}
+#| eval: false
+
+# Set environment variable
+Sys.getenv(GRIDSTATUS_API_KEY = "your_api_key")
+
+# Create CAISO Client
+client <- CAISOWrapR::create_caiso_client()
+```
+
+Once the client object has been created, it is ready to be used for fetching LMP data from CAISO. The wrapper also includes built-in error checking to ensure that any issues with the API requests—such as invalid API keys, network problems, or incorrect client configurations—are caught early. Specifically, the `validate_client` function checks that the client is properly configured with the correct class and required fields (host and API key), while the `build_api_request` function ensures that the request is constructed correctly and includes comprehensive error handling for issues that may arise during the request building process. Additionally, the `execute_api_request` function handles errors during the execution of the API request, such as non-200 status codes or response parsing failures. This built-in error handling makes it easier for the user to identify and debug any issues that may occur when interacting with the CAISO API.
+
+### Fetching LMP Data:
+
+The core function of the API wrapper is `fetch_lmp_data()`. This function allows the user to retrieve LMP data for specific CAISO nodes within a defined time range. At a minimum, the user needs to pass in the client object they created, and the function will retrieve the relevant LMP data for the specified time period. However, users can also provide additional parameters to refine their queries, such as specifying the number of data points to return with the `limit` parameter.
+
+Here’s an example of how to use the `fetch_lmp_data()` function to retrieve LMP data for a given time range:
+
+```{r}
+#| eval: false
+
+# Fetch LMP data for CAISO nodes between specific start and end times
+lmp_data <- fetch_lmp_data(client, 
+                           start_time = "2024-12-01 00:00:00", 
+                           end_time = "2024-12-01 01:00:00", 
+                           limit = 100)
+```
+
+In this example, the user specifies the start and end times, and limits the number of data points returned to 100. The function is flexible, allowing the user to pass in other parameters for more specific data retrieval. For example, one could specify a particular location or market by passing in additional arguments such as `location` and `market`.
+
+```{r}
+#| eval: false
+
+# Fetch LMP data for a specific location and market
+lmp_data <- fetch_lmp_data(client, 
+                           start_time = "2024-12-01 00:00:00", 
+                           end_time = "2024-12-01 01:00:00", 
+                           filter_column = "location",
+                           filter_value = "12STREET_LNODEEET1",
+                           filter_operator = "=",
+                           limit = 100)
+```
+
+In this case, the user filters for a specific node location in the `location` column, which allows the function to return LMP data specifically for node's location during the specified time range.
+
+Beyond this, the `fetch_lmp_data()` function offers advanced options to tailor data retrieval to specific needs. Users can select temporal resolutions, apply filters on attributes such as `location` and `market`, and manage pagination for large datasets. Additional features, such as selective column retrieval, data resampling, and time zone handling, provide flexibility and efficiency, making this API wrapper a powerful tool for analyzing CAISO’s LMP data.
+
+### Data Transformation and Cleaning:
+
+One of the benefits of the `fetch_lmp_data()` function is that it not only retrieves the raw LMP data but also cleans and transforms it into a usable format. The function automatically converts time-related columns into the correct data types, such as `POSIXct` for date-time values, which allows for easier manipulation in subsequent analyses. Additionally, any missing or erroneous data points are handled gracefully, ensuring that the final dataset is ready for analysis and visualization.
+
+For instance, when the LMP data is returned, the function will perform the following operations:
+
+-   Convert the `timestamp` column to `POSIXct` format for easier time-based filtering.
+
+-   Ensure that the `LMP` values are numeric, handling any invalid entries by replacing them with `NA` where necessary.
+
+By taking care of these data preprocessing tasks, `fetch_lmp_data()` allows the user to focus on analysis and visualization without worrying about cleaning the data first.
+
+### Conclusion
+
+With the CAISO API wrapper now in place, users can easily retrieve LMP data for specific nodes within the CAISO region and leverage that data for in-depth analysis and visualization. The `fetch_lmp_data()` function is flexible and user-friendly, allowing for custom queries while automatically handling data cleaning and transformation. In the next sections, we'll examine the functions within the **CAISOWrapR** and see how they make use of the data our API wrapper and analyze/visualize them.
 
 ## Next Section (Name)
 
