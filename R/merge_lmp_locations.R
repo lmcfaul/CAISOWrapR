@@ -12,8 +12,6 @@
 #' # Example usage of the merge_lmp_locations function
 #' merge_lmp_locations(instance)
 #' 
-#' @importFrom dplyr left_join distinct rename select
-#' 
 #' @export
 merge_lmp_locations <- function(instance) {
   # Load the location data

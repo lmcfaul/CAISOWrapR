@@ -8,8 +8,6 @@
 #' 
 #' @return A dataframe with the LMP and price breakdown for the given date and time
 #' 
-#' @importFrom lubridate ymd_hms round_date minutes
-#' 
 #' @export
 #' 
 #' @examples
