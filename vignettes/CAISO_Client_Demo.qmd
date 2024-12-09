@@ -132,7 +132,7 @@ In the next code blocks, we will showcase the different parameters and options y
     filtered_data <- fetch_lmp_data(
       client = client,
       filter_column = "location",    # Column to filter
-      filter_value = "PALO_VERDE",  # Value to match
+      filter_value = "12STREET_LNODEEET1",  # Value to match
       filter_operator = "="         # Comparison method
     )
 

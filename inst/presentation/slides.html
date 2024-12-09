@@ -336,14 +336,8 @@ Kate Esbenshade, Luke McFaul, Mack Smith
 </div>
 
 </section>
-<section id="global-knitr-chunk-options" class="title-slide slide level1 center">
-<h1>Global knitr chunk options</h1>
-<p>knitr::opts_chunk$set( echo = FALSE, # Hide code by default warning = FALSE, # Suppress warnings message = FALSE # Suppress messages )</p>
-</section>
-
-<section>
-<section id="project-inspiration" class="title-slide slide level1 center">
-<h1>Project Inspiration</h1>
+<section id="project-inspiration" class="slide level2">
+<h2>Project Inspiration</h2>
 <ol type="1">
 <li>California has a unique electricity market structure that is different from other states in the US.</li>
 <li>There are many <strong>integrated renewables</strong> and <strong>high fluctuation</strong> in electricity demand, meaning that there are often times when there is not enough transmission capacity to move electricity from one location to another.</li>
@@ -351,46 +345,28 @@ Kate Esbenshade, Luke McFaul, Mack Smith
 <li>We wanted to create a project to <strong>visualize</strong> these differences in price and allow users to <strong>understand and analyze</strong> LMP differences and congestion.</li>
 </ol>
 </section>
-<section class="slide level2">
-
-</section></section>
-<section>
-<section id="project-goals" class="title-slide slide level1 center">
-<h1>Project Goals</h1>
+<section id="project-goals" class="slide level2">
+<h2>Project Goals</h2>
 <ul>
 <li>Create a package in R to help with analysis of electricity prices in California</li>
 <li>Use the package to analyze the relationship between congestion and locational marginal prices (LMPs) in California wihin locations and between them</li>
 <li>Create a shiny app to visualize the results</li>
 </ul>
 </section>
-<section class="slide level2">
-
-</section></section>
-<section>
-<section id="project-outputs" class="title-slide slide level1 center">
-<h1>Project Outputs</h1>
+<section id="project-outputs" class="slide level2">
+<h2>Project Outputs</h2>
 <ul>
 <li>API wrapper for the gridstatus.io API to fetch and clean data of locational marginal prices for California between 2020-2023</li>
 <li>A Shiny App that visualizes the transmission lines and locational data</li>
 <li>Analysis functions for a single instance (15 minute interval) across all nodes, and for an entire node (or comparing nodes) across all instances of a year</li>
 </ul>
 </section>
-<section class="slide level2">
-
-</section></section>
-<section id="example-plot-from-package" class="title-slide slide level1 center">
-<h1>Example Plot from Package</h1>
+<section id="example-plot-from-package" class="slide level2">
+<h2>Example Plot from Package</h2>
 <p>This plot demonstrates the distribution of LMPs for an example node:</p>
 </section>
-
-<section id="load-the-csv-file" class="title-slide slide level1 center">
-<h1>Load the CSV file</h1>
-<p>file_path &lt;- system.file(“extdata”, “San_Francisco_node_2023.csv”, package = “CAISOWrapR”) example_data &lt;- read.csv(file_path)</p>
-</section>
-
-<section id="generate-and-display-the-plot" class="title-slide slide level1 center">
-<h1>Generate and display the plot</h1>
-<p>visualize_node(example_data)</p>
+<section id="generate-and-display-the-plot" class="slide level2">
+<h2>Generate and display the plot</h2>
 <div class="quarto-auto-generated-content">
 <div class="footer footer-default">
 
