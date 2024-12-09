@@ -101,21 +101,21 @@ CA_map <- function(instance = read.csv(system.file("extdata", "instance_normal.c
         }
         
         # Render the leaflet map with the selected node type
-        leaflet::leaflet() %>%
-          leaflet::addProviderTiles("CartoDB.Positron") %>%
-          leaflet::setView(lng = -119.5, lat = 37.5, zoom = 6) %>%
+        leaflet::leaflet() |>
+          leaflet::addProviderTiles("CartoDB.Positron") |>
+          leaflet::setView(lng = -119.5, lat = 37.5, zoom = 6) |>
           leaflet::addPolygons(data = CA_states, weight = 2, color = "black", 
-                               fillColor = "lightblue", fillOpacity = 0.1) %>%
+                               fillColor = "lightblue", fillOpacity = 0.1) |>
           leaflet::addPolylines(data = df_transmission, 
                                 color = "blue", 
                                 weight = ~kV_Sort / 200, 
                                 opacity = 0.6, 
-                                group = "All Transmission Lines") %>%
+                                group = "All Transmission Lines") |>
           leaflet::addPolylines(data = df_transmission_500, 
                                 color = "blue", 
                                 weight = 3, 
                                 opacity = 0.6, 
-                                group = "500kV Transmission Lines") %>%
+                                group = "500kV Transmission Lines") |>
           leaflet::addCircleMarkers(data = instance, 
                                     lng = ~longitude, 
                                     lat = ~latitude, 
@@ -123,12 +123,12 @@ CA_map <- function(instance = read.csv(system.file("extdata", "instance_normal.c
                                     color = ~palette(get(color_column)), 
                                     popup = paste("City: ", instance$city, "<br>",
                                                   paste(input$node_type, ": $", round(instance[[color_column]], 2), "<br>")),
-                                    group = input$node_type) %>%
+                                    group = input$node_type) |>
           leaflet::addLegend(position = "topleft", 
                              pal = palette, 
                              values = round(instance[[color_column]]),
                              title = paste(tools::toTitleCase(input$node_type), " Prices"), 
-                             opacity = 1) %>%
+                             opacity = 1) |>
           leaflet::addLayersControl(
             overlayGroups = c("All Transmission Lines", "500kV Transmission Lines", input$node_type),
             options = leaflet::layersControlOptions(collapsed = FALSE)
