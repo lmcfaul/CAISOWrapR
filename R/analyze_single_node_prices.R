@@ -190,15 +190,15 @@ analyze_single_node_data <- function(node_df = read.csv(system.file("extdata", "
 #' @export
 visualize_node <- function(node_df = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR"))) {
   
-  node_df <- node_df %>%
+  node_df <- node_df |>
     dplyr::mutate(
       interval_start_utc = as.POSIXct(interval_start_utc, format = "%Y-%m-%d %H:%M:%S", tz = "UTC"),
       interval_start_pst = lubridate::with_tz(interval_start_utc, tzone = "America/Los_Angeles"),
       time_only = format(interval_start_pst, "%H:%M:%S")
     )
   
-  avg_price_per_time <- node_df %>%
-    dplyr::group_by(time_only) %>%
+  avg_price_per_time <- node_df |>
+    dplyr::group_by(time_only) |>
     dplyr::summarise(
       lower_whisker = quantile(lmp, 0.1, na.rm = TRUE),
       lower_quartile = quantile(lmp, 0.25, na.rm = TRUE),
@@ -273,7 +273,7 @@ visualize_node <- function(node_df = read.csv(system.file("extdata", "San_Franci
 #' @export
 visualize_node_seasonal <- function(node_df = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR"))) {
   
-  node_df <- node_df %>%
+  node_df <- node_df |>
     dplyr::mutate(
       interval_start_utc = as.POSIXct(interval_start_utc, format = "%Y-%m-%d %H:%M:%S", tz = "UTC"),
       interval_start_pst = lubridate::with_tz(interval_start_utc, tzone = "America/Los_Angeles"),
@@ -287,11 +287,11 @@ visualize_node_seasonal <- function(node_df = read.csv(system.file("extdata", "S
         month %in% c(9, 10, 11) ~ "Fall",
         TRUE ~ NA_character_
       )
-    ) %>%
+    ) |>
     dplyr::filter(!is.na(season))
   
-  avg_price_per_time <- node_df %>%
-    dplyr::group_by(hour, season) %>%
+  avg_price_per_time <- node_df |>
+    dplyr::group_by(hour, season) |>
     dplyr::summarise(
       lower_whisker = quantile(lmp, 0.1, na.rm = TRUE),
       lower_quartile = quantile(lmp, 0.25, na.rm = TRUE),
@@ -374,15 +374,15 @@ visualize_node_seasonal <- function(node_df = read.csv(system.file("extdata", "S
 #' @export
 visualize_node_congestion = function(node_df = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR"))) {
   
-  node_df <- node_df %>%
+  node_df <- node_df |>
     dplyr::mutate(
       interval_start_utc = as.POSIXct(interval_start_utc, format = "%Y-%m-%d %H:%M:%S", tz = "UTC"),
       interval_start_pst = lubridate::with_tz(interval_start_utc, tzone = "America/Los_Angeles"),
       time_only = format(interval_start_pst, "%H:%M:%S")
     )
   
-  avg_price_per_time <- node_df %>%
-    dplyr::group_by(time_only) %>%
+  avg_price_per_time <- node_df |>
+    dplyr::group_by(time_only) |>
     dplyr::summarise(
       lower_whisker = quantile(congestion, 0.1, na.rm = TRUE),
       lower_quartile = quantile(congestion, 0.25, na.rm = TRUE),
@@ -458,7 +458,7 @@ visualize_node_congestion = function(node_df = read.csv(system.file("extdata", "
 #' @export
 visualize_node_seasonal_congestion = function(node_df = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR"))) {
   
-  node_df <- node_df %>%
+  node_df <- node_df |>
     dplyr::mutate(
       interval_start_utc = as.POSIXct(interval_start_utc, format = "%Y-%m-%d %H:%M:%S", tz = "UTC"),
       interval_start_pst = lubridate::with_tz(interval_start_utc, tzone = "America/Los_Angeles"),
@@ -472,11 +472,11 @@ visualize_node_seasonal_congestion = function(node_df = read.csv(system.file("ex
         month %in% c(9, 10, 11) ~ "Fall",
         TRUE ~ NA_character_
       )
-    ) %>%
+    ) |>
     dplyr::filter(!is.na(season))
   
-  avg_price_per_time <- node_df %>%
-    dplyr::group_by(hour, season) %>%
+  avg_price_per_time <- node_df |>
+    dplyr::group_by(hour, season) |>
     dplyr::summarise(
       lower_whisker = quantile(congestion, 0.1, na.rm = TRUE),
       lower_quartile = quantile(congestion, 0.25, na.rm = TRUE),
@@ -559,15 +559,15 @@ visualize_node_seasonal_congestion = function(node_df = read.csv(system.file("ex
 #' @export
 visualize_node_losses = function(node_df = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR"))) {
   
-  node_df <- node_df %>%
+  node_df <- node_df |>
     dplyr::mutate(
       interval_start_utc = as.POSIXct(interval_start_utc, format = "%Y-%m-%d %H:%M:%S", tz = "UTC"),
       interval_start_pst = lubridate::with_tz(interval_start_utc, tzone = "America/Los_Angeles"),
       time_only = format(interval_start_pst, "%H:%M:%S")
     )
   
-  avg_price_per_time <- node_df %>%
-    dplyr::group_by(time_only) %>%
+  avg_price_per_time <- node_df |>
+    dplyr::group_by(time_only) |>
     dplyr::summarise(
       lower_whisker = quantile(loss, 0.1, na.rm = TRUE),
       lower_quartile = quantile(loss, 0.25, na.rm = TRUE),
@@ -644,7 +644,7 @@ visualize_node_losses = function(node_df = read.csv(system.file("extdata", "San_
 #' @export
 visualize_node_seasonal_losses = function(node_df = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR"))) {
   
-  node_df <- node_df %>%
+  node_df <- node_df |>
     dplyr::mutate(
       interval_start_utc = as.POSIXct(interval_start_utc, format = "%Y-%m-%d %H:%M:%S", tz = "UTC"),
       interval_start_pst = lubridate::with_tz(interval_start_utc, tzone = "America/Los_Angeles"),
@@ -658,11 +658,11 @@ visualize_node_seasonal_losses = function(node_df = read.csv(system.file("extdat
         month %in% c(9, 10, 11) ~ "Fall",
         TRUE ~ NA_character_
       )
-    ) %>%
+    ) |>
     dplyr::filter(!is.na(season))
   
-  avg_price_per_time <- node_df %>%
-    dplyr::group_by(hour, season) %>%
+  avg_price_per_time <- node_df |>
+    dplyr::group_by(hour, season) |>
     dplyr::summarise(
       lower_whisker = quantile(loss, 0.1, na.rm = TRUE),
       lower_quartile = quantile(loss, 0.25, na.rm = TRUE),
@@ -748,7 +748,7 @@ visualize_node_demand <- function(node_df = read.csv(system.file("extdata", "San
   node_df = merge_demand(node_df)
   
   # Create load buckets ranging from 12,000 to 52,000 with 2,000 intervals
-  node_df <- node_df %>%
+  node_df <- node_df |>
     dplyr::mutate(
       interval_start_utc = as.POSIXct(interval_start_utc, format = "%Y-%m-%d %H:%M:%S", tz = "UTC"),
       interval_start_pst = lubridate::with_tz(interval_start_utc, tzone = "America/Los_Angeles"),
@@ -759,8 +759,8 @@ visualize_node_demand <- function(node_df = read.csv(system.file("extdata", "San
     )
   
   # Summarize LMP data by load bucket
-  avg_price_per_bucket <- node_df %>%
-    dplyr::group_by(load_bucket) %>%
+  avg_price_per_bucket <- node_df |>
+    dplyr::group_by(load_bucket) |>
     dplyr::summarise(
       lower_whisker = quantile(lmp, 0.1, na.rm = TRUE),
       lower_quartile = quantile(lmp, 0.25, na.rm = TRUE),
@@ -836,10 +836,10 @@ visualize_node_demand_without_high_demand_hours <- function(node_df = read.csv(s
   node_df = merge_demand(node_df)
   
   # Filter out high-demand loads
-  node_df <- node_df %>% dplyr::filter(load <= 40000)
+  node_df <- node_df |> dplyr::filter(load <= 40000)
   
   # Create load buckets ranging from 12,000 to 40,000 with 1,000 intervals
-  node_df <- node_df %>%
+  node_df <- node_df |>
     dplyr::mutate(
       interval_start_utc = as.POSIXct(interval_start_utc, format = "%Y-%m-%d %H:%M:%S", tz = "UTC"),
       interval_start_pst = lubridate::with_tz(interval_start_utc, tzone = "America/Los_Angeles"),
@@ -850,8 +850,8 @@ visualize_node_demand_without_high_demand_hours <- function(node_df = read.csv(s
     )
   
   # Summarize LMP data by load bucket
-  avg_price_per_bucket <- node_df %>%
-    dplyr::group_by(load_bucket) %>%
+  avg_price_per_bucket <- node_df |>
+    dplyr::group_by(load_bucket) |>
     dplyr::summarise(
       lower_whisker = quantile(lmp, 0.1, na.rm = TRUE),
       lower_quartile = quantile(lmp, 0.25, na.rm = TRUE),
@@ -927,7 +927,7 @@ visualize_node_demand_congestion <- function(node_df = read.csv(system.file("ext
   node_df = merge_demand(node_df)
   
   # Create load buckets ranging from 12,000 to 40,000 with 1,000 intervals
-  node_df <- node_df %>%
+  node_df <- node_df |>
     dplyr::mutate(
       interval_start_utc = as.POSIXct(interval_start_utc, format = "%Y-%m-%d %H:%M:%S", tz = "UTC"),
       interval_start_pst = lubridate::with_tz(interval_start_utc, tzone = "America/Los_Angeles"),
@@ -938,8 +938,8 @@ visualize_node_demand_congestion <- function(node_df = read.csv(system.file("ext
     )
   
   # Summarize congestion data by load bucket
-  avg_congestion_per_bucket <- node_df %>%
-    dplyr::group_by(load_bucket) %>%
+  avg_congestion_per_bucket <- node_df |>
+    dplyr::group_by(load_bucket) |>
     dplyr::summarise(
       lower_whisker = quantile(congestion, 0.1, na.rm = TRUE),
       lower_quartile = quantile(congestion, 0.25, na.rm = TRUE),
@@ -1017,10 +1017,10 @@ visualize_node_demand_without_high_demand_hours_congestion <- function(node_df =
   node_df = merge_demand(node_df)
   
   # Filter out high-demand loads
-  node_df <- node_df %>% dplyr::filter(load <= 40000)
+  node_df <- node_df |> dplyr::filter(load <= 40000)
   
   # Create load buckets ranging from 12,000 to 40,000 with 1,000 intervals
-  node_df <- node_df %>%
+  node_df <- node_df |>
     dplyr::mutate(
       interval_start_utc = as.POSIXct(interval_start_utc, format = "%Y-%m-%d %H:%M:%S", tz = "UTC"),
       interval_start_pst = lubridate::with_tz(interval_start_utc, tzone = "America/Los_Angeles"),
@@ -1031,8 +1031,8 @@ visualize_node_demand_without_high_demand_hours_congestion <- function(node_df =
     )
   
   # Summarize congestion data by load bucket
-  avg_congestion_per_bucket <- node_df %>%
-    dplyr::group_by(load_bucket) %>%
+  avg_congestion_per_bucket <- node_df |>
+    dplyr::group_by(load_bucket) |>
     dplyr::summarise(
       lower_whisker = quantile(congestion, 0.1, na.rm = TRUE),
       lower_quartile = quantile(congestion, 0.25, na.rm = TRUE),
