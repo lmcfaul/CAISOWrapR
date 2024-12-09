@@ -109,15 +109,111 @@ execute:
 
 -   Quick Note: Only 250 monthly API requests and 1000000 monthly API
     rows under Starter Plan
+    
+## Graph Oriented Fetching LMP Data {.scrollable}
 
-## Example Plot from Package
+-   Users can directly call the fetch_lmp_data command, or use one of two 
+    functions to get data in a form to directly use in visuals and analysis
+
+-   `pulldata_instance` fetches data for a single instance (15 minute interval) 
+    across all CA node. This is useful for comparing LMPs at a single point in 
+    time
+    
+-   `pulldata_node` fetches data for an entire node (or comparing nodes) across 
+    all instances of a year. This is useful for comparing LMPs at a single node 
+    over time
+    
+## Visualizing and Analyzing LMP Data {.scrollable}
+
+-   We created many functions to visualize and analyze the LMP data
+
+-   Most simply, `summarize_lmps` gives users a summary of the LMP data for a 
+    singular instance and `violin_plot` creates a violin plot of the LMP data
+    
+-   When analyzing a singular node or two nodes, users can visualize the LMPs 
+    and also the different parts of the pricing, including congestion and losses
+
+-   Users can visualize the average prices per hour to see the daily fluctuation, 
+    and look at this seasonally which demonstrates how LMPs change over the year
+    
+-   Users can also compare prices between two nodes to see how they differ over 
+    time
+
+-   Lastly, users can compare prices with daily electricity demand
+    
+## Example LMP Distribution Plot
 
 This plot demonstrates the distribution of LMPs for an example node:
 
-```{r visualize_node_example, fig.cap="LMP Distribution Example Plot"}
+```{r visualize_node_example, fig.cap="LMP Distribution Example Plot", eval = TRUE, echo = FALSE}
 # Load the CSV file 
 # file_path <- system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR") 
 # example_data <- read.csv(file_path)
+
+library(CAISOWrapR)
+
+sf_node = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR"))
+visualize_node(sf_node)
+
 ```
 
-## Generate and display the plot
+## Example Seasonal LMP Distribution Plot
+
+This plot demonstrates the distribution of LMPs for an example node:
+
+```{r visualize_node_example_seasonal, fig.cap="SeasonalLMP Distribution Example Plot", eval = TRUE, echo = FALSE}
+# Load the CSV file 
+# file_path <- system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR") 
+# example_data <- read.csv(file_path)
+
+library(CAISOWrapR)
+
+sf_node = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR"))
+visualize_node_seasonal(sf_node)
+
+```
+
+## Example Comparison LMP Distribution Plot
+
+This plot demonstrates the distribution of LMPs for an example node:
+
+```{r visualize_node_example_comparison, fig.cap="Comparison LMP Distribution Example Plot", eval = TRUE, echo = FALSE}
+# Load the CSV file 
+# file_path <- system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR") 
+# example_data <- read.csv(file_path)
+
+library(CAISOWrapR)
+
+sf_node = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR"))
+la_node = read.csv(system.file("extdata", "Los_Angeles_node_2023.csv", package = "CAISOWrapR"))
+compare_lmps_visual_seasonal(sf_node, la_node)
+
+```
+
+## Example Demand and LMP Plot
+
+This plot demonstrates the distribution of LMPs for an example node:
+
+```{r visualize_node_example_demand, fig.cap="Demand and LMP Example Plot", eval = TRUE, echo = FALSE}
+# Load the CSV file 
+# file_path <- system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR") 
+# example_data <- read.csv(file_path)
+
+library(CAISOWrapR)
+
+sf_node = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR"))
+visualize_node_demand_without_high_demand_hours(sf_node)
+
+```
+
+## Shiny App
+
+-   We created a Shiny App to visualize the pricing data, where users input
+    an instance of data (15 minute interval with all nodes) and the app
+    generates a map of California with these nodes and the transmission lines
+    
+-   Users can choose to disply the LMPs, congestion prices, or losses and either 
+    all transmission lines or just the major ones
+    
+-   Users can hover over the nodes to see the prices at that node, and nodes are 
+    color coded based on price

@@ -2,15 +2,18 @@
 % Please edit documentation in R/CA_map.R
 \name{CA_map}
 \alias{CA_map}
-\title{create base map of NE}
+\title{Create a map of California with LMP prices and Transmission Lines}
 \usage{
-CA_map(instance = (read.csv("data/instance_normal.csv")))
+CA_map(instance = (read.csv("inst/extdata/instance_normal.csv")))
+}
+\arguments{
+\item{instance}{A dataframe of the LMP prices of one time period (one 15 minute interval). The default dataframe is a normal day in California at 1pm. Users can change this dataframe to analyze a different instance that pulled from the \code{pulldata_instance} function. Or, to visualize the highest peak load in the last three years, use: "inst/extdata/instance_peak_load.csv"}
 }
 \value{
-a map of the Northeastern states of the United States
+A Shiny app page with a map of California and the prices.
 }
 \description{
-function creates a map of the Northeastern states of the United States
+This function creates a map in a Shiny App of California with LMP prices and transmission lines. The function uses the \code{sf}, \code{leaflet}, \code{shiny}, and \code{rnaturalearth} packages, and allows the map to be interactive to view different aspects of the price and different types of transmission lines. This can be used to visualize where there are high electricity prices in the state at a certain time and how the transmission lines are distributed / how they are related to those prices. The user inputs a dataframe of the LMP prices of one time period (one 15 minute interval) and the function will plot the map with the LMP prices and transmission lines. The baseline instance (time period) is a typical day in California at 1pm, from the csv instance_normal.csv file. However, the user can make their own dataframe with the function \code{pulldata_instance} and then call it with this function to visualize it.
 }
 \examples{
 CA_map()

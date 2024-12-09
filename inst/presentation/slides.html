@@ -474,17 +474,36 @@ Kate Esbenshade, Luke McFaul, Mack Smith
 <li><p>Quick Note: Only 250 monthly API requests and 1000000 monthly API rows under Starter Plan</p></li>
 </ul>
 </section>
+<section id="graph-oriented-fetching-lmp-data" class="slide level2 scrollable">
+<h2>Graph Oriented Fetching LMP Data</h2>
+<ul>
+<li><p>Users can directly call the fetch_lmp_data command, or use one of two functions to get data in a form to directly use in visuals and analysis</p></li>
+<li><p><code>pulldata_instance</code> fetches data for a single instance (15 minute interval) across all CA node. This is useful for comparing LMPs at a single point in time</p></li>
+<li><p><code>pulldata_node</code> fetches data for an entire node (or comparing nodes) across all instances of a year. This is useful for comparing LMPs at a single node over time</p></li>
+</ul>
+</section>
+<section id="visualizing-and-analyzing-lmp-data" class="slide level2 scrollable">
+<h2>Visualizing and Analyzing LMP Data</h2>
+<ul>
+<li><p>We created many functions to visualize and analyze the LMP data</p></li>
+<li><p>Most simply, <code>summarize_lmps</code> gives users a summary of the LMP data for a singular instance and <code>violin_plot</code> creates a violin plot of the LMP data</p></li>
+<li><p>When analyzing a singular node or two nodes, users can visualize the LMPs and also the different parts of the pricing, including congestion and losses</p></li>
+<li><p>Users can visualize the average prices per hour to see the daily fluctuation, and look at this seasonally which demonstrates how LMPs change over the year</p></li>
+<li><p>Users can also compare prices between two nodes to see how they differ over time</p></li>
+<li><p>Lastly, users can compare prices with daily electricity demand</p></li>
+</ul>
+</section>
 <section id="example-plot-from-package" class="slide level2">
 <h2>Example Plot from Package</h2>
 <p>This plot demonstrates the distribution of LMPs for an example node:</p>
-<div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href=""></a><span class="co"># Load the CSV file </span></span>
-<span id="cb3-2"><a href=""></a><span class="co"># file_path &lt;- system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR") </span></span>
-<span id="cb3-3"><a href=""></a><span class="co"># example_data &lt;- read.csv(file_path)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</div>
 </section>
-<section id="generate-and-display-the-plot" class="slide level2">
-<h2>Generate and display the plot</h2>
+<section id="shiny-app" class="slide level2">
+<h2>Shiny App</h2>
+<ul>
+<li><p>We created a Shiny App to visualize the pricing data, where users input an instance of data (15 minute interval with all nodes) and the app generates a map of California with these nodes and the transmission lines</p></li>
+<li><p>Users can choose to disply the LMPs, congestion prices, or losses and either all transmission lines or just the major ones</p></li>
+<li><p>Users can hover over the nodes to see the prices at that node, and nodes are color coded based on price</p></li>
+</ul>
 <div class="quarto-auto-generated-content">
 <div class="footer footer-default">
 
