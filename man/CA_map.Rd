@@ -4,7 +4,7 @@
 \alias{CA_map}
 \title{create base map of NE}
 \usage{
-CA_map(instance = (read.csv("data/instance_jan1_2020.csv")))
+CA_map(instance = (read.csv("data/instance_normal.csv")))
 }
 \value{
 a map of the Northeastern states of the United States

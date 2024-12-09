@@ -39,8 +39,8 @@ pulldata_instance = function(date, time, api_key){
   
   df_instance = fetch_lmp_data(
     client = client_pull,
-    start = start_time_iso,
-    end = end_time_iso,
+    start_time = start_time_iso,
+    end_time = end_time_iso,
     filter_column = "location",
     filter_value = paste(unique_lmps$unique_lmps, collapse = ","),
     filter_operator = "in",

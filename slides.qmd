@@ -1,0 +1,52 @@
+---
+title: "Locational Marginal Price and Congestion Analysis in R"
+authors: "Kate Esbenshade, Luke McFaul, Mack Smith"
+format: revealjs  # Can also use ioslides, beamer, etc.
+revealjs:
+  theme: solarized
+  slideNumber: true
+  css: styles.css
+---
+
+```{r setup, include=FALSE}
+# Global knitr chunk options
+knitr::opts_chunk$set(
+  echo = FALSE,      # Hide code by default
+  warning = FALSE,   # Suppress warnings
+  message = FALSE    # Suppress messages
+)
+
+# Project Inspiration
+
+1. California has a unique electricity market structure that is different from other states in the US. 
+2. There are many **integrated renewables** and **high fluctuation** in electricity demand, meaning that there are often times when there is not enough transmission capacity to move electricity from one location to another. 
+3. This can cause **congestion in the transmission system**, which can lead to higher electricity prices in certain locations (different locational marginal prices, or LMPS).
+4. We wanted to create a project to **visualize** these differences in price and allow users to **understand and analyze** LMP differences and congestion. 
+
+---
+
+# Project Goals
+- Create a package in R to help with analysis of electricity prices in California
+- Use the package to analyze the relationship between congestion and locational marginal prices (LMPs) in California wihin locations and between them
+- Create a shiny app to visualize the results
+
+---
+
+# Project Outputs
+- API wrapper for the gridstatus.io API to fetch and clean data of locational marginal prices for California between 2020-2023
+- A Shiny App that visualizes the transmission lines and locational data
+- Analysis functions for a single instance (15 minute interval) across all nodes, and for an entire node (or comparing nodes) across all instances of a year
+
+---
+
+# Example Plot from Package
+
+This plot demonstrates the distribution of LMPs for an example node:
+
+```{r visualize_node_example, echo=FALSE, fig.cap="LMP Distribution Example Plot"}
+# Load the CSV file
+file_path <- system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR")
+example_data <- read.csv(file_path)
+
+# Generate and display the plot
+visualize_node(example_data)
