@@ -1,0 +1,38 @@
+---
+title: "Report"
+author: "Kate Esbenshade, Luke McFaul, and Mack Smith"
+format: html
+vignette: >
+  %\VignetteIndexEntry{Report}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+---
+
+# STATS 290 Final Project Report
+
+## Introduction
+
+### Problem Statement
+
+## CAISO Client (Mack)
+
+## Next Section (Name)
+
+## Next Section (Name)
+
+## Use Case
+
+To
+
+```{r}
+# Load CAISOWrapR
+library(CAISOWrapR)
+
+# Create environment variable for GridStatus API key
+Sys.setenv(GRIDSTATUS_API_KEY = "c92f5de270cc4ec2ab3c4da6f8a53399")
+
+# Create CAISO Client
+client <- create_caiso_client()
+```
+
+## Future Enhancements and Extensions
