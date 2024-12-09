@@ -48,7 +48,7 @@ analyze_single_node_data <- function(node_df = read.csv(system.file("extdata", "
   
   # Extract the year and city for the title
   interval_time <- unique(node_df$interval_start_utc)[1]
-  year_of_data <- format(ymd_hms(interval_time), "%Y")
+  year_of_data <- format(lubridate::ymd_hms(interval_time), "%Y")
   
   title <- grid::textGrob(
     paste("LMP Distributions for", node_df$city[1], "in", year_of_data),
