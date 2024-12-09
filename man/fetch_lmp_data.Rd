@@ -59,7 +59,7 @@ Supported operators:
 \item Uses API's default page size if not specified
 }}
 
-\item{resample}{Frequency to resample data (optional)}
+\item{resample_frequency}{Frequency to resample data (optional)}
 
 \item{resample_by}{Columns to group by when resampling (optional)
 \itemize{
@@ -78,7 +78,7 @@ Options:
 \item "variance"
 }}
 
-\item{publish_tm}{Controls filtering based on publish time (optional)
+\item{publish_time}{Controls filtering based on publish time (optional)
 \itemize{
 \item "latest_report": Most recently published report
 \item "latest": Most recent record for each timestamp
@@ -138,7 +138,7 @@ filtered_data <- fetch_lmp_data(
 # Resampling data
 resampled_data <- fetch_lmp_data(
   client,
-  resample = "1H",  # Resample to hourly
+  resample_frequency = "1H",  # Resample to hourly
   resample_function = "mean",
   resample_by = c("location", "market")
 )

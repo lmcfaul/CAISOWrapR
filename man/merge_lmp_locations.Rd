@@ -7,15 +7,18 @@
 merge_lmp_locations(instance)
 }
 \arguments{
-\item{instance}{dataframe of instance data}
+\item{instance}{A dataframe containing the LMP instance data to be merged with location data.}
 }
 \value{
-dataframe with instance data and location data
+A dataframe containing both the LMP instance data and the location information.
 }
 \description{
-Takes instance dataframe and merges with location and latitude longitude data
+This function takes an instance dataframe (with LMP data) and merges it with location data
+(including city names and corresponding latitude and longitude), returning a dataframe with
+both the LMP and location information.
 }
 \examples{
+# Example usage of the merge_lmp_locations function
 merge_lmp_locations(instance)
 
 }

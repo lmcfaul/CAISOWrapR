@@ -11,7 +11,7 @@
 #' 
 #' @importFrom sf st_read
 #' @importFrom leaflet colorBin addProviderTiles setView addPolygons addPolylines addCircleMarkers addLayersControl layersControlOptions renderLeaflet leafletOutput
-#' @importFrom shiny shinyApp fluidPage tags style 
+#' @importFrom shiny shinyApp fluidPage tags 
 #' @importFrom rnaturalearth ne_states
 #' @importFrom utils read.csv
 #' @importFrom tools toTitleCase
@@ -19,6 +19,15 @@
 #' @export
 CA_map <- function(instance = read.csv("inst/extdata/instance_normal.csv")) {
   # Get the geometries for the United States
+  
+  if (length(instance) == 1 && instance == "peak_load") {
+    instance = read.csv("inst/extdata/instance_peak_load.csv")
+  }
+  
+  if (!is.data.frame(instance)) {
+    stop("Error: 'instance' must either be 'peak_load' or a data frame.")
+  }
+
   us_states <- rnaturalearth::ne_states(country = "United States of America", returnclass = "sf")
   
   # Filter for California using the correct column name
