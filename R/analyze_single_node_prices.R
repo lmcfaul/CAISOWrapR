@@ -1,6 +1,5 @@
 # This script has all of the functions that analyze a single node of data (one location with all 15 minute intervals for a year) and combines the results into a pdf to export. The functions `visualize_node` and `visualize_node_seasonal` are called with an inputting dataframe of a node of data. The user has to call the `pulldata_node` function to get the data for the node they want to analyze. The user can also just call the individual analysis functions if they want to see the results separately.
 
-
 #' Analyze and Visualize Data for a Single Node
 #' 
 #' This function analyzes data from a single node, representing one location with locational marginal prices (LMPs) over a year (at 15-minute intervals). It calls multiple visualization functions to generate a series of plots, which are then compiled into a PDF report for easy export. The analysis covers various aspects of the node's data, including LMP distributions, congestion, loss pricing adjustments, and demand.
