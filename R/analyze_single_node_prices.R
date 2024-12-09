@@ -26,15 +26,17 @@
 #' 
 #' @return A pdf file with the two plots
 #' 
-#' @import grid
-#' @import gridExtra
-#' @import ggplot2
-#' @import lubridate
-#' @import gtable
-#' @import dplyr
+#' @importFrom grid textGrob gpar
+#' @importFrom gridExtra grid.arrange
+#' @importFrom ggplot2 ggplotGrob ggplot
+#' @importFrom lubridate ymd_hms with_tz
+#' @importFrom gtable gtable_add_padding
+#' @importFrom dplyr mutate group_by summarise unique filter
+#' @importFrom unit unit
+#' @importFrom ggplot2 geom_rect geom_segment geom_point scale_x_discrete labs themes
 #' 
 #' @export
-analyze_single_node_data <- function(node_df = read.csv("inst/extdata/San_Francisco_node_2023.csv"), output_pdf_path = "single_node_data.pdf") {
+analyze_single_node_data <- function(node_df = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR")), output_pdf_path = "single_node_data.pdf") {
   # Visualizations for LMP
   result_one <- visualize_node(node_df)
   result_two <- visualize_node_seasonal(node_df)
@@ -194,13 +196,13 @@ analyze_single_node_data <- function(node_df = read.csv("inst/extdata/San_Franci
 #' 
 #' @return A `ggplot2` object with a box and whisker plot.
 #' 
-#' @importFrom ggplot2 ggplot geom_rect geom_segment geom_point scale_x_discrete labs theme_solarized theme
+#' @importFrom ggplot2 ggplot geom_rect geom_segment geom_point scale_x_discrete labs theme
 #' @importFrom dplyr mutate group_by summarise
 #' @importFrom lubridate with_tz ymd_hms
 #' @importFrom ggthemes theme_solarized
 #' 
 #' @export
-visualize_node <- function(node_df = read.csv("inst/extdata/San_Francisco_node_2023.csv")) {
+visualize_node <- function(node_df = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR"))) {
   
   node_df <- node_df %>%
     dplyr::mutate(
@@ -288,7 +290,7 @@ visualize_node <- function(node_df = read.csv("inst/extdata/San_Francisco_node_2
 #' @importFrom ggthemes theme_solarized
 #' 
 #' @export
-visualize_node_seasonal <- function(node_df = read.csv("inst/extdata/San_Francisco_node_2023.csv")) {
+visualize_node_seasonal <- function(node_df = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR"))) {
   
   node_df <- node_df %>%
     dplyr::mutate(
@@ -394,7 +396,7 @@ visualize_node_seasonal <- function(node_df = read.csv("inst/extdata/San_Francis
 #' @importFrom ggthemes theme_solarized
 #' 
 #' @export
-visualize_node_congestion = function(node_df = read.csv("inst/extdata/San_Francisco_node_2023.csv")) {
+visualize_node_congestion = function(node_df = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR"))) {
   
   node_df <- node_df %>%
     dplyr::mutate(
@@ -483,7 +485,7 @@ visualize_node_congestion = function(node_df = read.csv("inst/extdata/San_Franci
 #' @importFrom ggthemes theme_solarized
 #' 
 #' @export
-visualize_node_seasonal_congestion = function(node_df = read.csv("inst/extdata/San_Francisco_node_2023.csv")) {
+visualize_node_seasonal_congestion = function(node_df = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR"))) {
   
   node_df <- node_df %>%
     dplyr::mutate(
@@ -589,7 +591,7 @@ visualize_node_seasonal_congestion = function(node_df = read.csv("inst/extdata/S
 #' @importFrom ggthemes theme_solarized
 #' 
 #' @export
-visualize_node_losses = function(node_df = read.csv("inst/extdata/San_Francisco_node_2023.csv")) {
+visualize_node_losses = function(node_df = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR"))) {
   
   node_df <- node_df %>%
     dplyr::mutate(
@@ -679,7 +681,7 @@ visualize_node_losses = function(node_df = read.csv("inst/extdata/San_Francisco_
 #' @importFrom ggthemes theme_solarized
 #' 
 #' @export
-visualize_node_seasonal_losses = function(node_df = read.csv("inst/extdata/San_Francisco_node_2023.csv")) {
+visualize_node_seasonal_losses = function(node_df = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR"))) {
   
   node_df <- node_df %>%
     dplyr::mutate(
@@ -784,7 +786,7 @@ visualize_node_seasonal_losses = function(node_df = read.csv("inst/extdata/San_F
 #' @importFrom ggthemes theme_solarized
 #' 
 #' @export
-visualize_node_demand <- function(node_df = read.csv("inst/extdata/San_Francisco_node_2023.csv")) {
+visualize_node_demand <- function(node_df = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR"))) {
   
   node_df = merge_demand(node_df)
   
@@ -876,7 +878,7 @@ visualize_node_demand <- function(node_df = read.csv("inst/extdata/San_Francisco
 #' @importFrom ggthemes theme_solarized
 #' 
 #' @export
-visualize_node_demand_without_high_demand_hours <- function(node_df = read.csv("inst/extdata/San_Francisco_node_2023.csv")) {
+visualize_node_demand_without_high_demand_hours <- function(node_df = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR"))){
   
   node_df = merge_demand(node_df)
   
@@ -973,7 +975,7 @@ visualize_node_demand_without_high_demand_hours <- function(node_df = read.csv("
 #' @importFrom lubridate with_tz ymd_hms
 #' 
 #' @export
-visualize_node_demand_congestion <- function(node_df = read.csv("inst/extdata/San_Francisco_node_2023.csv")) {
+visualize_node_demand_congestion <- function(node_df = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR"))) {
   node_df = merge_demand(node_df)
   
   # Create load buckets ranging from 12,000 to 40,000 with 1,000 intervals
@@ -1068,7 +1070,7 @@ visualize_node_demand_congestion <- function(node_df = read.csv("inst/extdata/Sa
 #' @importFrom lubridate with_tz ymd_hms
 #' 
 #' @export
-visualize_node_demand_without_high_demand_hours_congestion <- function(node_df = read.csv("inst/extdata/San_Francisco_node_2023.csv")) {
+visualize_node_demand_without_high_demand_hours_congestion <- function(node_df = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR"))) {
   node_df = merge_demand(node_df)
   
   # Filter out high-demand loads

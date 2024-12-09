@@ -18,7 +18,8 @@
 #' @importFrom unit unit
 #' 
 #' @export
-analyze_two_node_data <- function(df1 = read.csv("inst/extdata/San_Francisco_node_2023.csv"), df2 = read.csv("inst/extdata/Los_Angeles_node_2023.csv"), output_pdf_path = "two_node_data.pdf") {
+#analyze_two_node_data <- function(df1 = read.csv("inst/extdata/San_Francisco_node_2023.csv"), df2 = read.csv("inst/extdata/Los_Angeles_node_2023.csv"), output_pdf_path = "two_node_data.pdf") {
+analyze_two_node_data <- function(df1 = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR")), df2 = read.csv(system.file("extdata", "Los_Angeles_node_2023.csv", package = "CAISOWrapR")), output_pdf_path = "two_node_data.pdf") {
   result_one <- compare_lmps_visual(df1, df2)
   result_two <- compare_lmps_visual_seasonal(df1, df2)
   result_three <- compare_congestion_visual(df1, df2)
@@ -121,7 +122,7 @@ analyze_two_node_data <- function(df1 = read.csv("inst/extdata/San_Francisco_nod
 #' @importFrom ggthemes theme_solarized
 #' 
 #' @export
-compare_lmps_visual = function(df1 = read.csv("inst/extdata/San_Francisco_node_2023.csv"), df2 = read.csv("inst/extdata/Los_Angeles_node_2023.csv")){
+compare_lmps_visual = function(df1 = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR")), df2 = read.csv(system.file("extdata", "Los_Angeles_node_2023.csv", package = "CAISOWrapR"))){
   df1 <- dplyr::mutate(
     df1,
     interval_start_utc = as.POSIXct(interval_start_utc, format = "%Y-%m-%d %H:%M:%S", tz = "UTC"),
@@ -288,8 +289,7 @@ compare_lmps_visual = function(df1 = read.csv("inst/extdata/San_Francisco_node_2
 #' @importFrom ggthemes theme_solarized
 #' 
 #' @export
-compare_lmps_visual_seasonal = function(df1 = read.csv("inst/extdata/San_Francisco_node_2023.csv"), 
-                                        df2 = read.csv("inst/extdata/Los_Angeles_node_2023.csv")) {
+compare_lmps_visual_seasonal = function(df1 = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR")), df2 = read.csv(system.file("extdata", "Los_Angeles_node_2023.csv", package = "CAISOWrapR"))) {
   
   df1 <- df1 %>%
     dplyr::mutate(
@@ -475,7 +475,7 @@ compare_lmps_visual_seasonal = function(df1 = read.csv("inst/extdata/San_Francis
 #' @importFrom lubridate with_tz
 #' 
 #' @export
-compare_congestion_visual = function(df1 = read.csv("inst/extdata/San_Francisco_node_2023.csv"), df2 = read.csv("inst/extdata/Los_Angeles_node_2023.csv")){
+compare_congestion_visual = function(df1 = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR")), df2 = read.csv(system.file("extdata", "Los_Angeles_node_2023.csv", package = "CAISOWrapR"))){
   df1 <- df1 %>%
     dplyr::mutate(
       interval_start_utc = as.POSIXct(interval_start_utc, format = "%Y-%m-%d %H:%M:%S", tz = "UTC"),
@@ -639,11 +639,11 @@ compare_congestion_visual = function(df1 = read.csv("inst/extdata/San_Francisco_
 #' 
 #' @importFrom dplyr mutate filter group_by summarise case_when pull
 #' @importFrom lubridate with_tz
-#' @importFrom ggplot2 ggplot aes geom_rect geom_segment geom_point scale_x_continuous scale_fill_manual scale_color_manual labs facet_wrap theme_solarized
+#' @importFrom ggplot2 ggplot aes geom_rect geom_segment geom_point scale_x_continuous scale_fill_manual scale_color_manual labs facet_wrap
 #' @importFrom ggthemes theme_solarized
 #' 
 #' @export
-compare_congestion_visual_seasonal = function(df1 = read.csv("inst/extdata/San_Francisco_node_2023.csv"), df2 = read.csv("inst/extdata/Los_Angeles_node_2023.csv")) {
+compare_congestion_visual_seasonal = function(df1 = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR")), df2 = read.csv(system.file("extdata", "Los_Angeles_node_2023.csv", package = "CAISOWrapR"))) {
   
   df1 <- df1 %>%
     dplyr::mutate(
@@ -831,7 +831,7 @@ compare_congestion_visual_seasonal = function(df1 = read.csv("inst/extdata/San_F
 #' @importFrom ggthemes theme_solarized
 #' 
 #' @export
-compare_losses_visual = function(df1 = read.csv("inst/extdata/San_Francisco_node_2023.csv"), df2 = read.csv("inst/extdata/Los_Angeles_node_2023.csv")){
+compare_losses_visual = function(df1 = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR")), df2 = read.csv(system.file("extdata", "Los_Angeles_node_2023.csv", package = "CAISOWrapR"))){
   df1 <- df1 %>%
     dplyr::mutate(
       interval_start_utc = as.POSIXct(interval_start_utc, format = "%Y-%m-%d %H:%M:%S", tz = "UTC"),
@@ -999,7 +999,7 @@ compare_losses_visual = function(df1 = read.csv("inst/extdata/San_Francisco_node
 #' @importFrom ggthemes theme_solarized
 #' 
 #' @export
-compare_losses_visual_seasonal = function(df1 = read.csv("inst/extdata/San_Francisco_node_2023.csv"), df2 = read.csv("inst/extdata/Los_Angeles_node_2023.csv")) {
+compare_losses_visual_seasonal = function(df1 = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR")), df2 = read.csv(system.file("extdata", "Los_Angeles_node_2023.csv", package = "CAISOWrapR"))){
   
   df1 <- df1 %>%
     dplyr::mutate(
@@ -1169,3 +1169,4 @@ compare_losses_visual_seasonal = function(df1 = read.csv("inst/extdata/San_Franc
   return(q)
   
 }
+
