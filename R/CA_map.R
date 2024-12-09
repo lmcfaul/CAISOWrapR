@@ -17,11 +17,11 @@
 #' @importFrom tools toTitleCase
 #' 
 #' @export
-CA_map <- function(instance = read.csv("inst/extdata/instance_normal.csv")) {
+CA_map <- function(instance = read.csv(system.file("extdata", "instance_normal.csv", package = "CAISOWrapR"))) {
   # Get the geometries for the United States
   
   if (length(instance) == 1 && instance == "peak_load") {
-    instance = read.csv("inst/extdata/instance_peak_load.csv")
+    instance = read.csv(system.file("extdata", "instance_peak_load.csv", package = "CAISOWrapR"))
   }
   
   if (!is.data.frame(instance)) {
