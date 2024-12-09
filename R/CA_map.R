@@ -13,9 +13,11 @@
 #' @importFrom leaflet colorBin addProviderTiles setView addPolygons addPolylines addCircleMarkers addLayersControl layersControlOptions renderLeaflet leafletOutput
 #' @importFrom shiny shinyApp fluidPage tags style 
 #' @importFrom rnaturalearth ne_states
+#' @importFrom utils read.csv
+#' @importFrom tools toTitleCase
 #' 
 #' @export
-CA_map <- function(instance = (read.csv("inst/extdata/instance_normal.csv"))) {
+CA_map <- function(instance = read.csv("inst/extdata/instance_normal.csv")) {
   # Get the geometries for the United States
   us_states <- rnaturalearth::ne_states(country = "United States of America", returnclass = "sf")
   
@@ -72,11 +74,33 @@ CA_map <- function(instance = (read.csv("inst/extdata/instance_normal.csv"))) {
   # Create the Shiny app with an interactive map
   shiny::shinyApp(
     ui = shiny::fluidPage(
-      tags$style(type = "text/css", "#map {height: calc(100vh - 20px) !important;}"), 
+      shiny::tags$style(type = "text/css", "#map {height: calc(100vh - 20px) !important;}"), 
+      shiny::selectInput("node_type", "Select Price Type", 
+                         choices = c("LMP Prices" = "lmp", 
+                                     "Congestion Prices" = "congestion", 
+                                     "Loss Prices" = "loss"),
+                         selected = "lmp"),
       leaflet::leafletOutput("map", width = "100%", height = "100%")
     ),
     server = function(input, output, session) {
       output$map <- leaflet::renderLeaflet({
+        # Default color palette for LMP
+        palette <- lmp_palette
+        color_column <- "lmp"
+        bins <- c(-Inf, -40, -20, 0, 10, 20, 30, 50, 75, 100, 140, 180, Inf)
+        
+        # Change palette and column based on user selection
+        if (input$node_type == "congestion") {
+          palette <- congestion_palette
+          color_column <- "congestion"
+          bins <- c(-Inf, -40, -20, -0.1, .1, 3, 10, 20, 30, 50, 100, 150, Inf)
+        } else if (input$node_type == "loss") {
+          palette <- losses_palette
+          color_column <- "loss"
+          bins <- c(-Inf, -40, -20, -0.1, .1, 1, 3, 5, 7, 10, 15, 25, Inf)
+        }
+        
+        # Render the leaflet map with the selected node type
         leaflet::leaflet() %>%
           leaflet::addProviderTiles("CartoDB.Positron") %>%
           leaflet::setView(lng = -119.5, lat = 37.5, zoom = 6) %>%
@@ -96,35 +120,21 @@ CA_map <- function(instance = (read.csv("inst/extdata/instance_normal.csv"))) {
                                     lng = ~longitude, 
                                     lat = ~latitude, 
                                     radius = 4, 
-                                    color = ~lmp_palette(lmp), 
+                                    color = ~palette(get(color_column)), 
                                     popup = paste("City: ", instance$city, "<br>",
-                                                  "LMP: $", round(instance$lmp, 2), "<br>",
-                                                  "Energy: $", round(instance$energy, 2), "<br>",
-                                                  "Congestion: $", round(instance$congestion, 2), "<br>",
-                                                  "Loss: $", round(instance$loss, 2)),
-                                    group = "LMP Prices") %>%
-          leaflet::addCircleMarkers(data = instance, 
-                                    lng = ~longitude, 
-                                    lat = ~latitude, 
-                                    radius = 4, 
-                                    color = ~congestion_palette(congestion), 
-                                    popup = paste("City: ", instance$city, "<br>",
-                                                  "Congestion: $", round(instance$congestion, 2)),
-                                    group = "Congestion Prices") %>%
-          leaflet::addCircleMarkers(data = instance, 
-                                    lng = ~longitude, 
-                                    lat = ~latitude, 
-                                    radius = 4, 
-                                    color = ~losses_palette(loss), 
-                                    popup = paste("City: ", instance$city, "<br>",
-                                                  "Loss: $", round(instance$loss, 2)),
-                                    group = "Loss Prices") %>%
+                                                  paste(input$node_type, ": $", round(instance[[color_column]], 2), "<br>")),
+                                    group = input$node_type) %>%
+          leaflet::addLegend(position = "topleft", 
+                             pal = palette, 
+                             values = round(instance[[color_column]]),
+                             title = paste(tools::toTitleCase(input$node_type), " Prices"), 
+                             opacity = 1) %>%
           leaflet::addLayersControl(
-            overlayGroups = c("All Transmission Lines", "500kV Transmission Lines", "LMP Prices",
-                              "Congestion Prices", "Loss Prices"),
-            options = leaflet::layersControlOptions(collapsed = TRUE)
+            overlayGroups = c("All Transmission Lines", "500kV Transmission Lines", input$node_type),
+            options = leaflet::layersControlOptions(collapsed = FALSE)
           )
       })
     }
   )
 }
+

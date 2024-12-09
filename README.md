@@ -79,6 +79,17 @@ lmp_data <- fetch_lmp_data(
     )
     ```
 
-## Next Section:
+## Next Section
 
-## Last Section:
+## How to use CA_map() function
+
+The CA_map() function is a simple function that allows you to visualize the LMP data on a map of California. The function takes in a data frame of LMP data and plots the LMP values for each location on a map of California. The user can then visualize LMPs, congestion, losses, and transmission lines.
+
+The function takes in a single instance of data, and creates a map of California.
+
+The user can choose to input a data frame into the function, use argument "peak_load" (September 6, 2022 at 5 PM), or use the default instance of data
+### Example:
+```{r}
+# Plot LMP data on a map of California
+CA_map()
+```
