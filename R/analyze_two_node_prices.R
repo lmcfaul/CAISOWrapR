@@ -126,8 +126,8 @@ compare_lmps_visual = function(df1 = read.csv(system.file("extdata", "San_Franci
     hour = as.numeric(substr(time_only, 1, 2))
   )
   
-  avg_price_per_time1 <- dplyr::filter(df1, time_only == paste0(sprintf("%02d", hour), ":00:00")) %>%
-    dplyr::group_by(hour) %>%
+  avg_price_per_time1 <- dplyr::filter(df1, time_only == paste0(sprintf("%02d", hour), ":00:00")) |>
+    dplyr::group_by(hour) |>
     dplyr::summarise(
       lower_whisker = quantile(lmp, 0.1, na.rm = TRUE),
       lower_quartile = quantile(lmp, 0.25, na.rm = TRUE),
@@ -137,8 +137,8 @@ compare_lmps_visual = function(df1 = read.csv(system.file("extdata", "San_Franci
       city = dplyr::pull(df1, city)[1]
     )
   
-  avg_price_per_time2 <- dplyr::filter(df2, time_only == paste0(sprintf("%02d", hour), ":00:00")) %>%
-    dplyr::group_by(hour) %>%
+  avg_price_per_time2 <- dplyr::filter(df2, time_only == paste0(sprintf("%02d", hour), ":00:00")) |>
+    dplyr::group_by(hour) |>
     dplyr::summarise(
       lower_whisker = quantile(lmp, 0.1, na.rm = TRUE),
       lower_quartile = quantile(lmp, 0.25, na.rm = TRUE),
@@ -272,7 +272,7 @@ compare_lmps_visual = function(df1 = read.csv(system.file("extdata", "San_Franci
 #' @export
 compare_lmps_visual_seasonal = function(df1 = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR")), df2 = read.csv(system.file("extdata", "Los_Angeles_node_2023.csv", package = "CAISOWrapR"))) {
   
-  df1 <- df1 %>%
+  df1 <- df1 |>
     dplyr::mutate(
       interval_start_utc = as.POSIXct(interval_start_utc, format = "%Y-%m-%d %H:%M:%S", tz = "UTC"),
       interval_start_pst = lubridate::with_tz(interval_start_utc, tzone = "America/Los_Angeles"),
@@ -288,7 +288,7 @@ compare_lmps_visual_seasonal = function(df1 = read.csv(system.file("extdata", "S
       )
     )
   
-  df2 <- df2 %>%
+  df2 <- df2 |>
     dplyr::mutate(
       interval_start_utc = as.POSIXct(interval_start_utc, format = "%Y-%m-%d %H:%M:%S", tz = "UTC"),
       interval_start_pst = lubridate::with_tz(interval_start_utc, tzone = "America/Los_Angeles"),
@@ -304,9 +304,9 @@ compare_lmps_visual_seasonal = function(df1 = read.csv(system.file("extdata", "S
       )
     )
   
-  avg_price_per_time1 <- df1 %>%
-    dplyr::filter(time_only == paste0(sprintf("%02d", hour), ":00:00")) %>%
-    dplyr::group_by(hour, season) %>%
+  avg_price_per_time1 <- df1 |>
+    dplyr::filter(time_only == paste0(sprintf("%02d", hour), ":00:00")) |>
+    dplyr::group_by(hour, season) |>
     dplyr::summarise(
       lower_whisker = quantile(lmp, 0.1, na.rm = TRUE),
       lower_quartile = quantile(lmp, 0.25, na.rm = TRUE),
@@ -316,9 +316,9 @@ compare_lmps_visual_seasonal = function(df1 = read.csv(system.file("extdata", "S
       city = dplyr::pull(df1, city)[1]
     )
   
-  avg_price_per_time2 <- df2 %>%
-    dplyr::filter(time_only == paste0(sprintf("%02d", hour), ":00:00")) %>%
-    dplyr::group_by(hour, season) %>%
+  avg_price_per_time2 <- df2 |>
+    dplyr::filter(time_only == paste0(sprintf("%02d", hour), ":00:00")) |>
+    dplyr::group_by(hour, season) |>
     dplyr::summarise(
       lower_whisker = quantile(lmp, 0.1, na.rm = TRUE),
       lower_quartile = quantile(lmp, 0.25, na.rm = TRUE),
@@ -452,7 +452,7 @@ compare_lmps_visual_seasonal = function(df1 = read.csv(system.file("extdata", "S
 #' 
 #' @export
 compare_congestion_visual = function(df1 = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR")), df2 = read.csv(system.file("extdata", "Los_Angeles_node_2023.csv", package = "CAISOWrapR"))){
-  df1 <- df1 %>%
+  df1 <- df1 |>
     dplyr::mutate(
       interval_start_utc = as.POSIXct(interval_start_utc, format = "%Y-%m-%d %H:%M:%S", tz = "UTC"),
       interval_start_pst = lubridate::with_tz(interval_start_utc, tzone = "America/Los_Angeles"),
@@ -460,7 +460,7 @@ compare_congestion_visual = function(df1 = read.csv(system.file("extdata", "San_
       hour = as.numeric(substr(time_only, 1, 2))
     )
   
-  df2 <- df2 %>%
+  df2 <- df2 |>
     dplyr::mutate(
       interval_start_utc = as.POSIXct(interval_start_utc, format = "%Y-%m-%d %H:%M:%S", tz = "UTC"),
       interval_start_pst = lubridate::with_tz(interval_start_utc, tzone = "America/Los_Angeles"),
@@ -468,9 +468,9 @@ compare_congestion_visual = function(df1 = read.csv(system.file("extdata", "San_
       hour = as.numeric(substr(time_only, 1, 2))
     )
   
-  avg_price_per_time1 <- df1 %>%
-    dplyr::filter(time_only == paste0(sprintf("%02d", hour), ":00:00")) %>% 
-    dplyr::group_by(hour) %>%
+  avg_price_per_time1 <- df1 |>
+    dplyr::filter(time_only == paste0(sprintf("%02d", hour), ":00:00")) |>
+    dplyr::group_by(hour) |>
     dplyr::summarise(
       lower_whisker = quantile(congestion, 0.1, na.rm = TRUE),
       lower_quartile = quantile(congestion, 0.25, na.rm = TRUE),
@@ -480,9 +480,9 @@ compare_congestion_visual = function(df1 = read.csv(system.file("extdata", "San_
       city = dplyr::pull(df1, city)[1]
     )
   
-  avg_price_per_time2 <- df2 %>%
-    dplyr::filter(time_only == paste0(sprintf("%02d", hour), ":00:00")) %>% 
-    dplyr::group_by(hour) %>%
+  avg_price_per_time2 <- df2 |>
+    dplyr::filter(time_only == paste0(sprintf("%02d", hour), ":00:00")) |>
+    dplyr::group_by(hour) |>
     dplyr::summarise(
       lower_whisker = quantile(congestion, 0.1, na.rm = TRUE),
       lower_quartile = quantile(congestion, 0.25, na.rm = TRUE),
@@ -616,7 +616,7 @@ compare_congestion_visual = function(df1 = read.csv(system.file("extdata", "San_
 #' @export
 compare_congestion_visual_seasonal = function(df1 = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR")), df2 = read.csv(system.file("extdata", "Los_Angeles_node_2023.csv", package = "CAISOWrapR"))) {
   
-  df1 <- df1 %>%
+  df1 <- df1 |>
     dplyr::mutate(
       interval_start_utc = as.POSIXct(interval_start_utc, format = "%Y-%m-%d %H:%M:%S", tz = "UTC"),
       interval_start_pst = lubridate::with_tz(interval_start_utc, tzone = "America/Los_Angeles"),
@@ -632,7 +632,7 @@ compare_congestion_visual_seasonal = function(df1 = read.csv(system.file("extdat
       )
     )
   
-  df2 <- df2 %>%
+  df2 <- df2 |>
     dplyr::mutate(
       interval_start_utc = as.POSIXct(interval_start_utc, format = "%Y-%m-%d %H:%M:%S", tz = "UTC"),
       interval_start_pst = lubridate::with_tz(interval_start_utc, tzone = "America/Los_Angeles"),
@@ -648,9 +648,9 @@ compare_congestion_visual_seasonal = function(df1 = read.csv(system.file("extdat
       )
     )
   
-  avg_price_per_time1 <- df1 %>%
-    dplyr::filter(time_only == paste0(sprintf("%02d", hour), ":00:00")) %>% 
-    dplyr::group_by(hour, season) %>%
+  avg_price_per_time1 <- df1 |>
+    dplyr::filter(time_only == paste0(sprintf("%02d", hour), ":00:00")) |>
+    dplyr::group_by(hour, season) |>
     dplyr::summarise(
       lower_whisker = quantile(congestion, 0.1, na.rm = TRUE),
       lower_quartile = quantile(congestion, 0.25, na.rm = TRUE),
@@ -660,9 +660,9 @@ compare_congestion_visual_seasonal = function(df1 = read.csv(system.file("extdat
       city = dplyr::pull(df1, city)[1]
     )
   
-  avg_price_per_time2 <- df2 %>%
-    dplyr::filter(time_only == paste0(sprintf("%02d", hour), ":00:00")) %>% 
-    dplyr::group_by(hour, season) %>%
+  avg_price_per_time2 <- df2 |>
+    dplyr::filter(time_only == paste0(sprintf("%02d", hour), ":00:00")) |> 
+    dplyr::group_by(hour, season) |>
     dplyr::summarise(
       lower_whisker = quantile(congestion, 0.1, na.rm = TRUE),
       lower_quartile = quantile(congestion, 0.25, na.rm = TRUE),
@@ -798,7 +798,7 @@ compare_congestion_visual_seasonal = function(df1 = read.csv(system.file("extdat
 #' 
 #' @export
 compare_losses_visual = function(df1 = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR")), df2 = read.csv(system.file("extdata", "Los_Angeles_node_2023.csv", package = "CAISOWrapR"))){
-  df1 <- df1 %>%
+  df1 <- df1 |>
     dplyr::mutate(
       interval_start_utc = as.POSIXct(interval_start_utc, format = "%Y-%m-%d %H:%M:%S", tz = "UTC"),
       interval_start_pst = lubridate::with_tz(interval_start_utc, tzone = "America/Los_Angeles"),
@@ -806,7 +806,7 @@ compare_losses_visual = function(df1 = read.csv(system.file("extdata", "San_Fran
       hour = as.numeric(substr(time_only, 1, 2))
     )
   
-  df2 <- df2 %>%
+  df2 <- df2 |>
     dplyr::mutate(
       interval_start_utc = as.POSIXct(interval_start_utc, format = "%Y-%m-%d %H:%M:%S", tz = "UTC"),
       interval_start_pst = lubridate::with_tz(interval_start_utc, tzone = "America/Los_Angeles"),
@@ -814,9 +814,9 @@ compare_losses_visual = function(df1 = read.csv(system.file("extdata", "San_Fran
       hour = as.numeric(substr(time_only, 1, 2))
     )
   
-  avg_price_per_time1 <- df1 %>%
-    dplyr::filter(time_only == paste0(sprintf("%02d", hour), ":00:00")) %>% 
-    dplyr::group_by(hour) %>%
+  avg_price_per_time1 <- df1 |>
+    dplyr::filter(time_only == paste0(sprintf("%02d", hour), ":00:00")) |>
+    dplyr::group_by(hour) |>
     dplyr::summarise(
       lower_whisker = quantile(loss, 0.1, na.rm = TRUE),
       lower_quartile = quantile(loss, 0.25, na.rm = TRUE),
@@ -826,9 +826,9 @@ compare_losses_visual = function(df1 = read.csv(system.file("extdata", "San_Fran
       city = dplyr::pull(df1, city)[1]
     )
   
-  avg_price_per_time2 <- df2 %>%
-    dplyr::filter(time_only == paste0(sprintf("%02d", hour), ":00:00")) %>% 
-    dplyr::group_by(hour) %>%
+  avg_price_per_time2 <- df2 |>
+    dplyr::filter(time_only == paste0(sprintf("%02d", hour), ":00:00")) |> 
+    dplyr::group_by(hour) |>
     dplyr::summarise(
       lower_whisker = quantile(loss, 0.1, na.rm = TRUE),
       lower_quartile = quantile(loss, 0.25, na.rm = TRUE),
@@ -962,7 +962,7 @@ compare_losses_visual = function(df1 = read.csv(system.file("extdata", "San_Fran
 #' @export
 compare_losses_visual_seasonal = function(df1 = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR")), df2 = read.csv(system.file("extdata", "Los_Angeles_node_2023.csv", package = "CAISOWrapR"))){
   
-  df1 <- df1 %>%
+  df1 <- df1 |>
     dplyr::mutate(
       interval_start_utc = as.POSIXct(interval_start_utc, format = "%Y-%m-%d %H:%M:%S", tz = "UTC"),
       interval_start_pst = lubridate::with_tz(interval_start_utc, tzone = "America/Los_Angeles"),
@@ -978,7 +978,7 @@ compare_losses_visual_seasonal = function(df1 = read.csv(system.file("extdata", 
       )
     )
   
-  df2 <- df2 %>%
+  df2 <- df2 |>
     dplyr::mutate(
       interval_start_utc = as.POSIXct(interval_start_utc, format = "%Y-%m-%d %H:%M:%S", tz = "UTC"),
       interval_start_pst = lubridate::with_tz(interval_start_utc, tzone = "America/Los_Angeles"),
@@ -994,9 +994,9 @@ compare_losses_visual_seasonal = function(df1 = read.csv(system.file("extdata", 
       )
     )
   
-  avg_price_per_time1 <- df1 %>%
-    dplyr::filter(time_only == paste0(sprintf("%02d", hour), ":00:00")) %>% 
-    dplyr::group_by(hour, season) %>%
+  avg_price_per_time1 <- df1 |>
+    dplyr::filter(time_only == paste0(sprintf("%02d", hour), ":00:00")) |>
+    dplyr::group_by(hour, season) |>
     dplyr::summarise(
       lower_whisker = quantile(loss, 0.1, na.rm = TRUE),
       lower_quartile = quantile(loss, 0.25, na.rm = TRUE),
@@ -1006,9 +1006,9 @@ compare_losses_visual_seasonal = function(df1 = read.csv(system.file("extdata", 
       city = dplyr::pull(df1, city)[1]
     )
   
-  avg_price_per_time2 <- df2 %>%
-    dplyr::filter(time_only == paste0(sprintf("%02d", hour), ":00:00")) %>% 
-    dplyr::group_by(hour, season) %>%
+  avg_price_per_time2 <- df2 |>
+    dplyr::filter(time_only == paste0(sprintf("%02d", hour), ":00:00")) |>
+    dplyr::group_by(hour, season) |>
     dplyr::summarise(
       lower_whisker = quantile(loss, 0.1, na.rm = TRUE),
       lower_quartile = quantile(loss, 0.25, na.rm = TRUE),
