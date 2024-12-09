@@ -12,7 +12,7 @@
 #' @export
 merge_lmp_locations <- function(instance) {
   # Load the location data
-  location_data <- read.csv("data/cities_and_lmps.csv")
+  location_data <- read.csv(system.file("extdata", "cities_and_lmps.csv", package = "CAISOWrapR"))
   
   # Merge the instance data with the location data
   merged_data <- instance %>%
