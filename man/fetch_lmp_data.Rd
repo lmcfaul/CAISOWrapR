@@ -7,111 +7,74 @@
 fetch_lmp_data(client, dataset = "caiso_lmp_real_time_15_min", ...)
 }
 \arguments{
-\item{client}{A GridStatusClient object created with \code{\link{create_gridstatus_client}}}
+\item{client}{A GridStatusClient object created with \code{\link{create_caiso_client}}}
 
 \item{dataset}{Name of the CAISO LMP dataset to query. (default: "caiso_lmp_real_time_15_min")
 Options:
 \itemize{
 \item "caiso_lmp_real_time_15_min": 15-minute real-time LMP data
 \item "caiso_lmp_real_time_5_min": 5-minute real-time LMP data
-\item "caiso_lmp_day_ahead_hourly": 1-minute real-time LMP data
+\item "caiso_lmp_day_ahead_hourly": Hourly day-ahead LMP data
 }}
-
-\item{start_time}{Start time for data retrieval (optional)
-\itemize{
-\item Format: "YYYY-MM-DD HH:MM:SS" or "YYYY-MM-DD"
-\item Timezone: Automatically converted to UTC
-\item If not provided, uses earliest available time
-}}
-
-\item{end_time}{End time for data retrieval (optional)
-\itemize{
-\item Format: "YYYY-MM-DD HH:MM:SS" or "YYYY-MM-DD"
-\item Timezone: Automatically converted to UTC
-\item If not provided, uses latest available time
-}}
-
-\item{filter_column}{Column to apply filtering on (optional)}
-
-\item{filter_value}{Value to filter by (optional)}
-
-\item{filter_operator}{Filtering operator (optional)
-Supported operators:
-\itemize{
-\item "=" (exact match)
-\item ">" (greater than)
-\item "<" (less than)
-\item ">=" (greater than or equal to)
-\item "<=" (less than or equal to)
-\item "in" (multiple value matching)
-}}
-
-\item{columns}{Specific columns to retrieve (optional)
-\itemize{
-\item Character vector of column names
-\item If not provided, returns all columns
-}}
-
-\item{limit}{Maximum number of records to return}
-
-\item{page_size}{Number of records per page (optional)
-\itemize{
-\item Uses API's default page size if not specified
-}}
-
-\item{resample}{Frequency to resample data (optional)}
-
-\item{resample_by}{Columns to group by when resampling (optional)
-\itemize{
-\item Default: Groups by time index column
-}}
-
-\item{resample_function}{Aggregation method for resampling (default: "mean")
-Options:
-\itemize{
-\item "mean"
-\item "sum"
-\item "min"
-\item "max"
-\item "stddev"
-\item "count"
-\item "variance"
-}}
-
-\item{publish_tm}{Controls filtering based on publish time (optional)
-\itemize{
-\item "latest_report": Most recently published report
-\item "latest": Most recent record for each timestamp
-\item Specific timestamp string
-\item NULL: No filtering
-}}
-
-\item{use_cursor_pagination}{Use cursor-based pagination (default: TRUE)}
-
-\item{tz}{Timezone for timestamp conversion (default: "UTC")}
 }
 \value{
 A data frame containing the retrieved LMP data
 }
 \description{
-Retrieve LMP data with flexible querying and filtering options.
+Retrieve LMP data with essential querying options.
 }
-\section{Nuances and Considerations}{
+\section{Advanced Query Options (Future Use)}{
 
+The \code{fetch_lmp_data} function currently supports essential parameters, but may support additional features in the future. These advanced options are aligned with the capabilities of the Grid Status API and are available for custom extensions. The following options are planned for future inclusion:
 \itemize{
-\item Input times are converted to UTC
-\item Can specify output timezone via \code{tz} parameter
-\item Automatically handles multi-page responses
-\item Supports both cursor and traditional pagination
-\item Automatically converts:
+\item \strong{Time-based Filtering}:
 \itemize{
-\item Timestamps to POSIXct
-\item Categorical columns to factors
-\item Numeric columns to numeric type
+\item \code{start_time} and \code{end_time} for retrieving data over specific intervals.
+\item Formats: \code{"YYYY-MM-DD HH:MM:SS"} or \code{"YYYY-MM-DD"} (automatically converted to UTC).
 }
-\item Provides informative error messages
-\item Gracefully handles conversion issues
+\item \strong{Filtering and Selection}:
+\itemize{
+\item \code{filter_column}, \code{filter_value}, and \code{filter_operator} for applying custom filters on data.
+\itemize{
+\item \code{filter_column}: The column to apply the filter on (e.g., "location").
+\item \code{filter_value}: The value to match against in the selected column.
+\item \code{filter_operator}: Supported operators include:
+\itemize{
+\item \code{"="} (exact match)
+\item \code{">"} (greater than)
+\item \code{"<"} (less than)
+\item \code{">="} (greater than or equal to)
+\item \code{"<="} (less than or equal to)
+\item \code{"in"} (multiple value matching).
 }
+}
+\item \code{columns} to specify which columns to retrieve from the dataset.
+}
+\item \strong{Resampling and Aggregation}:
+\itemize{
+\item \code{resample_frequency} for specifying the frequency at which to resample the data (e.g., "1H" for hourly).
+\item \code{resample_by} for grouping the data when resampling (e.g., "location", "market").
+\item \code{resample_function} for the aggregation method when resampling:
+\itemize{
+\item \code{"mean"}, \code{"sum"}, \code{"min"}, \code{"max"}, \code{"stddev"}, \code{"count"}, \code{"variance"}.
+}
+}
+\item \strong{Time Zone Customization}:
+\itemize{
+\item \code{tz} to specify the time zone for timestamp conversion. This would adjust timestamps according to the local time zone, instead of always using UTC.
+}
+\item \strong{Pagination}:
+\itemize{
+\item \code{page_size} and \code{limit} to control pagination:
+\itemize{
+\item \code{page_size}: Number of records per page (default is the API’s value).
+\item \code{limit}: Maximum number of records to return.
+}
+\item Supports cursor-based pagination or traditional pagination, depending on the API response.
+}
+}
+
+These advanced options are not currently implemented but are intended for future use. Users may extend the function themselves or refer to the API documentation for more detailed customization.
 }
 
 \examples{
@@ -120,28 +83,7 @@ Retrieve LMP data with flexible querying and filtering options.
 client <- create_caiso_client(api_key = "your_api_key")
 
 # Basic usage
-lmp_data <- fetch_lmp_data(
-  client,
-  start = "2024-01-01 00:00:00",
-  end = "2024-01-02 00:00:00"
-)
-
-# Advanced filtering
-filtered_data <- fetch_lmp_data(
-  client,
-  filter_column = "location",
-  filter_value = "",
-  filter_operator = "=",
-  columns = c("interval_start_utc", "lmp", "location")
-)
-
-# Resampling data
-resampled_data <- fetch_lmp_data(
-  client,
-  resample = "1H",  # Resample to hourly
-  resample_function = "mean",
-  resample_by = c("location", "market")
-)
+lmp_data <- fetch_lmp_data(client)
 }
 
 }

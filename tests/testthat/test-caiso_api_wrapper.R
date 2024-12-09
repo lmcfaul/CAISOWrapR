@@ -1,3 +1,5 @@
+library(withr)
+
 # Mock objects and helper functions for testing
 create_mock_client <- function() {
   structure(

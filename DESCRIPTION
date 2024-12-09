@@ -3,13 +3,7 @@ Title: CAISO API Wrapper using Grid Status API
 Version: 0.1.0
 Authors@R: c(person("Mack", "Smith", 
                     email = "macks26@stanford.edu", 
-                    role = c("aut", "cre")),
-             person("First", "Last",
-                    email = "",
-                    role = c("")),
-             person("First", "Last",
-                    email = "",
-                    role = c("")))
+                    role = c("aut", "cre")))
 Description: 
     This package provides a wrapper for the CAISO locational marginal price 
     (LMP) datasets using the Grid Status API. The package allows users to 
@@ -29,9 +23,11 @@ Config/testthat/edition: 3
 VignetteBuilder: quarto
 Imports: 
     dplyr,
-    geosphere,
     ggplot2,
     ggthemes,
+    grid,
+    gridExtra,
+    gtable,
     httr2,
     leaflet,
     lubridate,

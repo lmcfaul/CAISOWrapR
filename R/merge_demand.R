@@ -7,9 +7,6 @@
 #' @return a data frame with the node data and the demand data
 #' @examples merge_demand(node_data)
 #' 
-#' @importFrom utils read.csv
-#' @importFrom dplyr left_join select
-#' 
 #' @export
 merge_demand <- function(node_data) {
   # Read CAISO demand data

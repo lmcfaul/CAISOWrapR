@@ -26,10 +26,10 @@ library(gtable)
 example_table <- tableGrob(head(mtcars))
 
 # Add padding to the table
-padded_table <- gtable_add_padding(example_table, unit(c(1, 1, 1, 1), "cm"))
+padded_table <- gtable_add_padding(example_table, grid::unit(c(1, 1, 1, 1), "cm"))
 
 # Print the padded table
-grid.newpage()
-grid.draw(padded_table)
+grid::grid.newpage()
+grid::grid.draw(padded_table)
 
 }

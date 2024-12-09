@@ -26,13 +26,6 @@
 #' 
 #' @return A pdf file with the two plots
 #' 
-#' @import grid
-#' @import gridExtra
-#' @import ggplot2
-#' @import lubridate
-#' @import gtable
-#' @import dplyr
-#' 
 #' @export
 analyze_single_node_data <- function(node_df = read.csv("inst/extdata/San_Francisco_node_2023.csv"), output_pdf_path = "single_node_data.pdf") {
   # Visualizations for LMP
@@ -194,11 +187,6 @@ analyze_single_node_data <- function(node_df = read.csv("inst/extdata/San_Franci
 #' 
 #' @return A `ggplot2` object with a box and whisker plot.
 #' 
-#' @importFrom ggplot2 ggplot geom_rect geom_segment geom_point scale_x_discrete labs theme_solarized theme
-#' @importFrom dplyr mutate group_by summarise
-#' @importFrom lubridate with_tz ymd_hms
-#' @importFrom ggthemes theme_solarized
-#' 
 #' @export
 visualize_node <- function(node_df = read.csv("inst/extdata/San_Francisco_node_2023.csv")) {
   
@@ -281,11 +269,6 @@ visualize_node <- function(node_df = read.csv("inst/extdata/San_Francisco_node_2
 #' @param node_df A dataframe of locational marginal prices for a year for one node. The default for this is San Francisco 2023, but a user can input a different dataframe by running the `pulldata_node` function.
 #' 
 #' @return A `ggplot2` object displaying the distribution of LMPs by hour for the location over a day.
-#' 
-#' @importFrom dplyr mutate filter group_by summarise
-#' @importFrom ggplot2 ggplot aes geom_rect geom_segment geom_point scale_x_continuous labs facet_wrap theme
-#' @importFrom lubridate with_tz ymd_hms
-#' @importFrom ggthemes theme_solarized
 #' 
 #' @export
 visualize_node_seasonal <- function(node_df = read.csv("inst/extdata/San_Francisco_node_2023.csv")) {
@@ -388,11 +371,6 @@ visualize_node_seasonal <- function(node_df = read.csv("inst/extdata/San_Francis
 #' 
 #' @return A `ggplot2` object displaying the congestion price distribution by 15-minute interval.
 #' 
-#' @importFrom ggplot2 ggplot aes geom_rect geom_segment geom_point scale_x_discrete labs theme
-#' @importFrom dplyr mutate group_by summarise
-#' @importFrom lubridate with_tz ymd_hms
-#' @importFrom ggthemes theme_solarized
-#' 
 #' @export
 visualize_node_congestion = function(node_df = read.csv("inst/extdata/San_Francisco_node_2023.csv")) {
   
@@ -476,11 +454,6 @@ visualize_node_congestion = function(node_df = read.csv("inst/extdata/San_Franci
 #' @param node_df A dataframe of locational marginal prices for a year for one node. The default for this is San Francisco 2023, but a user can input a different dataframe by running the `pulldata_node` function.
 #' 
 #' @return A `ggplot2` object displaying the distribution of LMPs by hour for the location over a day, split by season.
-#' 
-#' @importFrom dplyr mutate group_by summarise filter case_when
-#' @importFrom ggplot2 ggplot aes geom_rect geom_segment geom_point scale_x_continuous labs facet_wrap theme
-#' @importFrom lubridate with_tz ymd_hms
-#' @importFrom ggthemes theme_solarized
 #' 
 #' @export
 visualize_node_seasonal_congestion = function(node_df = read.csv("inst/extdata/San_Francisco_node_2023.csv")) {
@@ -583,11 +556,6 @@ visualize_node_seasonal_congestion = function(node_df = read.csv("inst/extdata/S
 #' 
 #' @return A `ggplot2` object displaying a box and whisker plot for the loss pricing adjustments by time interval.
 #' 
-#' @importFrom ggplot2 ggplot aes geom_rect geom_segment geom_point scale_x_discrete labs theme element_text
-#' @importFrom dplyr mutate group_by summarise
-#' @importFrom lubridate with_tz ymd_hms
-#' @importFrom ggthemes theme_solarized
-#' 
 #' @export
 visualize_node_losses = function(node_df = read.csv("inst/extdata/San_Francisco_node_2023.csv")) {
   
@@ -672,11 +640,6 @@ visualize_node_losses = function(node_df = read.csv("inst/extdata/San_Francisco_
 #' @param node_df A dataframe of locational marginal prices for a year for one node. The default for this is San Francisco 2023, but a user can input a different dataframe by running the `pulldata_node` function.
 #' 
 #' @return A `ggplot2` object displaying the distribution of LMPs by hour for the location over the day, separated by season.
-#' 
-#' @importFrom dplyr mutate group_by summarise filter case_when
-#' @importFrom ggplot2 ggplot aes geom_rect geom_segment geom_point scale_x_continuous labs facet_wrap theme element_text
-#' @importFrom lubridate with_tz ymd_hms
-#' @importFrom ggthemes theme_solarized
 #' 
 #' @export
 visualize_node_seasonal_losses = function(node_df = read.csv("inst/extdata/San_Francisco_node_2023.csv")) {
@@ -779,10 +742,6 @@ visualize_node_seasonal_losses = function(node_df = read.csv("inst/extdata/San_F
 #' 
 #' @return A `ggplot2` object displaying the distribution of LMPs by demand bucket.
 #' 
-#' @importFrom ggplot2 ggplot aes geom_rect geom_segment geom_point scale_x_discrete labs theme element_text
-#' @importFrom dplyr mutate group_by summarise
-#' @importFrom ggthemes theme_solarized
-#' 
 #' @export
 visualize_node_demand <- function(node_df = read.csv("inst/extdata/San_Francisco_node_2023.csv")) {
   
@@ -870,10 +829,6 @@ visualize_node_demand <- function(node_df = read.csv("inst/extdata/San_Francisco
 #' @param node_df A dataframe of locational marginal prices for a year for one node. The default for this is San Francisco 2023, but a user can input a different dataframe by running the `pulldata_node` function.
 #' 
 #' @return A `ggplot2` object displaying the distribution of LMPs by demand bucket (up to 40,000).
-#' 
-#' @importFrom ggplot2 ggplot aes geom_rect geom_segment geom_point scale_x_discrete labs theme element_text
-#' @importFrom dplyr mutate filter group_by summarise
-#' @importFrom ggthemes theme_solarized
 #' 
 #' @export
 visualize_node_demand_without_high_demand_hours <- function(node_df = read.csv("inst/extdata/San_Francisco_node_2023.csv")) {
@@ -967,11 +922,6 @@ visualize_node_demand_without_high_demand_hours <- function(node_df = read.csv("
 #' 
 #' @return A `ggplot2` object displaying the distribution of congestion by demand bucket (up to 40,000).
 #' 
-#' @importFrom ggplot2 ggplot aes geom_rect geom_segment geom_point scale_x_discrete labs theme element_text
-#' @importFrom dplyr mutate group_by summarise
-#' @importFrom ggthemes theme_solarized
-#' @importFrom lubridate with_tz ymd_hms
-#' 
 #' @export
 visualize_node_demand_congestion <- function(node_df = read.csv("inst/extdata/San_Francisco_node_2023.csv")) {
   node_df = merge_demand(node_df)
@@ -1061,11 +1011,6 @@ visualize_node_demand_congestion <- function(node_df = read.csv("inst/extdata/Sa
 #' @param node_df A dataframe of locational marginal prices for a year for one node. The default for this is San Francisco 2023, but a user can input a different dataframe by running the `pulldata_node` function.
 #' 
 #' @return A `ggplot2` object displaying the distribution of congestion by demand bucket (up to 40,000).
-#' 
-#' @importFrom ggplot2 ggplot aes geom_rect geom_segment geom_point scale_x_discrete labs theme element_text
-#' @importFrom dplyr mutate filter group_by summarise
-#' @importFrom ggthemes theme_solarized
-#' @importFrom lubridate with_tz ymd_hms
 #' 
 #' @export
 visualize_node_demand_without_high_demand_hours_congestion <- function(node_df = read.csv("inst/extdata/San_Francisco_node_2023.csv")) {

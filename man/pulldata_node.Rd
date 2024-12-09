@@ -7,18 +7,20 @@
 pulldata_node(city = NULL, node = NULL, year = 2023, api_key)
 }
 \arguments{
-\item{city}{city (automatically set to NULL)}
+\item{city}{City name (automatically set to NULL).}
 
-\item{node}{node (automatically set to NULL)}
+\item{node}{Node name (automatically set to NULL).}
 
-\item{year}{year (2020-2024)}
+\item{year}{Year (2020-2023).}
+
+\item{api_key}{API key for the CAISO API.}
 }
 \value{
-a dataframe of the price every 15 minutes for that year in that location
+A dataframe of the price every 15 minutes for that year in that location.
 }
 \description{
-This function takes in a city or a node and a year and returns a dataframe of the price every 15 minutes for that year in that location. Default is Palo Alto for 2024
+This function takes in a city or a node and a year and returns a dataframe of the price every 15 minutes for that year in that location. Default is Palo Alto for 2023.
 }
 \examples{
-pulldata_node(city = "San Diego", year = 2020)
+pulldata_node(city = "San Diego", year = 2020, api_key = api_key)
 }

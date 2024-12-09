@@ -121,71 +121,14 @@ execute_api_request <- function(request) {
 
 #' Fetch Locational Marginal Price (LMP) Data from Grid Status API
 #'
-#' Retrieve LMP data with flexible querying and filtering options.
+#' Retrieve LMP data with essential querying options.
 #'
-#' @param client A GridStatusClient object created with \code{\link{create_gridstatus_client}}
+#' @param client A GridStatusClient object created with \code{\link{create_caiso_client}}
 #' @param dataset Name of the CAISO LMP dataset to query. (default: "caiso_lmp_real_time_15_min")
 #'   Options:
 #'   - "caiso_lmp_real_time_15_min": 15-minute real-time LMP data
 #'   - "caiso_lmp_real_time_5_min": 5-minute real-time LMP data
-#'   - "caiso_lmp_day_ahead_hourly": 1-minute real-time LMP data
-#'   
-#' @param start_time Start time for data retrieval (optional)
-#'   - Format: "YYYY-MM-DD HH:MM:SS" or "YYYY-MM-DD"
-#'   - Timezone: Automatically converted to UTC
-#'   - If not provided, uses earliest available time
-#'   
-#' @param end_time End time for data retrieval (optional)
-#'   - Format: "YYYY-MM-DD HH:MM:SS" or "YYYY-MM-DD"
-#'   - Timezone: Automatically converted to UTC
-#'   - If not provided, uses latest available time
-#'   
-#' @param filter_column Column to apply filtering on (optional)
-#' 
-#' @param filter_value Value to filter by (optional)
-#' 
-#' @param filter_operator Filtering operator (optional)
-#'   Supported operators:
-#'   - "=" (exact match)
-#'   - ">" (greater than)
-#'   - "<" (less than)
-#'   - ">=" (greater than or equal to)
-#'   - "<=" (less than or equal to)
-#'   - "in" (multiple value matching)
-#'   
-#' @param columns Specific columns to retrieve (optional)
-#'   - Character vector of column names
-#'   - If not provided, returns all columns
-#'   
-#' @param limit Maximum number of records to return
-#' 
-#' @param page_size Number of records per page (optional)
-#'   - Uses API's default page size if not specified
-#'   
-#' @param resample_frequency Frequency to resample data (optional)
-#' 
-#' @param resample_by Columns to group by when resampling (optional)
-#'   - Default: Groups by time index column
-#'   
-#' @param resample_function Aggregation method for resampling (default: "mean")
-#'   Options:
-#'   - "mean"
-#'   - "sum"
-#'   - "min"
-#'   - "max"
-#'   - "stddev"
-#'   - "count"
-#'   - "variance"
-#'   
-#' @param publish_time Controls filtering based on publish time (optional)
-#'   - "latest_report": Most recently published report
-#'   - "latest": Most recent record for each timestamp
-#'   - Specific timestamp string
-#'   - NULL: No filtering
-#'   
-#' @param use_cursor_pagination Use cursor-based pagination (default: TRUE)
-#' 
-#' @param tz Timezone for timestamp conversion (default: "UTC")
+#'   - "caiso_lmp_day_ahead_hourly": Hourly day-ahead LMP data
 #'
 #' @return A data frame containing the retrieved LMP data
 #'
@@ -195,45 +138,45 @@ execute_api_request <- function(request) {
 #' client <- create_caiso_client(api_key = "your_api_key")
 #'
 #' # Basic usage
-#' lmp_data <- fetch_lmp_data(
-#'   client,
-#'   start = "2024-01-01 00:00:00",
-#'   end = "2024-01-02 00:00:00"
-#' )
-#'
-#' # Advanced filtering
-#' filtered_data <- fetch_lmp_data(
-#'   client,
-#'   filter_column = "location",
-#'   filter_value = "",
-#'   filter_operator = "=",
-#'   columns = c("interval_start_utc", "lmp", "location")
-#' )
-#'
-#' # Resampling data
-#' resampled_data <- fetch_lmp_data(
-#'   client,
-#'   resample_frequency = "1H",  # Resample to hourly
-#'   resample_function = "mean",
-#'   resample_by = c("location", "market")
-#' )
+#' lmp_data <- fetch_lmp_data(client)
 #' }
 #'
-#' @section Nuances and Considerations:
-#' \itemize{
-#'   \item Input times are converted to UTC
-#'   \item Can specify output timezone via \code{tz} parameter
-#'   \item Automatically handles multi-page responses
-#'   \item Supports both cursor and traditional pagination
-#'   \item Automatically converts:
-#'     \itemize{
-#'       \item Timestamps to POSIXct
-#'       \item Categorical columns to factors
-#'       \item Numeric columns to numeric type
-#'     }
-#'   \item Provides informative error messages
-#'   \item Gracefully handles conversion issues
-#' }
+#' @section Advanced Query Options (Future Use):
+#' The \code{fetch_lmp_data} function currently supports essential parameters, but may support additional features in the future. These advanced options are aligned with the capabilities of the Grid Status API and are available for custom extensions. The following options are planned for future inclusion:
+#' 
+#' - **Time-based Filtering**:
+#'   - \code{start_time} and \code{end_time} for retrieving data over specific intervals.
+#'   - Formats: \code{"YYYY-MM-DD HH:MM:SS"} or \code{"YYYY-MM-DD"} (automatically converted to UTC).
+#' 
+#' - **Filtering and Selection**:
+#'   - \code{filter_column}, \code{filter_value}, and \code{filter_operator} for applying custom filters on data.
+#'     - \code{filter_column}: The column to apply the filter on (e.g., "location").
+#'     - \code{filter_value}: The value to match against in the selected column.
+#'     - \code{filter_operator}: Supported operators include:
+#'       - \code{"="} (exact match)
+#'       - \code{">"} (greater than)
+#'       - \code{"<"} (less than)
+#'       - \code{">="} (greater than or equal to)
+#'       - \code{"<="} (less than or equal to)
+#'       - \code{"in"} (multiple value matching).
+#'   - \code{columns} to specify which columns to retrieve from the dataset.
+#'
+#' - **Resampling and Aggregation**:
+#'   - \code{resample_frequency} for specifying the frequency at which to resample the data (e.g., "1H" for hourly).
+#'   - \code{resample_by} for grouping the data when resampling (e.g., "location", "market").
+#'   - \code{resample_function} for the aggregation method when resampling:
+#'     - \code{"mean"}, \code{"sum"}, \code{"min"}, \code{"max"}, \code{"stddev"}, \code{"count"}, \code{"variance"}.
+#'
+#' - **Time Zone Customization**:
+#'   - \code{tz} to specify the time zone for timestamp conversion. This would adjust timestamps according to the local time zone, instead of always using UTC.
+#'
+#' - **Pagination**:
+#'   - \code{page_size} and \code{limit} to control pagination:
+#'     - \code{page_size}: Number of records per page (default is the API’s value).
+#'     - \code{limit}: Maximum number of records to return.
+#'   - Supports cursor-based pagination or traditional pagination, depending on the API response.
+#'
+#' These advanced options are not currently implemented but are intended for future use. Users may extend the function themselves or refer to the API documentation for more detailed customization.
 #'
 #' @seealso \code{\link{create_caiso_client}}
 #'

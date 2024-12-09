@@ -5,18 +5,18 @@
 \title{Analyze Single Instance Data}
 \usage{
 analyze_single_instance_data(
-  instance_df,
+  instance_df = read.csv("inst/extdata/instance_normal.csv"),
   output_pdf_path = "single_instance_data.pdf"
 )
 }
 \arguments{
-\item{instance_df}{A dataframe of locational marginal prices with LMP names}
+\item{instance_df}{A dataframe of locational marginal prices with LMP names. The default dataframe is a normal day in California at 1pm. Users can change this dataframe to analyze a different instance that pulled from the \code{pulldata_instance} function. Or, to visualize the highest peak load in the last three years, use: "inst/extdata/instance_peak_load.csv"}
 
-\item{output_pdf_path}{The path to save the pdf file. There is a default path of "single_instance_data.pdf" but the user can edit this path to save the file in a different location.}
+\item{output_pdf_path}{The path to save the PDF file. The default path is "single_instance_data.pdf," but the user can modify this path to save the file in a different location.}
 }
 \value{
-A pdf file with the summary statistics and violin plot
+A PDF file with the summary statistics and violin plot.
 }
 \description{
-This function calls the functions \code{summarize_lmps} and \code{price_violin} with an inputting dataframe of an instance of data (one date and 15 minute interval) and combines the results into a pdf to export. First, the user has to call the \code{pulldata_instance} function to get the data for the instance they want to analyze.
+This function calls the functions \code{summarize_lmps} and \code{price_violin} with an inputting dataframe of an instance of data (one date and 15 minute interval) and combines the results into a PDF for export. First, the user must call the \code{pulldata_instance} function to retrieve the data for the instance they want to analyze.
 }

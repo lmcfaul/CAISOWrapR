@@ -11,7 +11,7 @@
 #' 
 #' @importFrom sf st_read
 #' @importFrom leaflet colorBin addProviderTiles setView addPolygons addPolylines addCircleMarkers addLayersControl layersControlOptions renderLeaflet leafletOutput
-#' @importFrom shiny shinyApp fluidPage tags style 
+#' @importFrom shiny shinyApp fluidPage tags
 #' @importFrom rnaturalearth ne_states
 #' @importFrom utils read.csv
 #' @importFrom tools toTitleCase

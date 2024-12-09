@@ -7,12 +7,6 @@
 #' 
 #' @return A PDF file with the summary statistics and violin plot.
 #' 
-#' @import grid gridExtra ggplot2 lubridate ymd_hms gtable
-#' @import gridExtra grid
-#' @import ggplot2 ggplot
-#' @import lubridate ymd_hms
-#' @import gtable gtable_add_padding
-#' 
 #' @export
 analyze_single_instance_data <- function(instance_df = read.csv("inst/extdata/instance_normal.csv"), output_pdf_path = "single_instance_data.pdf") {
   result_one <- summarize_lmps(instance_df)
@@ -114,10 +108,6 @@ summarize_lmps <- function(instance_df = read.csv("inst/extdata/instance_normal.
 #'
 #' @return A violin plot of the prices with an overlaid boxplot.
 #'
-#' @importFrom ggplot2 ggplot aes geom_violin geom_boxplot labs theme element_blank
-#' @import ggthemes theme_solarized
-#' @import lubridate ymd_hms
-#'
 #' @export
 #' @examples
 #' # Example Data
@@ -157,9 +147,6 @@ price_violin <- function(instance_df = read.csv("inst/extdata/instance_normal.cs
 #' @param padding A unit object specifying the padding to apply (e.g., `unit(c(1, 1, 1, 1), "cm")`).
 #' 
 #' @return A `gtable` object with the specified padding added.
-#' 
-#' @import grid gtable
-#' @import gtable gtable_add_grob
 #' 
 #' @examples
 #' library(grid)
