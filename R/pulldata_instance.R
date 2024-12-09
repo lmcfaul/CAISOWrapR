@@ -8,36 +8,37 @@
 #' 
 #' @return A dataframe with the LMP and price breakdown for the given date and time
 #' 
-#' @import lubridate
+#' @importFrom lubridate ymd_hms round_date minutes
 #' 
 #' @export
 #' 
 #' @examples
 #' pulldata_instance("2019-01-01", "00:00", api_key = api_key)
-pulldata_instance = function(date, time, api_key){
+pulldata_instance <- function(date, time, api_key) {
   
   adjust_to_nearest_15 <- function(time) {
-    parsed_time = ymd_hms(time)
-    rounded_time = round_date(parsed_time, unit = "15 minutes")
+    parsed_time <- lubridate::ymd_hms(time)
+    rounded_time <- lubridate::round_date(parsed_time, unit = "15 minutes")
     return(rounded_time)
   }
   
-  input_datetime = paste(date, time, "00")
-  input_datetime = ymd_hms(input_datetime)
+  input_datetime <- paste(date, time, "00")
+  input_datetime <- lubridate::ymd_hms(input_datetime)
   
-  start_time = adjust_to_nearest_15(input_datetime)
-  start_time_iso = format(start_time, "%Y-%m-%d %H:%M:%S")  # Remove the "T"
+  start_time <- adjust_to_nearest_15(input_datetime)
+  start_time_iso <- format(start_time, "%Y-%m-%d %H:%M:%S")  # Remove the "T"
   print(start_time_iso)
   
-  end_time = start_time + minutes(15)
-  end_time_iso = format(end_time, "%Y-%m-%d %H:%M:%S")  # Remove the "T"
+  end_time <- start_time + lubridate::minutes(15)
+  end_time_iso <- format(end_time, "%Y-%m-%d %H:%M:%S")  # Remove the "T"
   print(end_time_iso)
-
-  unique_lmps = read.csv("data/lmps.csv")
-  # Load the data
-  client_pull = create_caiso_client(api_key = api_key)
   
-  df_instance = fetch_lmp_data(
+  unique_lmps <- read.csv("inst/extdata/lmps.csv")
+  
+  # Load the data
+  client_pull <- create_caiso_client(api_key = api_key)
+  
+  df_instance <- fetch_lmp_data(
     client = client_pull,
     start_time = start_time_iso,
     end_time = end_time_iso,
@@ -46,6 +47,6 @@ pulldata_instance = function(date, time, api_key){
     filter_operator = "in",
     limit = length(unique_lmps$unique_lmps)
   )
-
+  
   return(df_instance)
 }

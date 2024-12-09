@@ -1,140 +1,130 @@
-#' create base map of NE
+#' Create a map of California with LMP prices and Transmission Lines
 #' 
-#' function creates a map of the Northeastern states of the United States
+#' This function creates a map in a Shiny App of California with LMP prices and transmission lines. The function uses the `sf`, `leaflet`, `shiny`, and `rnaturalearth` packages, and allows the map to be interactive to view different aspects of the price and different types of transmission lines. This can be used to visualize where there are high electricity prices in the state at a certain time and how the transmission lines are distributed / how they are related to those prices. The user inputs a dataframe of the LMP prices of one time period (one 15 minute interval) and the function will plot the map with the LMP prices and transmission lines. The baseline instance (time period) is a typical day in California at 1pm, from the csv instance_normal.csv file. However, the user can make their own dataframe with the function `pulldata_instance` and then call it with this function to visualize it. 
 #' 
-#' @return a map of the Northeastern states of the United States
+#' @param instance A dataframe of the LMP prices of one time period (one 15 minute interval). The default dataframe is a normal day in California at 1pm. Users can change this dataframe to analyze a different instance that pulled from the `pulldata_instance` function. Or, to visualize the highest peak load in the last three years, use: "inst/extdata/instance_peak_load.csv"
+#' 
+#' @return A Shiny app page with a map of California and the prices.
+#' 
 #' @examples
 #' CA_map()
 #' 
-#' @import sf
-#' @import leaflet
-#' @import shiny
-#' @import rnaturalearth
+#' @importFrom sf st_read
+#' @importFrom leaflet colorBin addProviderTiles setView addPolygons addPolylines addCircleMarkers addLayersControl layersControlOptions renderLeaflet leafletOutput
+#' @importFrom shiny shinyApp fluidPage tags style 
+#' @importFrom rnaturalearth ne_states
 #' 
 #' @export
-CA_map <- function(instance = (read.csv(system.file("extdata", "instance_normal.csv", package = "CAISOWrapR")))) {
+CA_map <- function(instance = (read.csv("inst/extdata/instance_normal.csv"))) {
   # Get the geometries for the United States
-  us_states <- ne_states(country = "United States of America", returnclass = "sf")
+  us_states <- rnaturalearth::ne_states(country = "United States of America", returnclass = "sf")
   
-  # Filter for the Calironia using the correct column name
+  # Filter for California using the correct column name
   CA_states <- us_states[us_states$name %in% c("California"), ]
-  df_transmission = st_read("data/all_transmission_lines.shp")
-  df_transmission_500 = st_read("data/500kv_transmission_lines.shp")
   
-  instance = merge_lmp_locations(instance)
+  # Load the transmission line shapefiles
+  df_transmission <- sf::st_read("data/all_transmission_lines.shp")
+  df_transmission_500 <- sf::st_read("data/500kv_transmission_lines.shp")
   
-  #convert lmp, congestion, and losses to numeric
+  # Merge LMP locations data with the instance dataframe
+  instance <- merge_lmp_locations(instance)
+  
+  # Convert LMP, congestion, and losses to numeric
   instance$lmp <- as.numeric(instance$lmp)
   instance$congestion <- as.numeric(instance$congestion)
   instance$loss <- as.numeric(instance$loss)
   
-  # Create a color palette for the LMP prices
-  lmp_palette <- colorBin(
+  # Create color palettes for the LMP prices, congestion, and losses
+  lmp_palette <- leaflet::colorBin(
     palette = c(
-      "#333399", "#336699",  # Dark to medium blue
-      "#66A3CC", "#88B497", "#A8D08D",          # Light blue to muted green
-      "#FFFFBF", "#FFD37F", "#FFA07A", # Yellow to orange
-      "#FF6347", "#D7191C", "#990000"  # Red shades
+      "#333399", "#336699", "#66A3CC", "#88B497", "#A8D08D", 
+      "#FFFFBF", "#FFD37F", "#FFA07A", "#FF6347", "#D7191C", "#990000"
     ),
-    bins = c(-Inf, -40, -20, 0, 10, 20, 30, 50, 75, 100, 140, 180, Inf),  # Breaks for each bin
-    na.color = "transparent"  # Handle NA values
+    bins = c(-Inf, -40, -20, 0, 10, 20, 30, 50, 75, 100, 140, 180, Inf),
+    na.color = "transparent"
   )
   
-  congestion_palette <- colorBin(
+  congestion_palette <- leaflet::colorBin(
     palette = c(
-      "#333399", "#336699",  # Dark to medium blue
-      "#66A3CC", "#88B497", "#A8D08D",          # Light blue to muted green
-      "#FFFFBF", "#FFD37F", "#FFA07A", # Yellow to orange
-      "#FF6347", "#D7191C", "#990000"  # Red shades
+      "#333399", "#336699", "#66A3CC", "#88B497", "#A8D08D", 
+      "#FFFFBF", "#FFD37F", "#FFA07A", "#FF6347", "#D7191C", "#990000"
     ),
-    bins = c(-Inf, -40, -20, -0.1, .1, 3, 10, 20, 30, 50, 100, 150, Inf),  # Breaks for each bin
-    na.color = "transparent"  # Handle NA values
+    bins = c(-Inf, -40, -20, -0.1, .1, 3, 10, 20, 30, 50, 100, 150, Inf),
+    na.color = "transparent"
   )
   
-  losses_palette <- colorBin(
+  losses_palette <- leaflet::colorBin(
     palette = c(
-      "#333399", "#336699",  # Dark to medium blue
-      "#66A3CC", "#88B497", "#A8D08D",          # Light blue to muted green
-      "#FFFFBF", "#FFD37F", "#FFA07A", # Yellow to orange
-      "#FF6347", "#D7191C", "#990000"  # Red shades
+      "#333399", "#336699", "#66A3CC", "#88B497", "#A8D08D", 
+      "#FFFFBF", "#FFD37F", "#FFA07A", "#FF6347", "#D7191C", "#990000"
     ),
-    bins = c(-Inf, -40, -20, -0.1, .1, 1, 3, 5, 7, 10, 15, 25, Inf),  # Breaks for each bin
-    na.color = "transparent"  # Handle NA values
+    bins = c(-Inf, -40, -20, -0.1, .1, 1, 3, 5, 7, 10, 15, 25, Inf),
+    na.color = "transparent"
   )
-  
-  
   
   # Plot the map if there are valid geometries
   if (nrow(CA_states) > 0) {
-    plot(st_geometry(CA_states), col = "lightblue", border = "black")
+    plot(sf::st_geometry(CA_states), col = "lightblue", border = "black")
   } else {
     cat("No geometries found for the specified states.")
   }
   
-  #make the states moveable and dragable
-  #add libraries
-  shinyApp(
-    ui = fluidPage(
-      tags$style(type = "text/css", "#map {height: calc(100vh - 20px) !important;}"), # Full screen height for the map
-      leafletOutput("map", width = "100%", height = "100%")
+  # Create the Shiny app with an interactive map
+  shiny::shinyApp(
+    ui = shiny::fluidPage(
+      tags$style(type = "text/css", "#map {height: calc(100vh - 20px) !important;}"), 
+      leaflet::leafletOutput("map", width = "100%", height = "100%")
     ),
     server = function(input, output, session) {
-      output$map <- renderLeaflet({
-        leaflet() %>%
-          addProviderTiles("CartoDB.Positron") %>%
-          setView(lng = -119.5, lat = 37.5, zoom = 6) %>%
-          # Add California polygons
-          addPolygons(data = CA_states, weight = 2, color = "black", 
-                      fillColor = "lightblue", fillOpacity = 0.1#, 
-                      #label = ~name
-                      ) %>%
-          # Add all transmission lines (as polylines)
-          addPolylines(data = df_transmission, 
-                       color = "blue", 
-                       weight = ~kV_Sort / 200,  # Adjust weight based on kV_sort
-                       opacity = 0.6, 
-                       group = "All Transmission Lines") %>%          # Add 500kV transmission lines (as polylines)
-          addPolylines(data = df_transmission_500, color = "blue", weight = 3, opacity = 0.6, group = "500kV Transmission Lines") %>%
-          # Add LMP markers
-          addCircleMarkers(data = instance, 
-                           lng = ~longitude, 
-                           lat = ~latitude, 
-                           radius = 4, 
-                           color = ~lmp_palette(lmp), 
-                           popup = paste("City: ", instance$city, "<br>",
-                                         "LMP: $", round(instance$lmp, 2), "<br>",
-                                         "Energy: $", round(instance$energy, 2), "<br>",
-                                         "Congestion: $", round(instance$congestion, 2), "<br>",
-                                         "Loss: $", round(instance$loss, 2)),
-                           group = "LMP Prices") %>%
-          #add congestions
-          addCircleMarkers(data = instance, 
-                           lng = ~longitude, 
-                           lat = ~latitude, 
-                           radius = 4, 
-                           color = ~congestion_palette(congestion), 
-                           popup = paste("City: ", instance$city, "<br>",
-                                         "Congestion: $", round(instance$congestion, 2)),
-                           group = "Congestion Prices") %>%
-          addCircleMarkers(data = instance, 
-                           lng = ~longitude, 
-                           lat = ~latitude, 
-                           radius = 4, 
-                           color = ~losses_palette(loss), 
-                           popup = paste("City: ", instance$city, "<br>",
-                                         "Loss: $", round(instance$loss, 2)),
-                           group = "Loss Prices") %>%
-          # Add layer control to toggle between the transmission lines layers
-          addLayersControl(
+      output$map <- leaflet::renderLeaflet({
+        leaflet::leaflet() %>%
+          leaflet::addProviderTiles("CartoDB.Positron") %>%
+          leaflet::setView(lng = -119.5, lat = 37.5, zoom = 6) %>%
+          leaflet::addPolygons(data = CA_states, weight = 2, color = "black", 
+                               fillColor = "lightblue", fillOpacity = 0.1) %>%
+          leaflet::addPolylines(data = df_transmission, 
+                                color = "blue", 
+                                weight = ~kV_Sort / 200, 
+                                opacity = 0.6, 
+                                group = "All Transmission Lines") %>%
+          leaflet::addPolylines(data = df_transmission_500, 
+                                color = "blue", 
+                                weight = 3, 
+                                opacity = 0.6, 
+                                group = "500kV Transmission Lines") %>%
+          leaflet::addCircleMarkers(data = instance, 
+                                    lng = ~longitude, 
+                                    lat = ~latitude, 
+                                    radius = 4, 
+                                    color = ~lmp_palette(lmp), 
+                                    popup = paste("City: ", instance$city, "<br>",
+                                                  "LMP: $", round(instance$lmp, 2), "<br>",
+                                                  "Energy: $", round(instance$energy, 2), "<br>",
+                                                  "Congestion: $", round(instance$congestion, 2), "<br>",
+                                                  "Loss: $", round(instance$loss, 2)),
+                                    group = "LMP Prices") %>%
+          leaflet::addCircleMarkers(data = instance, 
+                                    lng = ~longitude, 
+                                    lat = ~latitude, 
+                                    radius = 4, 
+                                    color = ~congestion_palette(congestion), 
+                                    popup = paste("City: ", instance$city, "<br>",
+                                                  "Congestion: $", round(instance$congestion, 2)),
+                                    group = "Congestion Prices") %>%
+          leaflet::addCircleMarkers(data = instance, 
+                                    lng = ~longitude, 
+                                    lat = ~latitude, 
+                                    radius = 4, 
+                                    color = ~losses_palette(loss), 
+                                    popup = paste("City: ", instance$city, "<br>",
+                                                  "Loss: $", round(instance$loss, 2)),
+                                    group = "Loss Prices") %>%
+          leaflet::addLayersControl(
             overlayGroups = c("All Transmission Lines", "500kV Transmission Lines", "LMP Prices",
                               "Congestion Prices", "Loss Prices"),
-            options = layersControlOptions(collapsed = TRUE)
+            options = leaflet::layersControlOptions(collapsed = TRUE)
           )
       })
     }
   )
 }
-
-
-
-
