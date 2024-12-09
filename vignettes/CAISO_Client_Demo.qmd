@@ -1,0 +1,271 @@
+---
+title: "CAISO Client Demo"
+author: "Mack Smith"
+format: html
+vignette: >
+  %\VignetteIndexEntry{CAISO Client Demo}
+  %\VignetteEngine{quarto::html}
+  %\VignetteEncoding{UTF-8}
+execute:
+  eval: false
+---
+
+# Introduction: CAISO API Client
+
+The CAISO API Client is part of a powerful R package **CAISOWrapR** designed to simplify access to California Independent System Operator (CAISO) Locational Marginal Price (LMP) data through the GridStatus API. This vignette will walk you through the package's key features, demonstrating how to retrieve, filter, and analyze energy pricing data.
+
+## Installation
+
+To install the CAISO API Client, first install the package "CAISOWrapR" from CRAN
+
+```{r}
+#| eval: false
+
+# Install `CAISOWrapR` package
+install.packages("CAISOWrapR")
+```
+
+## CAISO API Client
+
+Now we will get into creating the CAISO API Client. However, before you create a CAISO API Client, you need an API key for the GridStatus API. If you do not have an API key already, you can make one using the following link: [GridStatus API Key](https://www.gridstatus.io/api).
+
+Once you have an API key, you can now create a CAISO API Client. To do so, run the `create_caiso_client` function as shown below:
+
+```{r}
+#| eval: false
+
+# Create CAISO API Client
+client <- create_caiso_client(api_key = "your_api_key")
+```
+
+Alternatively, you can set the environment variable `GRIDSTATUS_API_KEY` to your API key in your R session and then create the client
+
+```{r}
+#| eval: false
+
+# Set environment variable to API Client
+Sys.setenv(GRIDSTATUS_API_KEY = "your_api_key")
+
+# Create CAISO API Client
+client <- create_caiso_client()
+```
+
+Once you have created the CAISO API Client, you can start fetching LMP data for CAISO.
+
+## Fetching LMP Data
+
+Using the CAISO API Client you had just created, you can now access CAISO's LMP data from its available datasets.
+
+First, we will walk through what a basic fetch of CAISO's LMP data would look like using the `fetch_lmp_data()` from **CAISOWrapR**, and then explain and demonstrate more advanced options you have when running it.
+
+Below is a simple fetch of the LMP data for a specific time range and limit:
+
+```{r}
+#| eval: false
+
+# Fetch data.frame of CAISO's LMP data
+lmp_data <- fetch_lmp_data(
+  client = client,
+  dataset = "caiso_lmp_real_time_15_min",
+  start_time = "2024-01-01",
+  end_time = "2024-01-02",
+  limit = 10
+)
+```
+
+The only required argument to run `fetch_lmp_data()` is the `client` argument, where all the other arguments are optional and will be explained in more depth in the next section. Additionally `fetch_lmp_data()` will return a data frame of the CAISO LMP data retrieved, including an empty data frame is no data cannot be retrieved from the API.
+
+However, there is one crucial point to note when using the GridStatus API. If you are on the Starter Plan (default plan) for your GridStatus API Key, you only have 250 monthly API requests and can only use 1,000,000 API rows. Therefore, it is incredibly important that you either specify a start and end time or a limit such that you do not exceed your monthly limit for the Starter Plan.
+
+### Advanced Options
+
+In the next code blocks, we will showcase the different parameters and options you have at your hands when running `fetch_lmp_data()`, from dataset selection to filtering parameters:
+
+1.  **Dataset Selection**
+
+    Choose the specific temporal resolution and type of LMP data you want to retrieve.
+
+    ```{r}
+    #| eval: false
+
+    # Choose from three primary LMP datasets
+    lmp_data <- fetch_lmp_data(
+      client = client,
+      dataset = "caiso_lmp_real_time_15_min"  # Default option
+    )
+
+    # Available datasets:
+    # - "caiso_lmp_real_time_15_min": 15-minute real-time LMP data
+    # - "caiso_lmp_real_time_5_min": 5-minute real-time LMP data
+    # - "caiso_lmp_day_ahead_hourly": Day-ahead hourly LMP data
+    ```
+
+2.  **Time Range Filtering**
+
+    Control the temporal scope of your data retrieval by specifying exact start and end times.
+
+    ```{r}
+    #| eval: false
+    #| 
+    # Specify precise time ranges for data retrieval
+    lmp_data <- fetch_lmp_data(
+      client = client,
+      start_time = "2024-01-01 00:00:00",  # Detailed timestamp supported
+      end_time = "2024-01-02 00:00:00"     # Flexible date/time formats
+    )
+
+    # Key time range considerations:
+    # - Automatically converts input to UTC
+    # - Accepts "YYYY-MM-DD" or "YYYY-MM-DD HH:MM:SS" formats
+    # - Omitting start_time uses earliest available data
+    # - Omitting end_time uses latest available data
+    ```
+
+3.  **Advanced Filtering**
+
+    Apply filtering criteria to your LMP data, allowing you to extract specific subsets of information based on location, value, or other categorical attributes.
+
+    ```{r}
+    #| eval: false
+
+    # Apply precise filters to your LMP data
+    filtered_data <- fetch_lmp_data(
+      client = client,
+      filter_column = "location",    # Column to filter
+      filter_value = "PALO_VERDE",  # Value to match
+      filter_operator = "="         # Comparison method
+    )
+
+    # Supported Filter Operators:
+    # - "=" (exact match)
+    # - ">" (greater than)
+    # - "<" (less than)
+    # - ">=" (greater than or equal to)
+    # - "<=" (less than or equal to)
+    # - "in" (multiple value matching)
+    ```
+
+4.  **Selective Column Retrieval**
+
+    Optimize your data retrieval by selecting only the specific columns you need, reducing unnecessary data transfer and processing time:
+
+    The columns of each of the datasets from the GridStatus API are as follows:
+
+    -   `interval_start_utc`: Timestamp of the data point's start in UTC.
+
+    -   `interval_end_utc`: Timestamp of the data point's end in UTC.
+
+    -   `market`: Categorical factor representing the type of market.
+
+    -   `location`: Categorical factor representing the location of the node.
+
+    -   `location_type` : Categorical factor representing the location type of the node.
+
+    -   `lmp`: The Locational Marginal Price at a specific node.
+
+    -   `energy`: Energy consumption at a specific node.
+
+    -   `congestion`: The congestion at a specific node.
+
+    -   `loss`: The transmission loss at a specific node.
+
+    ```{r}
+    #| eval: false
+
+    # Choose specific columns to retrieve
+    selected_columns <- fetch_lmp_data(
+      client = client,
+      columns = c("interval_start_utc", "lmp", "location")
+    )
+
+    # Allows precise control over returned data
+    # - Returns all columns if not specified
+    ```
+
+5.  **Pagination and Limit Control**
+
+    Manage large datasets efficiently by controlling the volume of data retrieved and how it's paginated.
+
+    ```{r}
+    #| eval: false
+
+    # Manage data volume and pagination
+    limited_data <- fetch_lmp_data(
+      client = client,
+      limit = 500,              # Maximum records to return
+      page_size = 100,          # Records per page
+      use_cursor_pagination = TRUE  # Recommended pagination method
+    )
+
+    # Helps manage API request limits
+    # - Cursor pagination provides efficient data retrieval
+    ```
+
+6.  **Data Resampling**
+
+    Transform your time-series LMP data by aggregating it across different time frequencies and applying various statistical functions.
+
+    ```{r}
+    #| eval: false
+
+    # Aggregate and resample LMP data
+    resampled_data <- fetch_lmp_data(
+      client = client,
+      resample_frequency = "1H",             # Resample frequency
+      resample_by = c("location"),  # Grouping columns
+      resample_function = "mean"    # Aggregation method
+    )
+
+    # Resampling Options:
+    # Frequencies: '1H' (hourly), '1D' (daily), etc.
+    # Grouping Columns: Any categorical columns
+    # Aggregation Functions:
+    # - "mean" (default)
+    # - "sum"
+    # - "min"
+    # - "max"
+    # - "stddev"
+    # - "count"
+    # - "variance"
+    ```
+
+7.  **Time Zone Handling**
+
+    Seamlessly manage timestamp conversions across different time zones.
+
+    ```{r}
+    #| eval: false
+
+    # Control input timezone
+    timezone_data <- fetch_lmp_data(
+      client = client,
+      start_time = "2024-01-01 08:00:00",
+      end_time = "2024-01-02 08:00:00",
+      tz = "America/Los_Angeles"  # Specify output timezone
+    )
+
+    # Default is UTC
+    # Converts timestamps to specified timezone
+    ```
+
+8.  **Publish Time Filtering**
+
+    Refine your data retrieval by focusing on the most recent or specific published reports, ensuring you're working with the most up-to-date or historically relevant LMP information.
+
+    ```{r}
+    #| eval: false
+
+    # Filter based on publish time
+    publish_filtered <- fetch_lmp_data(
+      client = client,
+      publish_time = "latest_report"  # Most recently published data
+    )
+
+    # Publish Time Options:
+    # - "latest_report": Most recent published report
+    # - "latest": Most recent record per timestamp
+    # - Specific timestamp string
+    # - NULL: No publish time filtering
+    ```
+
+Now you are ready to fetch CAISO's LMP data and use it for further analysis!
