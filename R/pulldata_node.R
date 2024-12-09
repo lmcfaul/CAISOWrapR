@@ -10,9 +10,6 @@
 #' @return A dataframe of the price every 15 minutes for that year in that location.
 #' 
 #' @export
-#' 
-#' @examples
-#' pulldata_node(city = "San Diego", year = 2020, api_key = api_key)
 pulldata_node <- function(city = NULL, node = NULL, year = 2023, api_key) {
   
   valid_years <- c(2020, 2021, 2022, 2023)
@@ -26,7 +23,7 @@ pulldata_node <- function(city = NULL, node = NULL, year = 2023, api_key) {
   current_date <- as.character(Sys.Date() - 2)
   
   if (!is.null(city)) {
-    city_lmps <- read.csv("inst/extdata/cities_and_lmps.csv")  # Load city-node mapping
+    city_lmps <- read.csv(system.file("extdata", "cities_and_lmps.csv", package = "CAISOWrapR"))  # Load city-node mapping
     node <- city_lmps$closest_lmp[city_lmps$name == city]
     node <- as.character(node[1])
     if (length(node) == 0) {

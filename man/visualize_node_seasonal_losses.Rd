@@ -5,7 +5,8 @@
 \title{Visualize Distribution of Loss Pricing Adjustments by Season}
 \usage{
 visualize_node_seasonal_losses(
-  node_df = read.csv("inst/extdata/San_Francisco_node_2023.csv")
+  node_df = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package =
+    "CAISOWrapR"))
 )
 }
 \arguments{

@@ -44,12 +44,12 @@ test_that("analyze_single_instance_data() produces a PDF", {
   expect_true(file.exists(output_pdf_path))
 })
 
-test_that("gtable_add_padding() returns a gtable object", {
+test_that("gtable_add_padding1() returns a gtable object", {
   # Create a sample table
   example_table <- gridExtra::tableGrob(head(mtcars))
   
   # Add padding to the table
-  padded_table <- gtable_add_padding(example_table, grid::unit(c(1, 1, 1, 1), "cm"))
+  padded_table <- gtable_add_padding1(example_table, grid::unit(c(1, 1, 1, 1), "cm"))
   
   # Check that the result is a gtable object
   expect_s3_class(padded_table, "gtable")

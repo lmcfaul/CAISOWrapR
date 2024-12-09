@@ -406,6 +406,11 @@ Kate Esbenshade, Luke McFaul, Mack Smith
 <ol type="1">
 <li>California has a unique electricity market structure that is different from other states in the US.</li>
 <li>There are many <strong>integrated renewables</strong> and <strong>high fluctuation</strong> in electricity demand, meaning that there are often times when there is not enough transmission capacity to move electricity from one location to another.</li>
+</ol>
+</section>
+<section id="project-inspiration-1" class="slide level2 scrollable">
+<h2>Project Inspiration</h2>
+<ol start="3" type="1">
 <li>This can cause <strong>congestion in the transmission system</strong>, which can lead to higher electricity prices in certain locations (different locational marginal prices, or LMPS).</li>
 <li>We wanted to create a project to <strong>visualize</strong> these differences in price and allow users to <strong>understand and analyze</strong> LMP differences and congestion.</li>
 </ol>
@@ -430,17 +435,6 @@ Kate Esbenshade, Luke McFaul, Mack Smith
 <section id="caiso-api-client" class="title-slide slide level1 center">
 <h1>CAISO API Client</h1>
 
-</section>
-<section id="finding-the-right-api" class="slide level2">
-<h2>Finding the Right API</h2>
-<ul>
-<li><p>Initially used ISO New England (ISONE) API to collect LMP data at a node-specific scope</p>
-<ul>
-<li><p>Poor documentation of API and LMP data at a region-specific scale</p></li>
-<li><p>Lack of geographical data surrounding node locations</p></li>
-</ul></li>
-<li><p>Shifted attention to GridStatus API because of node-specific LMP data, and focused on (CAISO) because of availability of geographical data concerning node locations</p></li>
-</ul>
 </section>
 <section id="creating-caiso-api-client" class="slide level2">
 <h2>Creating CAISO API Client</h2>
@@ -481,21 +475,27 @@ Kate Esbenshade, Luke McFaul, Mack Smith
 <li><p><code>pulldata_instance</code> fetches data for a single instance (15 minute interval) across all CA node. This is useful for comparing LMPs at a single point in time</p></li>
 <li><p><code>pulldata_node</code> fetches data for an entire node (or comparing nodes) across all instances of a year. This is useful for comparing LMPs at a single node over time</p></li>
 </ul>
+</section></section>
+<section>
+<section id="visualizing-and-analyzing-lmp-data" class="title-slide slide level1 center">
+<h1>Visualizing and Analyzing LMP Data</h1>
+
 </section>
-<section id="visualizing-and-analyzing-lmp-data" class="slide level2 scrollable">
+<section id="visualizing-and-analyzing-lmp-data-1" class="slide level2 scrollable">
 <h2>Visualizing and Analyzing LMP Data</h2>
 <ul>
 <li><p>We created many functions to visualize and analyze the LMP data</p></li>
 <li><p>Most simply, <code>summarize_lmps</code> gives users a summary of the LMP data for a singular instance and <code>violin_plot</code> creates a violin plot of the LMP data</p></li>
 <li><p>When analyzing a singular node or two nodes, users can visualize the LMPs and also the different parts of the pricing, including congestion and losses</p></li>
+</ul>
+</section>
+<section id="visualizing-and-analyzing-lmp-data-2" class="slide level2 scrollable">
+<h2>Visualizing and Analyzing LMP Data</h2>
+<ul>
 <li><p>Users can visualize the average prices per hour to see the daily fluctuation, and look at this seasonally which demonstrates how LMPs change over the year</p></li>
 <li><p>Users can also compare prices between two nodes to see how they differ over time</p></li>
 <li><p>Lastly, users can compare prices with daily electricity demand</p></li>
 </ul>
-</section>
-<section id="example-plot-from-package" class="slide level2">
-<h2>Example Plot from Package</h2>
-<p>This plot demonstrates the distribution of LMPs for an example node:</p>
 </section>
 <section id="shiny-app" class="slide level2">
 <h2>Shiny App</h2>

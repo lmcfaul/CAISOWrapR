@@ -9,7 +9,13 @@
 This package provides a wrapper for the CAISO locational marginal price (LMP) datasets using the Grid Status API. The package allows users to access node-level LMP data concerning the California eletrical grid and integrate it with data concerning California's transmission lines to identity areas of high congestion. Additionally, the package provides tools to visualize and analyze the LMP data to produce insightful and effective results concerning California eletrical grid congestion.
 }
 \author{
-\strong{Maintainer}: Mack Smith \email{macks26@stanford.edu}
+\strong{Maintainer}: Luke McFaul \email{lmcfaul@stanford.edu}
+
+Authors:
+\itemize{
+  \item Mack Smith \email{macks26@stanford.edu}
+  \item Kate Esbenshade \email{ksesben@stanford.edu}
+}
 
 }
 \keyword{internal}

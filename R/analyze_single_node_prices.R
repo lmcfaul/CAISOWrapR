@@ -57,52 +57,52 @@ analyze_single_node_data <- function(node_df = read.csv(system.file("extdata", "
   )
   
   # Add margins to each plot
-  plot_with_margins_1 <- gtable::gtable_add_padding(
+  plot_with_margins_1 <- gtable_add_padding1(
     ggplot2::ggplotGrob(result_one),
     padding = grid::unit(c(1, 1, 1, 1), "cm")
   )
   
-  plot_with_margins_2 <- gtable::gtable_add_padding(
+  plot_with_margins_2 <- gtable_add_padding1(
     ggplot2::ggplotGrob(result_two),
     padding = grid::unit(c(1, 1, 1, 1), "cm")
   )
   
-  plot_with_margins_3 <- gtable::gtable_add_padding(
+  plot_with_margins_3 <- gtable_add_padding1(
     ggplot2::ggplotGrob(result_three),
     padding = grid::unit(c(1, 1, 1, 1), "cm")
   )
   
-  plot_with_margins_4 <- gtable::gtable_add_padding(
+  plot_with_margins_4 <- gtable_add_padding1(
     ggplot2::ggplotGrob(result_four),
     padding = grid::unit(c(1, 1, 1, 1), "cm")
   )
   
-  plot_with_margins_5 <- gtable::gtable_add_padding(
+  plot_with_margins_5 <- gtable_add_padding1(
     ggplot2::ggplotGrob(result_five),
     padding = grid::unit(c(1, 1, 1, 1), "cm")
   )
   
-  plot_with_margins_6 <- gtable::gtable_add_padding(
+  plot_with_margins_6 <- gtable_add_padding1(
     ggplot2::ggplotGrob(result_six),
     padding = grid::unit(c(1, 1, 1, 1), "cm")
   )
   
-  plot_with_margins_7 <- gtable::gtable_add_padding(
+  plot_with_margins_7 <- gtable_add_padding1(
     ggplot2::ggplotGrob(result_seven),
     padding = grid::unit(c(1, 1, 1, 1), "cm")
   )
   
-  plot_with_margins_8 <- gtable::gtable_add_padding(
+  plot_with_margins_8 <- gtable_add_padding1(
     ggplot2::ggplotGrob(result_eight),
     padding = grid::unit(c(1, 1, 1, 1), "cm")
   )
   
-  plot_with_margins_9 <- gtable::gtable_add_padding(
+  plot_with_margins_9 <- gtable_add_padding1(
     ggplot2::ggplotGrob(result_nine),
     padding = grid::unit(c(1, 1, 1, 1), "cm")
   )
   
-  plot_with_margins_10 <- gtable::gtable_add_padding(
+  plot_with_margins_10 <- gtable_add_padding1(
     ggplot2::ggplotGrob(result_ten),
     padding = grid::unit(c(1, 1, 1, 1), "cm")
   )

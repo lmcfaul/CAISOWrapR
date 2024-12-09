@@ -5,7 +5,8 @@
 \title{Visualize Node Data Without High Demand Days}
 \usage{
 visualize_node_demand_without_high_demand_hours(
-  node_df = read.csv("inst/extdata/San_Francisco_node_2023.csv")
+  node_df = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package =
+    "CAISOWrapR"))
 )
 }
 \arguments{

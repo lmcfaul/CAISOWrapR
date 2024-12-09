@@ -4,7 +4,10 @@
 \alias{price_violin}
 \title{Price Violin}
 \usage{
-price_violin(instance_df = read.csv("inst/extdata/instance_normal.csv"))
+price_violin(
+  instance_df = read.csv(system.file("extdata", "instance_normal.csv", project =
+    "CAISOWrapR"))
+)
 }
 \arguments{
 \item{instance_df}{A dataframe of locational marginal prices with LMP names. The default dataframe is a normal day in California at 1pm. Users can change this dataframe to analyze a different instance that pulled from the \code{pulldata_instance} function. Or, to visualize the highest peak load in the last three years, use: "inst/extdata/instance_peak_load.csv"}

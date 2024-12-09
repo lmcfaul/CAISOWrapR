@@ -17,8 +17,3 @@ This function takes an instance dataframe (with LMP data) and merges it with loc
 (including city names and corresponding latitude and longitude), returning a dataframe with
 both the LMP and location information.
 }
-\examples{
-# Example usage of the merge_lmp_locations function
-merge_lmp_locations(instance)
-
-}

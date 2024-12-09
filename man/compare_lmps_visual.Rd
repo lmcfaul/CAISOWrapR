@@ -5,8 +5,10 @@
 \title{Compare LMPs between two cities visually}
 \usage{
 compare_lmps_visual(
-  df1 = read.csv("inst/extdata/San_Francisco_node_2023.csv"),
-  df2 = read.csv("inst/extdata/Los_Angeles_node_2023.csv")
+  df1 = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package =
+    "CAISOWrapR")),
+  df2 = read.csv(system.file("extdata", "Los_Angeles_node_2023.csv", package =
+    "CAISOWrapR"))
 )
 }
 \arguments{

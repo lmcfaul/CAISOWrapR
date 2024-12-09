@@ -5,7 +5,8 @@
 \title{Analyze and Visualize Data for a Single Node}
 \usage{
 analyze_single_node_data(
-  node_df = read.csv("inst/extdata/San_Francisco_node_2023.csv"),
+  node_df = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package =
+    "CAISOWrapR")),
   output_pdf_path = "single_node_data.pdf"
 )
 }

@@ -6,9 +6,6 @@
 #' 
 #' @return A Shiny app page with a map of California and the prices.
 #' 
-#' @examples
-#' CA_map()
-#' 
 #' @export
 CA_map <- function(instance = read.csv(system.file("extdata", "instance_normal.csv", package = "CAISOWrapR"))) {
   # Get the geometries for the United States

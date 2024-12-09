@@ -5,7 +5,8 @@
 \title{Visualize distribution of LMPs in one location by season}
 \usage{
 visualize_node_seasonal(
-  node_df = read.csv("inst/extdata/San_Francisco_node_2023.csv")
+  node_df = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package =
+    "CAISOWrapR"))
 )
 }
 \arguments{

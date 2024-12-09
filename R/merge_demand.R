@@ -5,8 +5,6 @@
 #' @param node_data a data frame for a single node
 #' 
 #' @return a data frame with the node data and the demand data
-#' @examples merge_demand(node_data)
-#' 
 #' @export
 merge_demand <- function(node_data) {
   # Read CAISO demand data

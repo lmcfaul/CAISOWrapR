@@ -5,7 +5,8 @@
 \title{Analyze Single Instance Data}
 \usage{
 analyze_single_instance_data(
-  instance_df = read.csv("inst/extdata/instance_normal.csv"),
+  instance_df = read.csv(system.file("extdata", "instance_normal.csv", project =
+    "CAISOWrapR")),
   output_pdf_path = "single_instance_data.pdf"
 )
 }

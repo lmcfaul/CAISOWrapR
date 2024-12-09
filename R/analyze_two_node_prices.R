@@ -21,7 +21,7 @@ analyze_two_node_data <- function(df1 = read.csv(system.file("extdata", "San_Fra
   result_six <- compare_losses_visual_seasonal(df1, df2)
   
   interval_time <- unique(df1$interval_start_utc)[1]
-  year_of_data <- format(ymd_hms(interval_time), "%Y")
+  year_of_data <- format(lubridate::ymd_hms(interval_time), "%Y")
   
   title <- grid::textGrob(
     paste("LMP Distributions for", df1$city[1], "and", df2$city[1], "in", year_of_data),
@@ -29,32 +29,32 @@ analyze_two_node_data <- function(df1 = read.csv(system.file("extdata", "San_Fra
     just = "center"
   )
   
-  plot_with_margins_1 <- gtable::gtable_add_padding(
+  plot_with_margins_1 <- gtable_add_padding1(
     ggplot2::ggplotGrob(result_one),
     padding = grid::unit(c(1, 1, 1, 1), "cm")
   )
   
-  plot_with_margins_2 <- gtable::gtable_add_padding(
+  plot_with_margins_2 <- gtable_add_padding1(
     ggplot2::ggplotGrob(result_two),
     padding = grid::unit(c(1, 1, 1, 1), "cm")
   )
   
-  plot_with_margins_3 <- gtable::gtable_add_padding(
+  plot_with_margins_3 <- gtable_add_padding1(
     ggplot2::ggplotGrob(result_three),
     padding = grid::unit(c(1, 1, 1, 1), "cm")
   )
   
-  plot_with_margins_4 <- gtable::gtable_add_padding(
+  plot_with_margins_4 <- gtable_add_padding1(
     ggplot2::ggplotGrob(result_four),
     padding = grid::unit(c(1, 1, 1, 1), "cm")
   )
   
-  plot_with_margins_5 <- gtable::gtable_add_padding(
+  plot_with_margins_5 <- gtable_add_padding1(
     ggplot2::ggplotGrob(result_five),
     padding = grid::unit(c(1, 1, 1, 1), "cm")
   )
   
-  plot_with_margins_6 <- gtable::gtable_add_padding(
+  plot_with_margins_6 <- gtable_add_padding1(
     ggplot2::ggplotGrob(result_six),
     padding = grid::unit(c(1, 1, 1, 1), "cm")
   )
@@ -597,7 +597,7 @@ compare_congestion_visual = function(df1 = read.csv(system.file("extdata", "San_
     ) +
     ggthemes::theme_solarized() +
     ggplot2::theme(
-      axis.text.x = element_text(angle = 90, vjust = 0.5)
+      axis.text.x = ggplot2::element_text(angle = 90, vjust = 0.5)
     )
   
   return(q)

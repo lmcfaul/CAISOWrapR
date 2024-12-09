@@ -21,6 +21,3 @@ A dataframe of the price every 15 minutes for that year in that location.
 \description{
 This function takes in a city or a node and a year and returns a dataframe of the price every 15 minutes for that year in that location. Default is Palo Alto for 2023.
 }
-\examples{
-pulldata_node(city = "San Diego", year = 2020, api_key = api_key)
-}

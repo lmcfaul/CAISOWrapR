@@ -4,7 +4,10 @@
 \alias{summarize_lmps}
 \title{Summarize Electricity Statistics}
 \usage{
-summarize_lmps(instance_df = read.csv("inst/extdata/instance_normal.csv"))
+summarize_lmps(
+  instance_df = utils::read.csv(system.file("extdata", "instance_normal.csv", package =
+    "CAISOWrapR"))
+)
 }
 \arguments{
 \item{instance_df}{A dataframe of locational marginal prices.}

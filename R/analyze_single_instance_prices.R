@@ -21,12 +21,12 @@ analyze_single_instance_data <- function(instance_df = read.csv(system.file("ext
     just = "center"
   )
   
-  table_with_margins <- gtable::gtable_add_padding(
+  table_with_margins <- gtable_add_padding1(
     gridExtra::tableGrob(result_one),
     padding = grid::unit(c(1, 1, 1, 1), "cm")
   )
   
-  plot_with_margins <- gtable::gtable_add_padding(
+  plot_with_margins <- gtable_add_padding1(
     ggplot2::ggplotGrob(result_two),
     padding = grid::unit(c(1, 1, 1, 1), "cm")
   )
@@ -147,21 +147,18 @@ price_violin <- function(instance_df = read.csv(system.file("extdata", "instance
 #' @return A `gtable` object with the specified padding added.
 #' 
 #' @examples
-#' library(grid)
-#' library(gtable)
-#' 
 #' # Create a simple table
-#' example_table <- tableGrob(head(mtcars))
+#' example_table <- gridExtra::tableGrob(head(mtcars))
 #' 
 #' # Add padding to the table
-#' padded_table <- gtable_add_padding(example_table, grid::unit(c(1, 1, 1, 1), "cm"))
+#' padded_table <- gtable_add_padding1(example_table, grid::unit(c(1, 1, 1, 1), "cm"))
 #' 
 #' # Print the padded table
 #' grid::grid.newpage()
 #' grid::grid.draw(padded_table)
 #' 
 #' @export
-gtable_add_padding <- function(grob, padding) {
+gtable_add_padding1 <- function(grob, padding) {
   gtable::gtable_add_grob(
     grob,
     grid::rectGrob(
@@ -169,6 +166,6 @@ gtable_add_padding <- function(grob, padding) {
     ),
     t = 1, l = 1, b = nrow(grob), r = ncol(grob),
     z = -Inf
-  ) %>%
+  ) |>
     gtable::gtable_add_padding(padding)
 }

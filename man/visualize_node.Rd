@@ -4,7 +4,10 @@
 \alias{visualize_node}
 \title{Visualize Node Data}
 \usage{
-visualize_node(node_df = read.csv("inst/extdata/San_Francisco_node_2023.csv"))
+visualize_node(
+  node_df = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package =
+    "CAISOWrapR"))
+)
 }
 \arguments{
 \item{node_df}{A dataframe of locational marginal prices for a year for one node. The default for this is San Francisco 2023, but a user can input a different dataframe by running the \code{pulldata_node} function.}

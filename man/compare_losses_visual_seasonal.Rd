@@ -5,8 +5,10 @@
 \title{Compare loss pricing adjustments between two cities visually by Season}
 \usage{
 compare_losses_visual_seasonal(
-  df1 = read.csv("inst/extdata/San_Francisco_node_2023.csv"),
-  df2 = read.csv("inst/extdata/Los_Angeles_node_2023.csv")
+  df1 = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package =
+    "CAISOWrapR")),
+  df2 = read.csv(system.file("extdata", "Los_Angeles_node_2023.csv", package =
+    "CAISOWrapR"))
 )
 }
 \arguments{

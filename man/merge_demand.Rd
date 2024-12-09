@@ -15,7 +15,3 @@ a data frame with the node data and the demand data
 \description{
 This function merges a node with the CAISO demand data by interval_start_tm and adds column demand for demand data
 }
-\examples{
-merge_demand(node_data)
-
-}

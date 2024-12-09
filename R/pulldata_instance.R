@@ -9,9 +9,6 @@
 #' @return A dataframe with the LMP and price breakdown for the given date and time
 #' 
 #' @export
-#' 
-#' @examples
-#' pulldata_instance("2019-01-01", "00:00", api_key = api_key)
 pulldata_instance <- function(date, time, api_key) {
   
   adjust_to_nearest_15 <- function(time) {
@@ -31,7 +28,7 @@ pulldata_instance <- function(date, time, api_key) {
   end_time_iso <- format(end_time, "%Y-%m-%d %H:%M:%S")  # Remove the "T"
   print(end_time_iso)
   
-  unique_lmps <- read.csv("inst/extdata/lmps.csv")
+  unique_lmps <- read.csv(system.file("extdata", "lmps.csv", package = "CAISOWrapR"))
   
   # Load the data
   client_pull <- create_caiso_client(api_key = api_key)

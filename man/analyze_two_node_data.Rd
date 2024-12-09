@@ -5,8 +5,10 @@
 \title{Analyze Two Node Data}
 \usage{
 analyze_two_node_data(
-  df1 = read.csv("inst/extdata/San_Francisco_node_2023.csv"),
-  df2 = read.csv("inst/extdata/Los_Angeles_node_2023.csv"),
+  df1 = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package =
+    "CAISOWrapR")),
+  df2 = read.csv(system.file("extdata", "Los_Angeles_node_2023.csv", package =
+    "CAISOWrapR")),
   output_pdf_path = "two_node_data.pdf"
 )
 }

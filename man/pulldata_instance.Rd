@@ -19,6 +19,3 @@ A dataframe with the LMP and price breakdown for the given date and time
 \description{
 This function takes in a date and time (15 minute increment) and returns a dataframe of every LMP and the price breakdown
 }
-\examples{
-pulldata_instance("2019-01-01", "00:00", api_key = api_key)
-}
