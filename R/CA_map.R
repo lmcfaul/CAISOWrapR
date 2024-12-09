@@ -13,7 +13,6 @@ CA_map <- function(instance = read.csv(system.file("extdata", "instance_normal.c
   if (length(instance) == 1 && instance == "peak_load") {
     instance = read.csv(system.file("extdata", "instance_peak_load.csv", package = "CAISOWrapR"))
   }
-  
   if (!is.data.frame(instance)) {
     stop("Error: 'instance' must either be 'peak_load' or a data frame.")
   }
