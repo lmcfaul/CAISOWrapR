@@ -25,9 +25,9 @@
 #' @param output_pdf_path The path to save the pdf file. There is a default path of "single_instance_data.pdf" but the user can edit this path to save the file in a different location.
 #' 
 #' @return A pdf file with the two plots
-#' 
+#'
 #' @export
-analyze_single_node_data <- function(node_df = read.csv("inst/extdata/San_Francisco_node_2023.csv"), output_pdf_path = "single_node_data.pdf") {
+analyze_single_node_data <- function(node_df = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR")), output_pdf_path = "single_node_data.pdf") {
   # Visualizations for LMP
   result_one <- visualize_node(node_df)
   result_two <- visualize_node_seasonal(node_df)
@@ -186,9 +186,9 @@ analyze_single_node_data <- function(node_df = read.csv("inst/extdata/San_Franci
 #' @param node_df A dataframe of locational marginal prices for a year for one node. The default for this is San Francisco 2023, but a user can input a different dataframe by running the `pulldata_node` function.
 #' 
 #' @return A `ggplot2` object with a box and whisker plot.
-#' 
+#'
 #' @export
-visualize_node <- function(node_df = read.csv("inst/extdata/San_Francisco_node_2023.csv")) {
+visualize_node <- function(node_df = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR"))) {
   
   node_df <- node_df %>%
     dplyr::mutate(
@@ -271,7 +271,7 @@ visualize_node <- function(node_df = read.csv("inst/extdata/San_Francisco_node_2
 #' @return A `ggplot2` object displaying the distribution of LMPs by hour for the location over a day.
 #' 
 #' @export
-visualize_node_seasonal <- function(node_df = read.csv("inst/extdata/San_Francisco_node_2023.csv")) {
+visualize_node_seasonal <- function(node_df = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR"))) {
   
   node_df <- node_df %>%
     dplyr::mutate(
@@ -372,7 +372,7 @@ visualize_node_seasonal <- function(node_df = read.csv("inst/extdata/San_Francis
 #' @return A `ggplot2` object displaying the congestion price distribution by 15-minute interval.
 #' 
 #' @export
-visualize_node_congestion = function(node_df = read.csv("inst/extdata/San_Francisco_node_2023.csv")) {
+visualize_node_congestion = function(node_df = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR"))) {
   
   node_df <- node_df %>%
     dplyr::mutate(
@@ -456,7 +456,7 @@ visualize_node_congestion = function(node_df = read.csv("inst/extdata/San_Franci
 #' @return A `ggplot2` object displaying the distribution of LMPs by hour for the location over a day, split by season.
 #' 
 #' @export
-visualize_node_seasonal_congestion = function(node_df = read.csv("inst/extdata/San_Francisco_node_2023.csv")) {
+visualize_node_seasonal_congestion = function(node_df = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR"))) {
   
   node_df <- node_df %>%
     dplyr::mutate(
@@ -557,7 +557,7 @@ visualize_node_seasonal_congestion = function(node_df = read.csv("inst/extdata/S
 #' @return A `ggplot2` object displaying a box and whisker plot for the loss pricing adjustments by time interval.
 #' 
 #' @export
-visualize_node_losses = function(node_df = read.csv("inst/extdata/San_Francisco_node_2023.csv")) {
+visualize_node_losses = function(node_df = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR"))) {
   
   node_df <- node_df %>%
     dplyr::mutate(
@@ -642,7 +642,7 @@ visualize_node_losses = function(node_df = read.csv("inst/extdata/San_Francisco_
 #' @return A `ggplot2` object displaying the distribution of LMPs by hour for the location over the day, separated by season.
 #' 
 #' @export
-visualize_node_seasonal_losses = function(node_df = read.csv("inst/extdata/San_Francisco_node_2023.csv")) {
+visualize_node_seasonal_losses = function(node_df = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR"))) {
   
   node_df <- node_df %>%
     dplyr::mutate(
@@ -743,7 +743,7 @@ visualize_node_seasonal_losses = function(node_df = read.csv("inst/extdata/San_F
 #' @return A `ggplot2` object displaying the distribution of LMPs by demand bucket.
 #' 
 #' @export
-visualize_node_demand <- function(node_df = read.csv("inst/extdata/San_Francisco_node_2023.csv")) {
+visualize_node_demand <- function(node_df = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR"))) {
   
   node_df = merge_demand(node_df)
   
@@ -831,7 +831,7 @@ visualize_node_demand <- function(node_df = read.csv("inst/extdata/San_Francisco
 #' @return A `ggplot2` object displaying the distribution of LMPs by demand bucket (up to 40,000).
 #' 
 #' @export
-visualize_node_demand_without_high_demand_hours <- function(node_df = read.csv("inst/extdata/San_Francisco_node_2023.csv")) {
+visualize_node_demand_without_high_demand_hours <- function(node_df = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR"))){
   
   node_df = merge_demand(node_df)
   
@@ -923,7 +923,7 @@ visualize_node_demand_without_high_demand_hours <- function(node_df = read.csv("
 #' @return A `ggplot2` object displaying the distribution of congestion by demand bucket (up to 40,000).
 #' 
 #' @export
-visualize_node_demand_congestion <- function(node_df = read.csv("inst/extdata/San_Francisco_node_2023.csv")) {
+visualize_node_demand_congestion <- function(node_df = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR"))) {
   node_df = merge_demand(node_df)
   
   # Create load buckets ranging from 12,000 to 40,000 with 1,000 intervals
@@ -1013,7 +1013,7 @@ visualize_node_demand_congestion <- function(node_df = read.csv("inst/extdata/Sa
 #' @return A `ggplot2` object displaying the distribution of congestion by demand bucket (up to 40,000).
 #' 
 #' @export
-visualize_node_demand_without_high_demand_hours_congestion <- function(node_df = read.csv("inst/extdata/San_Francisco_node_2023.csv")) {
+visualize_node_demand_without_high_demand_hours_congestion <- function(node_df = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR"))) {
   node_df = merge_demand(node_df)
   
   # Filter out high-demand loads

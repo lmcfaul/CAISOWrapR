@@ -4,7 +4,7 @@
 \alias{CA_map}
 \title{Create a map of California with LMP prices and Transmission Lines}
 \usage{
-CA_map(instance = read.csv("inst/extdata/instance_normal.csv"))
+CA_map(instance = (read.csv("inst/extdata/instance_normal.csv")))
 }
 \arguments{
 \item{instance}{A dataframe of the LMP prices of one time period (one 15 minute interval). The default dataframe is a normal day in California at 1pm. Users can change this dataframe to analyze a different instance that pulled from the \code{pulldata_instance} function. Or, to visualize the highest peak load in the last three years, use: "inst/extdata/instance_peak_load.csv"}

@@ -8,7 +8,7 @@
 #' @return A PDF file with the summary statistics and violin plot.
 #' 
 #' @export
-analyze_single_instance_data <- function(instance_df = read.csv("inst/extdata/instance_normal.csv"), output_pdf_path = "single_instance_data.pdf") {
+analyze_single_instance_data <- function(instance_df = read.csv(system.file("extdata", "instance_normal.csv", project = "CAISOWrapR")), output_pdf_path = "single_instance_data.pdf") {
   result_one <- summarize_lmps(instance_df)
   result_two <- price_violin(instance_df)
   
@@ -64,12 +64,10 @@ analyze_single_instance_data <- function(instance_df = read.csv("inst/extdata/in
 #'   location = c("Loc1", "Loc2", "Loc3")
 #' )
 #' summarize_lmps(example_df)
-summarize_lmps <- function(instance_df = read.csv("inst/extdata/instance_normal.csv")){
+summarize_lmps <- function(instance_df = utils::read.csv(system.file("extdata", "instance_normal.csv", package = "CAISOWrapR"))){
   avg_price <- mean(instance_df$lmp)
   sd_price <- sd(instance_df$lmp)
-  
-  cities_and_lmps <- read.csv("inst/extdata/cities_and_lmps.csv")
-  
+  cities_and_lmps <- utils::read.csv(system.file("extdata", "cities_and_lmps.csv", package = "CAISOWrapR"))
   min_price <- min(instance_df$lmp)
   min_loc_lmp <- instance_df$location[instance_df$lmp == min_price]
   min_loc_city <- cities_and_lmps$name[cities_and_lmps$closest_lmp == min_loc_lmp]
@@ -116,7 +114,7 @@ summarize_lmps <- function(instance_df = read.csv("inst/extdata/instance_normal.
 #'   location = c("Loc1", "Loc2", "Loc3")
 #' )
 #' price_violin(example_df)
-price_violin <- function(instance_df = read.csv("inst/extdata/instance_normal.csv")) {
+price_violin <- function(instance_df = read.csv(system.file("extdata", "instance_normal.csv", project = "CAISOWrapR"))) {
   
   interval_time <- unique(instance_df$interval_start_utc)[1]
   formatted_time <- format(lubridate::ymd_hms(interval_time), "%Y-%m-%d at %H:%M")

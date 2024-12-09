@@ -10,7 +10,7 @@
 #' @export
 merge_demand <- function(node_data) {
   # Read CAISO demand data
-  demand_data <- utils::read.csv("inst/extdata/caiso_load_2020_2023.csv")
+  demand_data <- utils::read.csv(system.file("extdata", "caiso_load_2020_2023.csv", package = "CAISOWrapR"))
   
   # Merge node data with demand data
   node_data <- dplyr::left_join(

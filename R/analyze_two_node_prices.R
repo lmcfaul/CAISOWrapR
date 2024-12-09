@@ -11,7 +11,8 @@
 #' @return A pdf file with the plots
 #' 
 #' @export
-analyze_two_node_data <- function(df1 = read.csv("inst/extdata/San_Francisco_node_2023.csv"), df2 = read.csv("inst/extdata/Los_Angeles_node_2023.csv"), output_pdf_path = "two_node_data.pdf") {
+#analyze_two_node_data <- function(df1 = read.csv("inst/extdata/San_Francisco_node_2023.csv"), df2 = read.csv("inst/extdata/Los_Angeles_node_2023.csv"), output_pdf_path = "two_node_data.pdf") {
+analyze_two_node_data <- function(df1 = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR")), df2 = read.csv(system.file("extdata", "Los_Angeles_node_2023.csv", package = "CAISOWrapR")), output_pdf_path = "two_node_data.pdf") {
   result_one <- compare_lmps_visual(df1, df2)
   result_two <- compare_lmps_visual_seasonal(df1, df2)
   result_three <- compare_congestion_visual(df1, df2)
@@ -108,7 +109,7 @@ analyze_two_node_data <- function(df1 = read.csv("inst/extdata/San_Francisco_nod
 #' @return A ggplot object displaying the distribution of LMPs by hour of the day for the two cities
 #' 
 #' @export
-compare_lmps_visual = function(df1 = read.csv("inst/extdata/San_Francisco_node_2023.csv"), df2 = read.csv("inst/extdata/Los_Angeles_node_2023.csv")){
+compare_lmps_visual = function(df1 = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR")), df2 = read.csv(system.file("extdata", "Los_Angeles_node_2023.csv", package = "CAISOWrapR"))){
   df1 <- dplyr::mutate(
     df1,
     interval_start_utc = as.POSIXct(interval_start_utc, format = "%Y-%m-%d %H:%M:%S", tz = "UTC"),
@@ -269,8 +270,7 @@ compare_lmps_visual = function(df1 = read.csv("inst/extdata/San_Francisco_node_2
 #' @return A ggplot object displaying the distribution of LMPs by hour of the day for the two cities by season
 #' 
 #' @export
-compare_lmps_visual_seasonal = function(df1 = read.csv("inst/extdata/San_Francisco_node_2023.csv"), 
-                                        df2 = read.csv("inst/extdata/Los_Angeles_node_2023.csv")) {
+compare_lmps_visual_seasonal = function(df1 = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR")), df2 = read.csv(system.file("extdata", "Los_Angeles_node_2023.csv", package = "CAISOWrapR"))) {
   
   df1 <- df1 %>%
     dplyr::mutate(
@@ -451,7 +451,7 @@ compare_lmps_visual_seasonal = function(df1 = read.csv("inst/extdata/San_Francis
 #' @return A ggplot object displaying the distribution of congestion prices by hour of the day for the two cities
 #' 
 #' @export
-compare_congestion_visual = function(df1 = read.csv("inst/extdata/San_Francisco_node_2023.csv"), df2 = read.csv("inst/extdata/Los_Angeles_node_2023.csv")){
+compare_congestion_visual = function(df1 = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR")), df2 = read.csv(system.file("extdata", "Los_Angeles_node_2023.csv", package = "CAISOWrapR"))){
   df1 <- df1 %>%
     dplyr::mutate(
       interval_start_utc = as.POSIXct(interval_start_utc, format = "%Y-%m-%d %H:%M:%S", tz = "UTC"),
@@ -614,7 +614,7 @@ compare_congestion_visual = function(df1 = read.csv("inst/extdata/San_Francisco_
 #' @return A ggplot object displaying the distribution of congestion prices by hour of the day for the two cities by season.
 #' 
 #' @export
-compare_congestion_visual_seasonal = function(df1 = read.csv("inst/extdata/San_Francisco_node_2023.csv"), df2 = read.csv("inst/extdata/Los_Angeles_node_2023.csv")) {
+compare_congestion_visual_seasonal = function(df1 = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR")), df2 = read.csv(system.file("extdata", "Los_Angeles_node_2023.csv", package = "CAISOWrapR"))) {
   
   df1 <- df1 %>%
     dplyr::mutate(
@@ -797,7 +797,7 @@ compare_congestion_visual_seasonal = function(df1 = read.csv("inst/extdata/San_F
 #' @return A ggplot object displaying the distribution of loss pricing adjustments by hour of the day for the two cities
 #' 
 #' @export
-compare_losses_visual = function(df1 = read.csv("inst/extdata/San_Francisco_node_2023.csv"), df2 = read.csv("inst/extdata/Los_Angeles_node_2023.csv")){
+compare_losses_visual = function(df1 = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR")), df2 = read.csv(system.file("extdata", "Los_Angeles_node_2023.csv", package = "CAISOWrapR"))){
   df1 <- df1 %>%
     dplyr::mutate(
       interval_start_utc = as.POSIXct(interval_start_utc, format = "%Y-%m-%d %H:%M:%S", tz = "UTC"),
@@ -960,7 +960,7 @@ compare_losses_visual = function(df1 = read.csv("inst/extdata/San_Francisco_node
 #' @return A ggplot object displaying the distribution of loss pricing adjustments by hour of the day for the two cities by season.
 #' 
 #' @export
-compare_losses_visual_seasonal = function(df1 = read.csv("inst/extdata/San_Francisco_node_2023.csv"), df2 = read.csv("inst/extdata/Los_Angeles_node_2023.csv")) {
+compare_losses_visual_seasonal = function(df1 = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR")), df2 = read.csv(system.file("extdata", "Los_Angeles_node_2023.csv", package = "CAISOWrapR"))){
   
   df1 <- df1 %>%
     dplyr::mutate(
@@ -1130,3 +1130,4 @@ compare_losses_visual_seasonal = function(df1 = read.csv("inst/extdata/San_Franc
   return(q)
   
 }
+
