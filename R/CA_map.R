@@ -12,7 +12,7 @@
 #' @import rnaturalearth
 #' 
 #' @export
-CA_map <- function(instance = (read.csv("data/instance_normal.csv"))) {
+CA_map <- function(instance = (read.csv(system.file("extdata", "instance_normal.csv", package = "CAISOWrapR")))) {
   # Get the geometries for the United States
   us_states <- ne_states(country = "United States of America", returnclass = "sf")
   
@@ -29,19 +29,37 @@ CA_map <- function(instance = (read.csv("data/instance_normal.csv"))) {
   instance$loss <- as.numeric(instance$loss)
   
   # Create a color palette for the LMP prices
-  lmp_palette <- colorNumeric(
-    palette = c("#336699", "#FFFFBF", "#D7191C"),  # blue (low) to red (high)
-    domain = instance$lmp
+  lmp_palette <- colorBin(
+    palette = c(
+      "#333399", "#336699",  # Dark to medium blue
+      "#66A3CC", "#88B497", "#A8D08D",          # Light blue to muted green
+      "#FFFFBF", "#FFD37F", "#FFA07A", # Yellow to orange
+      "#FF6347", "#D7191C", "#990000"  # Red shades
+    ),
+    bins = c(-Inf, -40, -20, 0, 10, 20, 30, 50, 75, 100, 140, 180, Inf),  # Breaks for each bin
+    na.color = "transparent"  # Handle NA values
   )
   
-  congestion_palette <- colorNumeric(
-    palette = c("#336699", "#FFFFBF", "#D7191C"),  # blue (low) to red (high)
-    domain = instance$congestion
+  congestion_palette <- colorBin(
+    palette = c(
+      "#333399", "#336699",  # Dark to medium blue
+      "#66A3CC", "#88B497", "#A8D08D",          # Light blue to muted green
+      "#FFFFBF", "#FFD37F", "#FFA07A", # Yellow to orange
+      "#FF6347", "#D7191C", "#990000"  # Red shades
+    ),
+    bins = c(-Inf, -40, -20, -0.1, .1, 3, 10, 20, 30, 50, 100, 150, Inf),  # Breaks for each bin
+    na.color = "transparent"  # Handle NA values
   )
   
-  losses_palette <- colorNumeric(
-    palette = c("#336699", "#FFFFBF", "#D7191C"),  # blue (low) to red (high)
-    domain = instance$loss
+  losses_palette <- colorBin(
+    palette = c(
+      "#333399", "#336699",  # Dark to medium blue
+      "#66A3CC", "#88B497", "#A8D08D",          # Light blue to muted green
+      "#FFFFBF", "#FFD37F", "#FFA07A", # Yellow to orange
+      "#FF6347", "#D7191C", "#990000"  # Red shades
+    ),
+    bins = c(-Inf, -40, -20, -0.1, .1, 1, 3, 5, 7, 10, 15, 25, Inf),  # Breaks for each bin
+    na.color = "transparent"  # Handle NA values
   )
   
   
@@ -76,7 +94,7 @@ CA_map <- function(instance = (read.csv("data/instance_normal.csv"))) {
                        weight = ~kV_Sort / 200,  # Adjust weight based on kV_sort
                        opacity = 0.6, 
                        group = "All Transmission Lines") %>%          # Add 500kV transmission lines (as polylines)
-          addPolylines(data = df_transmission_500, color = "red", weight = 3, opacity = 0.6, group = "500kV Transmission Lines") %>%
+          addPolylines(data = df_transmission_500, color = "blue", weight = 3, opacity = 0.6, group = "500kV Transmission Lines") %>%
           # Add LMP markers
           addCircleMarkers(data = instance, 
                            lng = ~longitude, 
