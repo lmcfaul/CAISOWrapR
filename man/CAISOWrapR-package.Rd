@@ -11,11 +11,5 @@ This package provides a wrapper for the CAISO locational marginal price (LMP) da
 \author{
 \strong{Maintainer}: Mack Smith \email{macks26@stanford.edu}
 
-Other contributors:
-\itemize{
-  \item First Last
-  \item First Last
-}
-
 }
 \keyword{internal}

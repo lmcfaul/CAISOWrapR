@@ -10,13 +10,6 @@
 #' 
 #' @return A pdf file with the plots
 #' 
-#' @importFrom grid textGrob gpar
-#' @importFrom gridExtra grid.arrange
-#' @importFrom ggplot2 ggplot ggplotGrob
-#' @importFrom lubridate ymd_hms with_tz
-#' @importFrom gtable gtable_add_padding
-#' @importFrom unit unit
-#' 
 #' @export
 #analyze_two_node_data <- function(df1 = read.csv("inst/extdata/San_Francisco_node_2023.csv"), df2 = read.csv("inst/extdata/Los_Angeles_node_2023.csv"), output_pdf_path = "two_node_data.pdf") {
 analyze_two_node_data <- function(df1 = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR")), df2 = read.csv(system.file("extdata", "Los_Angeles_node_2023.csv", package = "CAISOWrapR")), output_pdf_path = "two_node_data.pdf") {
@@ -114,12 +107,6 @@ analyze_two_node_data <- function(df1 = read.csv(system.file("extdata", "San_Fra
 #' @param df2 A dataframe of locational marginal prices for a year for another location. The defualt is Los Angeles for 2023. Users can change this dataframe to analyze a different location or year by pulling from the `pulldata_node` function
 #' 
 #' @return A ggplot object displaying the distribution of LMPs by hour of the day for the two cities
-#' 
-#' @importFrom dplyr mutate filter group_by summarise pull
-#' @importFrom ggplot2 ggplot geom_rect geom_segment geom_point scale_x_continuous scale_fill_manual scale_color_manual labs facet_wrap
-#' @importFrom lubridate with_tz
-#' @importFrom scales percent
-#' @importFrom ggthemes theme_solarized
 #' 
 #' @export
 compare_lmps_visual = function(df1 = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR")), df2 = read.csv(system.file("extdata", "Los_Angeles_node_2023.csv", package = "CAISOWrapR"))){
@@ -281,12 +268,6 @@ compare_lmps_visual = function(df1 = read.csv(system.file("extdata", "San_Franci
 #' @param df2 A dataframe of locational marginal prices for a year for another location. The defualt is Los Angeles for 2023. Users can change this dataframe to analyze a different location or year by pulling from the `pulldata_node` function
 #' 
 #' @return A ggplot object displaying the distribution of LMPs by hour of the day for the two cities by season
-#' 
-#' @importFrom dplyr mutate filter group_by summarise pull
-#' @importFrom ggplot2 ggplot geom_rect geom_segment geom_point scale_x_continuous scale_fill_manual scale_color_manual labs facet_wrap
-#' @importFrom lubridate with_tz
-#' @importFrom scales percent
-#' @importFrom ggthemes theme_solarized
 #' 
 #' @export
 compare_lmps_visual_seasonal = function(df1 = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR")), df2 = read.csv(system.file("extdata", "Los_Angeles_node_2023.csv", package = "CAISOWrapR"))) {
@@ -469,11 +450,6 @@ compare_lmps_visual_seasonal = function(df1 = read.csv(system.file("extdata", "S
 #' 
 #' @return A ggplot object displaying the distribution of congestion prices by hour of the day for the two cities
 #' 
-#' @importFrom dplyr mutate filter group_by summarise pull
-#' @importFrom ggplot2 ggplot geom_rect geom_segment geom_point scale_x_continuous scale_fill_manual scale_color_manual labs
-#' @importFrom ggthemes theme_solarized
-#' @importFrom lubridate with_tz
-#' 
 #' @export
 compare_congestion_visual = function(df1 = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR")), df2 = read.csv(system.file("extdata", "Los_Angeles_node_2023.csv", package = "CAISOWrapR"))){
   df1 <- df1 %>%
@@ -523,7 +499,7 @@ compare_congestion_visual = function(df1 = read.csv(system.file("extdata", "San_
   q <- ggplot2::ggplot() +
     ggplot2::geom_rect(
       data = avg_price_per_time1,
-      aes(
+      ggplot2::aes(
         xmin = hour - 0.35,
         xmax = hour - 0.005,
         ymin = lower_quartile,
@@ -534,7 +510,7 @@ compare_congestion_visual = function(df1 = read.csv(system.file("extdata", "San_
     ) +
     ggplot2::geom_segment(
       data = avg_price_per_time1,
-      aes(
+      ggplot2::aes(
         x = hour - 0.2,
         xend = hour - 0.2,
         y = lower_whisker,
@@ -544,7 +520,7 @@ compare_congestion_visual = function(df1 = read.csv(system.file("extdata", "San_
     ) +
     ggplot2::geom_segment(
       data = avg_price_per_time1,
-      aes(
+      ggplot2::aes(
         x = hour - 0.2,
         xend = hour - 0.2,
         y = upper_quartile,
@@ -554,7 +530,7 @@ compare_congestion_visual = function(df1 = read.csv(system.file("extdata", "San_
     ) +
     ggplot2::geom_point(
       data = avg_price_per_time1,
-      aes(
+      ggplot2::aes(
         x = (hour - 0.35 + hour - 0.005) / 2,
         y = median,
       ),
@@ -563,7 +539,7 @@ compare_congestion_visual = function(df1 = read.csv(system.file("extdata", "San_
     ) +
     ggplot2::geom_rect(
       data = avg_price_per_time2,
-      aes(
+      ggplot2::aes(
         xmin = hour + 0.05,
         xmax = hour + 0.35,
         ymin = lower_quartile,
@@ -574,7 +550,7 @@ compare_congestion_visual = function(df1 = read.csv(system.file("extdata", "San_
     ) +
     ggplot2::geom_segment(
       data = avg_price_per_time2,
-      aes(
+      ggplot2::aes(
         x = hour + 0.2,
         xend = hour + 0.2,
         y = lower_whisker,
@@ -584,7 +560,7 @@ compare_congestion_visual = function(df1 = read.csv(system.file("extdata", "San_
     ) +
     ggplot2::geom_segment(
       data = avg_price_per_time2,
-      aes(
+      ggplot2::aes(
         x = hour + 0.2,
         xend = hour + 0.2,
         y = upper_quartile,
@@ -594,7 +570,7 @@ compare_congestion_visual = function(df1 = read.csv(system.file("extdata", "San_
     ) +
     ggplot2::geom_point(
       data = avg_price_per_time2,
-      aes(
+      ggplot2::aes(
         x = hour + 0.2,
         y = median,
       ),
@@ -636,11 +612,6 @@ compare_congestion_visual = function(df1 = read.csv(system.file("extdata", "San_
 #' @param df2 A dataframe of locational marginal prices for a year for another location. The default is Los Angeles for 2023. Users can change this dataframe to analyze a different location or year by pulling from the `pulldata_node` function.
 #' 
 #' @return A ggplot object displaying the distribution of congestion prices by hour of the day for the two cities by season.
-#' 
-#' @importFrom dplyr mutate filter group_by summarise case_when pull
-#' @importFrom lubridate with_tz
-#' @importFrom ggplot2 ggplot aes geom_rect geom_segment geom_point scale_x_continuous scale_fill_manual scale_color_manual labs facet_wrap
-#' @importFrom ggthemes theme_solarized
 #' 
 #' @export
 compare_congestion_visual_seasonal = function(df1 = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR")), df2 = read.csv(system.file("extdata", "Los_Angeles_node_2023.csv", package = "CAISOWrapR"))) {
@@ -708,7 +679,7 @@ compare_congestion_visual_seasonal = function(df1 = read.csv(system.file("extdat
   q <- ggplot2::ggplot() +
     ggplot2::geom_rect(
       data = avg_price_per_time1,
-      aes(
+      ggplot2::aes(
         xmin = hour - 0.35,
         xmax = hour - 0.005,
         ymin = lower_quartile,
@@ -719,7 +690,7 @@ compare_congestion_visual_seasonal = function(df1 = read.csv(system.file("extdat
     ) +
     ggplot2::geom_segment(
       data = avg_price_per_time1,
-      aes(
+      ggplot2::aes(
         x = hour - 0.2,
         xend = hour - 0.2,
         y = lower_whisker,
@@ -729,7 +700,7 @@ compare_congestion_visual_seasonal = function(df1 = read.csv(system.file("extdat
     ) +
     ggplot2::geom_segment(
       data = avg_price_per_time1,
-      aes(
+      ggplot2::aes(
         x = hour - 0.2,
         xend = hour - 0.2,
         y = upper_quartile,
@@ -739,7 +710,7 @@ compare_congestion_visual_seasonal = function(df1 = read.csv(system.file("extdat
     ) +
     ggplot2::geom_point(
       data = avg_price_per_time1,
-      aes(
+      ggplot2::aes(
         x = (hour - 0.35 + hour - 0.005) / 2,
         y = median,
       ),
@@ -748,7 +719,7 @@ compare_congestion_visual_seasonal = function(df1 = read.csv(system.file("extdat
     ) +
     ggplot2::geom_rect(
       data = avg_price_per_time2,
-      aes(
+      ggplot2::aes(
         xmin = hour + 0.05,
         xmax = hour + 0.35,
         ymin = lower_quartile,
@@ -759,7 +730,7 @@ compare_congestion_visual_seasonal = function(df1 = read.csv(system.file("extdat
     ) +
     ggplot2::geom_segment(
       data = avg_price_per_time2,
-      aes(
+      ggplot2::aes(
         x = hour + 0.2,
         xend = hour + 0.2,
         y = lower_whisker,
@@ -769,7 +740,7 @@ compare_congestion_visual_seasonal = function(df1 = read.csv(system.file("extdat
     ) +
     ggplot2::geom_segment(
       data = avg_price_per_time2,
-      aes(
+      ggplot2::aes(
         x = hour + 0.2,
         xend = hour + 0.2,
         y = upper_quartile,
@@ -779,7 +750,7 @@ compare_congestion_visual_seasonal = function(df1 = read.csv(system.file("extdat
     ) +
     ggplot2::geom_point(
       data = avg_price_per_time2,
-      aes(
+      ggplot2::aes(
         x = hour + 0.2,
         y = median,
       ),
@@ -824,11 +795,6 @@ compare_congestion_visual_seasonal = function(df1 = read.csv(system.file("extdat
 #' @param df2 A dataframe of locational marginal prices for a year for another location. The defualt is Los Angeles for 2023. Users can change this dataframe to analyze a different location or year by pulling from the `pulldata_node` function
 #' 
 #' @return A ggplot object displaying the distribution of loss pricing adjustments by hour of the day for the two cities
-#' 
-#' @importFrom dplyr mutate filter group_by summarise
-#' @importFrom lubridate with_tz
-#' @importFrom ggplot2 ggplot geom_rect geom_segment geom_point scale_x_continuous scale_fill_manual scale_color_manual labs
-#' @importFrom ggthemes theme_solarized
 #' 
 #' @export
 compare_losses_visual = function(df1 = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR")), df2 = read.csv(system.file("extdata", "Los_Angeles_node_2023.csv", package = "CAISOWrapR"))){
@@ -879,7 +845,7 @@ compare_losses_visual = function(df1 = read.csv(system.file("extdata", "San_Fran
   q <- ggplot2::ggplot() +
     ggplot2::geom_rect(
       data = avg_price_per_time1,
-      aes(
+      ggplot2::aes(
         xmin = hour - 0.35,
         xmax = hour - 0.005,
         ymin = lower_quartile,
@@ -890,7 +856,7 @@ compare_losses_visual = function(df1 = read.csv(system.file("extdata", "San_Fran
     ) +
     ggplot2::geom_segment(
       data = avg_price_per_time1,
-      aes(
+      ggplot2::aes(
         x = hour - 0.2,
         xend = hour - 0.2,
         y = lower_whisker,
@@ -900,7 +866,7 @@ compare_losses_visual = function(df1 = read.csv(system.file("extdata", "San_Fran
     ) +
     ggplot2::geom_segment(
       data = avg_price_per_time1,
-      aes(
+      ggplot2::aes(
         x = hour - 0.2,
         xend = hour - 0.2,
         y = upper_quartile,
@@ -910,7 +876,7 @@ compare_losses_visual = function(df1 = read.csv(system.file("extdata", "San_Fran
     ) +
     ggplot2::geom_point(
       data = avg_price_per_time1,
-      aes(
+      ggplot2::aes(
         x = (hour - 0.35 + hour - 0.005) / 2,
         y = median,
       ),
@@ -919,7 +885,7 @@ compare_losses_visual = function(df1 = read.csv(system.file("extdata", "San_Fran
     ) +
     ggplot2::geom_rect(
       data = avg_price_per_time2,
-      aes(
+      ggplot2::aes(
         xmin = hour + 0.05,
         xmax = hour + 0.35,
         ymin = lower_quartile,
@@ -930,7 +896,7 @@ compare_losses_visual = function(df1 = read.csv(system.file("extdata", "San_Fran
     ) +
     ggplot2::geom_segment(
       data = avg_price_per_time2,
-      aes(
+      ggplot2::aes(
         x = hour + 0.2,
         xend = hour + 0.2,
         y = lower_whisker,
@@ -940,7 +906,7 @@ compare_losses_visual = function(df1 = read.csv(system.file("extdata", "San_Fran
     ) +
     ggplot2::geom_segment(
       data = avg_price_per_time2,
-      aes(
+      ggplot2::aes(
         x = hour + 0.2,
         xend = hour + 0.2,
         y = upper_quartile,
@@ -950,7 +916,7 @@ compare_losses_visual = function(df1 = read.csv(system.file("extdata", "San_Fran
     ) +
     ggplot2::geom_point(
       data = avg_price_per_time2,
-      aes(
+      ggplot2::aes(
         x = hour + 0.2,
         y = median,
       ),
@@ -992,11 +958,6 @@ compare_losses_visual = function(df1 = read.csv(system.file("extdata", "San_Fran
 #' @param df2 A dataframe of locational marginal prices for a year for another location. The default is Los Angeles for 2023. Users can change this dataframe to analyze a different location or year by pulling from the `pulldata_node` function.
 #' 
 #' @return A ggplot object displaying the distribution of loss pricing adjustments by hour of the day for the two cities by season.
-#' 
-#' @importFrom dplyr mutate filter group_by summarise case_when pull
-#' @importFrom lubridate with_tz
-#' @importFrom ggplot2 ggplot aes geom_rect geom_segment geom_point scale_x_continuous scale_fill_manual scale_color_manual labs facet_wrap
-#' @importFrom ggthemes theme_solarized
 #' 
 #' @export
 compare_losses_visual_seasonal = function(df1 = read.csv(system.file("extdata", "San_Francisco_node_2023.csv", package = "CAISOWrapR")), df2 = read.csv(system.file("extdata", "Los_Angeles_node_2023.csv", package = "CAISOWrapR"))){
@@ -1064,7 +1025,7 @@ compare_losses_visual_seasonal = function(df1 = read.csv(system.file("extdata", 
   q <- ggplot2::ggplot() +
     ggplot2::geom_rect(
       data = avg_price_per_time1,
-      aes(
+      ggplot2::aes(
         xmin = hour - 0.35,
         xmax = hour - 0.005,
         ymin = lower_quartile,
@@ -1075,7 +1036,7 @@ compare_losses_visual_seasonal = function(df1 = read.csv(system.file("extdata", 
     ) +
     ggplot2::geom_segment(
       data = avg_price_per_time1,
-      aes(
+      ggplot2::aes(
         x = hour - 0.2,
         xend = hour - 0.2,
         y = lower_whisker,
@@ -1085,7 +1046,7 @@ compare_losses_visual_seasonal = function(df1 = read.csv(system.file("extdata", 
     ) +
     ggplot2::geom_segment(
       data = avg_price_per_time1,
-      aes(
+      ggplot2::aes(
         x = hour - 0.2,
         xend = hour - 0.2,
         y = upper_quartile,
@@ -1095,7 +1056,7 @@ compare_losses_visual_seasonal = function(df1 = read.csv(system.file("extdata", 
     ) +
     ggplot2::geom_point(
       data = avg_price_per_time1,
-      aes(
+      ggplot2::aes(
         x = (hour - 0.35 + hour - 0.005) / 2,
         y = median,
       ),
@@ -1104,7 +1065,7 @@ compare_losses_visual_seasonal = function(df1 = read.csv(system.file("extdata", 
     ) +
     ggplot2::geom_rect(
       data = avg_price_per_time2,
-      aes(
+      ggplot2::aes(
         xmin = hour + 0.05,
         xmax = hour + 0.35,
         ymin = lower_quartile,
@@ -1115,7 +1076,7 @@ compare_losses_visual_seasonal = function(df1 = read.csv(system.file("extdata", 
     ) +
     ggplot2::geom_segment(
       data = avg_price_per_time2,
-      aes(
+      ggplot2::aes(
         x = hour + 0.2,
         xend = hour + 0.2,
         y = lower_whisker,
@@ -1125,7 +1086,7 @@ compare_losses_visual_seasonal = function(df1 = read.csv(system.file("extdata", 
     ) +
     ggplot2::geom_segment(
       data = avg_price_per_time2,
-      aes(
+      ggplot2::aes(
         x = hour + 0.2,
         xend = hour + 0.2,
         y = upper_quartile,
@@ -1135,7 +1096,7 @@ compare_losses_visual_seasonal = function(df1 = read.csv(system.file("extdata", 
     ) +
     ggplot2::geom_point(
       data = avg_price_per_time2,
-      aes(
+      ggplot2::aes(
         x = hour + 0.2,
         y = median,
       ),

@@ -9,19 +9,12 @@
 #' @examples
 #' CA_map()
 #' 
-#' @importFrom sf st_read
-#' @importFrom leaflet colorBin addProviderTiles setView addPolygons addPolylines addCircleMarkers addLayersControl layersControlOptions renderLeaflet leafletOutput
-#' @importFrom shiny shinyApp fluidPage tags 
-#' @importFrom rnaturalearth ne_states
-#' @importFrom utils read.csv
-#' @importFrom tools toTitleCase
-#' 
 #' @export
-CA_map <- function(instance = read.csv("inst/extdata/instance_normal.csv")) {
+CA_map <- function(instance = read.csv(system.file("extdata", "instance_normal.csv", package = "CAISOWrapR"))) {
   # Get the geometries for the United States
   
   if (length(instance) == 1 && instance == "peak_load") {
-    instance = read.csv("inst/extdata/instance_peak_load.csv")
+    instance = read.csv(system.file("extdata", "instance_peak_load.csv", package = "CAISOWrapR"))
   }
   
   if (!is.data.frame(instance)) {
@@ -34,9 +27,10 @@ CA_map <- function(instance = read.csv("inst/extdata/instance_normal.csv")) {
   CA_states <- us_states[us_states$name %in% c("California"), ]
   
   # Load the transmission line shapefiles
-  df_transmission <- sf::st_read("data/all_transmission_lines.shp")
-  df_transmission_500 <- sf::st_read("data/500kv_transmission_lines.shp")
+  df_transmission <- sf::st_read(system.file("extdata", "all_transmission_lines.shp", package = "CAISOWrapR"))
+  df_transmission_500 <- sf::st_read(system.file("extdata", "500kv_transmission_lines.shp", package = "CAISOWrapR"))
   
+
   # Merge LMP locations data with the instance dataframe
   instance <- merge_lmp_locations(instance)
   

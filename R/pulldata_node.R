@@ -9,8 +9,6 @@
 #' 
 #' @return A dataframe of the price every 15 minutes for that year in that location.
 #' 
-#' @importFrom lubridate as.POSIXct as.POSIXlt as.Date
-#' 
 #' @export
 #' 
 #' @examples
