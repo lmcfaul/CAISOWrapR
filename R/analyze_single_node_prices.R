@@ -15,6 +15,7 @@
 #' @import ggplot2
 #' @import lubridate
 #' @import gtable
+#' @import dplyr
 #' 
 #' @export
 analyze_single_node_data <- function(node_df, output_pdf_path = "single_node_data.pdf") {
@@ -698,3 +699,4 @@ visualize_node_seasonal_losses = function(node_df){
   return(p)
   
 }
+
