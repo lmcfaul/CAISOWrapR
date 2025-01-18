@@ -9,8 +9,10 @@
 merge_demand <- function(node_data) {
   # Read CAISO demand data
   demand_data <- utils::read.csv(system.file("extdata", "caiso_load_2020_2023.csv", package = "CAISOWrapR"))
-  
+  demand_data <- demand_data %>%
+    mutate(interval_start_utc = lubridate::ymd_hms(interval_start_utc, tz = "UTC"))
   # Merge node data with demand data
+  
   node_data <- dplyr::left_join(
     node_data,
     dplyr::select(demand_data, interval_start_utc, load),
